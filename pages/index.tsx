@@ -1,6 +1,8 @@
 import useConnect from "@/components/Components/Connect/hooks/useConnect";
 import Connect from "@/components/Components/Connect/modules/Connect";
 import Marquee from "@/components/Components/Marquee/Marquee";
+import useChannels from "@/components/Components/Tunes/hooks/useChannels";
+import Channels from "@/components/Components/Tunes/modules/Channels";
 import Tunes from "@/components/Components/Tunes/modules/Tunes";
 import Options from "@/components/Home/modules/Options";
 import Switcher from "@/components/Home/modules/Switcher";
@@ -18,8 +20,13 @@ export default function Home() {
     (state: RootState) => state.app.authStatusReducer.value
   );
   const pages = useSelector((state: RootState) => state.app.pageReducer.value);
+  const dispatchVideos = useSelector(
+    (state: RootState) => state.app.channelsReducer.value
+  );
+  const { videos, liked, mirrored, videosLoading, collected, hover, setHover } =
+    useChannels();
   return (
-    <div className="relative w-full h-screen flex flex-col overflow-x-hidden selection:bg-ama selection:text-moda bg-offBlack">
+    <div className="relative w-full h-full flex flex-col overflow-x-hidden selection:bg-ama selection:text-moda bg-offBlack">
       <Head>
         <title>Chromadin Dispatcher</title>
         <link rel="icon" href="/favicon.ico" />
@@ -47,6 +54,17 @@ export default function Home() {
         <Options dispatch={dispatch} />
         <Switcher />
       </div>
+      <Channels
+        videos={videos}
+        dispatch={dispatch}
+        liked={liked}
+        mirrored={mirrored}
+        videosLoading={videosLoading}
+        dispatchVideos={dispatchVideos}
+        collected={collected}
+        hover={hover}
+        setHover={setHover}
+      />
       <Tunes />
       <Marquee />
     </div>

@@ -108,24 +108,28 @@ export type ComponentProps = {
 };
 
 export type UseChannelsResults = {
-    videos: Publication[];
-    liked: boolean[];
-    mirrored: boolean[];
-    collected: boolean[];
-    tab: number;
-    setTab: (e: number) => void;
-    videosLoading: boolean;
-    likeAmount: number[];
-    collectAmount: number[];
-    mirrorAmount: number[];
-  };
+  videos: Publication[];
+  liked: boolean[];
+  mirrored: boolean[];
+  collected: boolean[];
+  tab: number;
+  setTab: (e: number) => void;
+  videosLoading: boolean;
+  likeAmount: number[];
+  collectAmount: number[];
+  mirrorAmount: number[];
+  hover: boolean[];
+  setHover: (e: boolean[]) => void;
+};
 
-  export type ChannelsProps = {
-    videos: Publication[];
-    dispatch: Dispatch<AnyAction>;
-    liked: boolean[];
-    mirrored: boolean[];
-    videosLoading: boolean;
-    dispatchVideos: Publication[];
-    collected: boolean[];
-  };
+export type ChannelsProps = {
+  videos: Publication[];
+  dispatch: Dispatch<AnyAction>;
+  liked: boolean[];
+  mirrored: boolean[];
+  videosLoading: boolean;
+  dispatchVideos: Publication[];
+  collected: boolean[];
+  hover: boolean[];
+  setHover: (e: boolean[]) => void;
+};

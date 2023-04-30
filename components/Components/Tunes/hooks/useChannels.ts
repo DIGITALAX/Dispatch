@@ -38,7 +38,6 @@ const useChannels = (): UseChannelsResults => {
     (state: RootState) => state.app.reactIdReducer.value
   );
   const dispatch = useDispatch();
-  const [videos, setVideos] = useState<Publication[]>([]);
   const [liked, setLiked] = useState<boolean[]>([]);
   const [collected, setCollected] = useState<boolean[]>([]);
   const [mirrored, setMirrored] = useState<boolean[]>([]);
@@ -47,6 +46,8 @@ const useChannels = (): UseChannelsResults => {
   const [mirrorAmount, setMirrorAmount] = useState<number[]>([]);
   const [likeAmount, setLikeAmount] = useState<number[]>([]);
   const [collectAmount, setCollectAmount] = useState<number[]>([]);
+  const [videos, setVideos] = useState<Publication[]>([]);
+  const [hover, setHover] = useState<boolean[]>([]);
 
   const getVideos = async (): Promise<void> => {
     setVideosLoading(true);
@@ -65,12 +66,14 @@ const useChannels = (): UseChannelsResults => {
           limit: 30,
         });
       }
+      console.log({ data });
       const arr: any[] = [...data?.data.publications?.items];
       const sortedArr: any[] = arr.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );
       dispatch(setChannelsRedux(sortedArr));
       setVideos(sortedArr);
+      setHover(Array.from({ length: sortedArr?.length }, () => false));
       setCollected(sortedArr.map((obj: Publication) => obj.hasCollectedByMe));
       setMirrorAmount(
         sortedArr.map((obj: Publication) => obj.stats.totalAmountOfMirrors)
@@ -102,7 +105,7 @@ const useChannels = (): UseChannelsResults => {
           actionCollected: sortedArr[0]?.hasCollectedByMe,
           actionLiked: hasReactedArr?.[0],
           actionMirrored: hasMirroredArr?.[0],
-          actionId: sortedArr[0].id,
+          actionId: sortedArr[0]?.id,
           actionLocal: `${json[0].link}`,
         })
       );
@@ -204,6 +207,8 @@ const useChannels = (): UseChannelsResults => {
     likeAmount,
     collectAmount,
     mirrorAmount,
+    hover,
+    setHover,
   };
 };
 

@@ -1,5 +1,5 @@
 export const INFURA_GATEWAY: string = "https://chromadin.infura-ipfs.io";
-export const BASE_URL: string = "https://api-mumbai.lens.dev";
+export const BASE_URL: string = "https://api.lens.dev";
 
 export const CHROMADIN_ACCESS_CONTROLS: `0x${string}` =
   "0xa376FdE1e0033a2624d95E3D4345aAd32d5fE1cD";

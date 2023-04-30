@@ -7,7 +7,7 @@ const Marquee: FunctionComponent = (): JSX.Element => {
       <MarqueeText gradient={false} speed={70} direction={"right"}>
         {Array.from({ length: 30 }).map((_, index: number) => {
           return (
-            <span className="relative font-arcade text-sm text-white px-5">
+            <span className="relative font-arcade text-sm text-white px-5" key={index}>
               CHROMADIN DISPATCH
             </span>
           );

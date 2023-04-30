@@ -25,7 +25,7 @@ const Player: FunctionComponent<PlayerProps> = ({
 }): JSX.Element => {
   return (
     <div
-      className={`relative justify-center items-center flex w-24 h-1/2`}
+      className={`relative justify-center items-center flex w-16 h-10`}
       key={mainVideo.local}
       ref={wrapperRef}
     >
@@ -38,8 +38,8 @@ const Player: FunctionComponent<PlayerProps> = ({
           draggable={false}
         />
       )}
-      {!videosLoading ? (
-        <div className="relative w-20 h-14 bg-offBlack flex flex-col items-center justify-center">
+      {videosLoading ? (
+        <div className="relative w-16 h-10 bg-offBlack flex flex-col items-center justify-center">
           <FetchMoreLoading size="4" />
         </div>
       ) : (

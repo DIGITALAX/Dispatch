@@ -201,7 +201,7 @@ const Controls: FunctionComponent<ControlsProps> = ({
                       ? (videos?.length > 0 ? videos : dispatchVideos).length -
                         1
                       : currentIndex - 1
-                  ].metadata.media[0].original.url.split("ipfs://")[1]
+                  ]?.metadata?.media[0]?.original?.url?.split("ipfs://")[1]
                 }`,
                 actionCollected:
                   collectedArray[
@@ -289,7 +289,7 @@ const Controls: FunctionComponent<ControlsProps> = ({
                   (videos?.length > 0 ? videos : dispatchVideos)[
                     (currentIndex + 1) %
                       (videos?.length > 0 ? videos : dispatchVideos)?.length
-                  ].metadata.media[0].original.url.split("ipfs://")[1]
+                  ]?.metadata?.media[0]?.original?.url?.split("ipfs://")[1]
                 }`,
                 actionCollected:
                   collectedArray[
