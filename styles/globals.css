@@ -1,3 +1,31 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+  font-family: "Arcade Classic";
+  font-weight: 400;
+  src: url("/fonts/ArcadeClassic.ttf");
+}
+
+@font-face {
+  font-family: "Geometria";
+  font-weight: 400;
+  src: url("/fonts/Geometria.ttf");
+}
+
+@font-face {
+  font-family: "Earls Revenge";
+  font-weight: 400;
+  src: url("/fonts/EarlsRevenge.ttf");
+}
+
+@font-face {
+  font-family: "Economica R";
+  font-weight: 400;
+  src: url("/fonts/EconomicaRegular.ttf");
+}
+
+html {
+  background-color: #131313;
+}

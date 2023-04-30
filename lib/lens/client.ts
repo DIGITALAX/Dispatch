@@ -1,0 +1,63 @@
+import {
+    ApolloClient,
+    InMemoryCache,
+    HttpLink,
+    ApolloLink,
+  } from "@apollo/client";
+  import { BASE_URL } from "../constants";
+  import { getAuthenticationToken, isAuthExpired, refreshAuth } from "./utils";
+  import { RetryLink } from "@apollo/client/link/retry";
+  
+  const httpLink = new HttpLink({ uri: BASE_URL });
+  
+  const retryLink = new RetryLink();
+  
+  let link: any;
+  
+  link = ApolloLink.from([retryLink, httpLink]);
+  
+  // auth client
+  export const authClient = new ApolloClient({
+    link: link,
+    uri: BASE_URL,
+    cache: new InMemoryCache(),
+  });
+  
+  // main client
+  const authLink = new ApolloLink((operation, forward) => {
+    const res = getAuthenticationToken() as {
+      accessToken: string;
+      refreshToken: string;
+      exp: number;
+    };
+    if (!res?.accessToken) {
+      return null;
+    }
+  
+    let authToken: string = res?.accessToken;
+  
+    if (isAuthExpired(res?.exp)) {
+      const refreshedAccessToken = refreshAuth();
+      if (!refreshedAccessToken) {
+        return null;
+      }
+      authToken = refreshedAccessToken as any;
+    }
+  
+    operation.setContext({
+      headers: {
+        "x-access-token": authToken ? `Bearer ${authToken}` : "",
+      },
+    });
+  
+    return forward(operation);
+  });
+  
+  link = ApolloLink.from([retryLink, authLink.concat(httpLink)]);
+  
+  export const apolloClient = new ApolloClient({
+    link: link,
+    uri: BASE_URL,
+    cache: new InMemoryCache(),
+  });
+  
