@@ -3,6 +3,8 @@ import { CHROMADIN_COLLECTION_CONTRACT } from "@/lib/constants";
 import { setAllCollectionsRedux } from "@/redux/reducers/allCollectionsSlice";
 import { setCollectionDetails } from "@/redux/reducers/collectionDetailsSlice";
 import { setIndexModal } from "@/redux/reducers/indexModalSlice";
+import { setModal } from "@/redux/reducers/modalSlice";
+import { setSuccessModal } from "@/redux/reducers/successModalSlice";
 import { RootState } from "@/redux/store";
 import { BigNumber } from "ethers";
 import { FormEvent, useEffect, useState } from "react";
@@ -164,6 +166,12 @@ const useAddCollection = () => {
       collectionValues.acceptedTokens.length !==
         collectionValues.tokenPrices.length
     ) {
+      dispatch(
+        setModal({
+          actionOpen: true,
+          actionMessage: "Missing fields detected; please try again",
+        })
+      );
       return;
     }
     setAddCollectionLoading(true);
@@ -196,8 +204,31 @@ const useAddCollection = () => {
   const addCollectionWrite = async (): Promise<void> => {
     setAddCollectionLoading(true);
     try {
+      dispatch(
+        setIndexModal({
+          actionValue: true,
+          actionMessage: "Minting Collection",
+        })
+      );
       const tx = await writeAsync?.();
       await tx?.wait();
+      const newCollections = await getAllCollections({ creator: address });
+      dispatch(setAllCollectionsRedux(newCollections.data.collectionMinteds));
+      dispatch(
+        setIndexModal({
+          actionValue: false,
+          actionMessage: "",
+        })
+      );
+      dispatch(
+        setSuccessModal({
+          actionOpen: true,
+          actionMedia: collectionValues.image,
+          actionLink: "",
+          actionMessage:
+            "Collection Minted! Before you're collection is live on the Market, you need to add it to a drop.",
+        })
+      );
       dispatch(
         setCollectionDetails({
           actionTitle: "",
@@ -208,11 +239,20 @@ const useAddCollection = () => {
           actionTokenPrices: [],
         })
       );
-      const newCollections = await getAllCollections({ creator: address });
-      dispatch(setAllCollectionsRedux(newCollections.data.collectionMinteds));
     } catch (err: any) {
       console.error(err.message);
-      dispatch(setIndexModal("Unsuccessful. Please Try Again."));
+      dispatch(
+        setIndexModal({
+          actionValue: true,
+          actionMessage: "Unsuccessful. Please Try Again.",
+        })
+      );
+      setTimeout(() => {
+        setIndexModal({
+          actionValue: false,
+          actionMessage: "",
+        })
+      }, 4000)
     }
     setAddCollectionLoading(false);
   };
@@ -222,21 +262,36 @@ const useAddCollection = () => {
       addCollectionWrite();
     }
   }, [isSuccess]);
+
   useEffect(() => {
-    if (collectionValues.tokenPrices?.length > 0 && editingIndex !== undefined) {
+    if (
+      collectionValues.tokenPrices?.length > 0 &&
+      editingIndex !== undefined
+    ) {
       const currencyAddress = collectionValues.acceptedTokens[editingIndex];
-      const matchingToken = availableTokens.find(token => token[1] === currencyAddress);
+      const matchingToken = availableTokens.find(
+        (token) => token[1] === currencyAddress
+      );
       if (matchingToken) {
         setPrice({
-          value: collectionValues.tokenPrices[editingIndex],
+          value: parseInt(
+            String(collectionValues.tokenPrices[editingIndex]),
+            10
+          ),
           currency: matchingToken[0],
         });
       } else if (collectionValues.acceptedTokens.length > 0) {
-        const lastCurrencyAddress = collectionValues.acceptedTokens.slice(-1)[0];
-        const lastMatchingToken = availableTokens.find(token => token[1] === lastCurrencyAddress);
+        const lastCurrencyAddress =
+          collectionValues.acceptedTokens.slice(-1)[0];
+        const lastMatchingToken = availableTokens.find(
+          (token) => token[1] === lastCurrencyAddress
+        );
         if (lastMatchingToken) {
           setPrice({
-            value: collectionValues.tokenPrices.slice(-1)[0],
+            value: parseInt(
+              String(collectionValues.tokenPrices.slice(-1)[0]),
+              10
+            ),
             currency: lastMatchingToken[0],
           });
         }

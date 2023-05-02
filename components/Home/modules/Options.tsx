@@ -12,7 +12,7 @@ const Options: FunctionComponent<OptionsProps> = ({
         "drops",
         "token gated",
         "fulfillment",
-        "messaging",
+        "messages",
         "drafts",
       ]).map((label: string, index: number) => {
         return (

@@ -5,8 +5,6 @@ import ReactPlayer from "react-player";
 import { AnyAction, Dispatch } from "redux";
 
 export type ControlsProps = {
-  setFullScreen: (fullScreen: boolean) => void;
-  fullScreen: boolean;
   formatTime: (time: number) => string;
   currentTime: number;
   duration: number;
@@ -45,8 +43,6 @@ export type ControlsProps = {
 
 export type UseControlsResults = {
   streamRef: Ref<ReactPlayer>;
-  setFullScreen: (fullScreen: boolean) => void;
-  fullScreen: boolean;
   formatTime: (time: number) => string;
   currentTime: number;
   duration: number;
@@ -63,9 +59,7 @@ export type UseControlsResults = {
   mirrorLoading: boolean;
   collectLoading: boolean;
   likeLoading: boolean;
-  authStatus: boolean;
   profileId: string;
-  mainVideo: MainVideoState;
   setIsPlaying: (e: boolean) => void;
   setCurrentTime: (e: number) => void;
   setDuration: (e: number) => void;

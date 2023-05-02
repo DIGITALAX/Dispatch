@@ -34,7 +34,7 @@ const Player: FunctionComponent<PlayerProps> = ({
           src={`${INFURA_GATEWAY}/ipfs/QmNPPsBttGAxvu6cX3gWT4cnFF8PMF9C55GgJUehGp3nCA`}
           layout="fill"
           objectFit="cover"
-          className="absolute w-full h-full flex object-cover z-1"
+          className="absolute w-full h-full flex object-cover z-30"
           draggable={false}
         />
       )}

@@ -16,6 +16,9 @@ import allDropsReducer from "./reducers/allDropsSlice";
 import collectionSwitcherReducer from "./reducers/collectionSwitcherSlice";
 import allCollectionsReducer from "./reducers/allCollectionsSlice";
 import collectionDetailsReducer from "./reducers/collectionDetailsSlice";
+import modalReducer from "./reducers/modalSlice";
+import successModalReducer from "./reducers/successModalSlice";
+import fullScreenVideoReducer from "./reducers/fullScreenVideoSlice";
 
 const reducer = combineReducers({
   lensProfileReducer,
@@ -34,6 +37,9 @@ const reducer = combineReducers({
   collectionSwitcherReducer,
   allCollectionsReducer,
   collectionDetailsReducer,
+  modalReducer,
+  successModalReducer,
+  fullScreenVideoReducer
 });
 
 export const store = configureStore({

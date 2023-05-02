@@ -27,7 +27,6 @@ const useControls = (): UseControlsResults => {
   const streamRef = useRef<ReactPlayer>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
-  const [fullScreen, setFullScreen] = useState<boolean>(false);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
@@ -94,14 +93,14 @@ const useControls = (): UseControlsResults => {
     setVolume(parseFloat((e.target as HTMLFormElement).value));
   };
 
-  useEffect(() => {
-    if (fullScreen) {
-      if (!document?.fullscreenElement) {
-        wrapperRef?.current!?.requestFullscreen();
-        setFullScreen(false);
-      }
-    }
-  }, [fullScreen]);
+  // useEffect(() => {
+  //   if (fullScreen) {
+  //     if (!document?.fullscreenElement) {
+  //       wrapperRef?.current!?.requestFullscreen();
+  //       setFullScreen(false);
+  //     }
+  //   }
+  // }, [fullScreen]);
 
   const likeVideo = async (): Promise<void> => {
     let react: any;
@@ -362,8 +361,6 @@ const useControls = (): UseControlsResults => {
 
   return {
     streamRef,
-    setFullScreen,
-    fullScreen,
     formatTime,
     duration,
     currentTime,
@@ -379,8 +376,6 @@ const useControls = (): UseControlsResults => {
     collectVideo,
     mirrorVideo,
     likeVideo,
-    mainVideo,
-    authStatus,
     profileId,
     setIsPlaying,
     setCurrentTime,

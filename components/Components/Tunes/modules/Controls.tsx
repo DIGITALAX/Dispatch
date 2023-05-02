@@ -7,10 +7,9 @@ import { useDispatch } from "react-redux";
 import { setMainVideo } from "@/redux/reducers/mainVideoSlice";
 import lodash from "lodash";
 import json from "./../../../../public/videos/local.json";
+import { setFullScreenVideo } from "@/redux/reducers/fullScreenVideoSlice";
 
 const Controls: FunctionComponent<ControlsProps> = ({
-  fullScreen,
-  setFullScreen,
   formatTime,
   duration,
   currentTime,
@@ -49,14 +48,13 @@ const Controls: FunctionComponent<ControlsProps> = ({
     videos?.length > 0 ? videos : dispatchVideos,
     { id: mainVideo.id }
   );
-
   return (
     <div className="relative h-fit flex flex-col md:flex-row w-full gap-3 items-center galaxy:px-2 justify-center min-h-fit">
       <div className="relative w-fit md:w-56 h-full flex justify-center items-center gap-3">
         <div className="relative flex flex-row w-full h-full items-center">
           <div
             className="relative w-4 h-4 cursor-pointer flex"
-            onClick={() => setFullScreen(!fullScreen)}
+            onClick={() => dispatch(setFullScreenVideo(true))}
           >
             <Image
               src={`${INFURA_GATEWAY}/ipfs/QmVpncAteeF7voaGu1ZV5qP63UpZW2xmiCWVftL1QnL5ja`}

@@ -2,12 +2,12 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface IndexModalState {
   value: boolean;
-  message?: string;
+  message: string;
 }
 
 const initialIndexModalState: IndexModalState = {
   value: false,
-  message: undefined,
+  message: "",
 };
 
 export const indexModalSlice = createSlice({

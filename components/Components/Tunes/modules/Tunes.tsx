@@ -8,8 +8,6 @@ import { RootState } from "@/redux/store";
 
 const Tunes: FunctionComponent = (): JSX.Element => {
   const {
-    fullScreen,
-    setFullScreen,
     streamRef,
     formatTime,
     duration,
@@ -28,8 +26,6 @@ const Tunes: FunctionComponent = (): JSX.Element => {
     collectLoading,
     likeLoading,
     profileId,
-    authStatus,
-    mainVideo,
     setIsPlaying,
     setCurrentTime,
     setDuration,
@@ -49,6 +45,12 @@ const Tunes: FunctionComponent = (): JSX.Element => {
   } = useChannels();
   const dispatchVideos = useSelector(
     (state: RootState) => state.app.channelsReducer.value
+  );
+  const mainVideo = useSelector(
+    (state: RootState) => state.app.mainVideoReducer
+  );
+  const authStatus = useSelector(
+    (state: RootState) => state.app.authStatusReducer.value
   );
   return (
     <div className="relative w-full h-16 bg-chroma bg-cover flex gap-2 justify-center items-center">
@@ -72,8 +74,6 @@ const Tunes: FunctionComponent = (): JSX.Element => {
           collectedArray={collected}
         />
         <Controls
-          fullScreen={fullScreen}
-          setFullScreen={setFullScreen}
           formatTime={formatTime}
           duration={duration}
           currentTime={currentTime}

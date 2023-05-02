@@ -32,6 +32,7 @@ module.exports = {
         cit: "#F7B500",
         b1: "#6BD6FC",
         b2: "#1696FC",
+        offBlue: "#81A8F8",
       },
       height: {
         100: "27rem",
