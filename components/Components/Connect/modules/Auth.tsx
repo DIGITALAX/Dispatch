@@ -9,6 +9,7 @@ const Auth: FunctionComponent<AuthProps> = ({
   handleConnect,
   handleLensSignIn,
   profile,
+  router,
 }): JSX.Element => {
   let action: string;
   const decideStringAction = () => {
@@ -25,9 +26,18 @@ const Auth: FunctionComponent<AuthProps> = ({
     default:
       return (
         <Wallet
-          handleTransaction={connected ? handleLensSignIn : handleConnect}
-          buttonText={connected ? "SOCIAL" : "CONNECT"}
+          handleTransaction={
+            connected && router.asPath.includes("dashboard")
+              ? handleLensSignIn
+              : handleConnect
+          }
+          buttonText={
+            connected && router.asPath.includes("dashboard")
+              ? "SOCIAL"
+              : "CONNECT"
+          }
           isConnected={connected}
+          router={router}
         />
       );
   }

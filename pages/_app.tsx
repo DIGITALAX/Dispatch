@@ -8,6 +8,7 @@ import { configureChains, createClient, WagmiConfig } from "wagmi";
 import { polygon } from "wagmi/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import Modals from "@/components/Components/Modals/modules/Modals";
+import Video from "@/components/Components/Tunes/modules/Video";
 
 const { chains, provider } = configureChains(
   [polygon],
@@ -34,8 +35,11 @@ export default function App({ Component, pageProps }: AppProps) {
     <Provider store={store}>
       <WagmiConfig client={wagmiClient}>
         <RainbowKitProvider chains={chains}>
+          <div className="relative min-h-screen w-full overflow-x-hidden selection:bg-ama selection:text-moda">
           <Component {...pageProps} />
+          <Video />
           <Modals />
+          </div>
         </RainbowKitProvider>
       </WagmiConfig>
     </Provider>

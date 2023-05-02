@@ -19,6 +19,7 @@ import { setIsCreator } from "@/redux/reducers/isCreatorSlice";
 import { useRouter } from "next/router";
 import { setAuthStatus } from "@/redux/reducers/authStatusSlice";
 import { setLensProfile } from "@/redux/reducers/lensProfileSlice";
+import { setLookAround } from "@/redux/reducers/lookAroundSlice";
 
 const useConnect = (): UseConnectResults => {
   const { openConnectModal } = useConnectModal();
@@ -27,7 +28,7 @@ const useConnect = (): UseConnectResults => {
   const [connected, setConnected] = useState<boolean>(false);
   const router = useRouter();
 
-  const { data } = useContractRead({
+  const { data, isSuccess } = useContractRead({
     address: CHROMADIN_ACCESS_CONTROLS,
     abi: [
       {
@@ -122,10 +123,15 @@ const useConnect = (): UseConnectResults => {
   }, [isConnected]);
 
   useEffect(() => {
-    if (data && router) {
-      dispatch(setIsCreator(data));
+    if (isSuccess) {
+      if (data && router) {
+        dispatch(setIsCreator(data));
+        router.push("/dashboard");
+      } else {
+        dispatch(setLookAround(true));
+      }
     }
-  }, [data]);
+  }, [data, isSuccess]);
 
   return { handleConnect, handleLensSignIn, handleRefreshProfile, connected };
 };

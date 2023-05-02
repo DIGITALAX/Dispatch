@@ -1,48 +1,44 @@
 import { FunctionComponent } from "react";
 import Player from "./Player";
 import Controls from "./Controls";
-import useControls from "../hooks/useControls";
-import useChannels from "../hooks/useChannels";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import { TunesProps } from "../types/video.types";
 
-const Tunes: FunctionComponent = (): JSX.Element => {
-  const {
-    streamRef,
-    formatTime,
-    duration,
-    currentTime,
-    volume,
-    handleVolumeChange,
-    isPlaying,
-    volumeOpen,
-    setVolumeOpen,
-    handleHeart,
-    heart,
-    mirrorVideo,
-    collectVideo,
-    likeVideo,
-    mirrorLoading,
-    collectLoading,
-    likeLoading,
-    profileId,
-    setIsPlaying,
-    setCurrentTime,
-    setDuration,
-    wrapperRef,
-    progressRef,
-    handleSeek,
-  } = useControls();
-  const {
-    videos,
-    mirrored,
-    liked,
-    videosLoading,
-    collected,
-    collectAmount,
-    mirrorAmount,
-    likeAmount,
-  } = useChannels();
+const Tunes: FunctionComponent<TunesProps> = ({
+  videos,
+  mirrored,
+  liked,
+  videosLoading,
+  collected,
+  collectAmount,
+  mirrorAmount,
+  likeAmount,
+  streamRef,
+  formatTime,
+  duration,
+  currentTime,
+  volume,
+  handleVolumeChange,
+  isPlaying,
+  volumeOpen,
+  setVolumeOpen,
+  handleHeart,
+  heart,
+  mirrorVideo,
+  collectVideo,
+  likeVideo,
+  mirrorLoading,
+  collectLoading,
+  likeLoading,
+  profileId,
+  setIsPlaying,
+  setCurrentTime,
+  setDuration,
+  wrapperRef,
+  progressRef,
+  handleSeek,
+}): JSX.Element => {
   const dispatchVideos = useSelector(
     (state: RootState) => state.app.channelsReducer.value
   );
@@ -72,6 +68,8 @@ const Tunes: FunctionComponent = (): JSX.Element => {
           videosLoading={videosLoading}
           dispatchVideos={dispatchVideos}
           collectedArray={collected}
+          fullScreen={false}
+          muted={false}
         />
         <Controls
           formatTime={formatTime}

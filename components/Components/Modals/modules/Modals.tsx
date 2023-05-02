@@ -4,10 +4,11 @@ import Success from "./Success";
 import Error from "./Error";
 import Indexing from "./Indexing";
 import FullScreenVideo from "./FullScreenVideo";
-import useFullScreenVideo from "../hooks/useFullScreenVideo";
+import { useRef } from "react";
 
 const Modals = () => {
   const dispatch = useDispatch();
+  const videoRef = useRef<any>(null);
   const indexingModal = useSelector(
     (state: RootState) => state.app.indexModalReducer
   );
@@ -21,16 +22,12 @@ const Modals = () => {
   const mainVideo = useSelector(
     (state: RootState) => state.app.mainVideoReducer
   );
-
-  const { videoRef, playerRef } = useFullScreenVideo();
-
   return (
     <>
       {fullScreenVideo.value && (
         <FullScreenVideo
           dispatch={dispatch}
           mainVideo={mainVideo}
-          playerRef={playerRef as any}
           videoRef={videoRef as any}
         />
       )}

@@ -19,6 +19,7 @@ const Component: FunctionComponent<ComponentProps> = ({
   setDuration,
   dispatchVideos,
   collectedArray,
+  muted
 }): JSX.Element => {
   const dispatch = useDispatch();
   const currentIndex = lodash.findIndex(
@@ -77,6 +78,7 @@ const Component: FunctionComponent<ComponentProps> = ({
       volume={volume}
       onDuration={(duration) => setDuration(duration)}
       onProgress={(progress) => setCurrentTime(progress.playedSeconds)}
+      muted={muted}
     />
   );
 };

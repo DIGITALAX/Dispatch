@@ -5,11 +5,12 @@ const Wallet: FunctionComponent<WalletProps> = ({
   handleTransaction,
   isConnected,
   buttonText,
+  router
 }): JSX.Element => {
   return (
     <div
       className={`relative w-40 h-10 font-earl text-white border-white border rounded-tl-lg rounded-br-lg flex flex-row items-center px-2 cursor-pointer text-sm ${
-        isConnected && "bg-lensLight/70"
+        isConnected && router.asPath.includes("dashboard") ? "bg-lensLight/70" : "bg-offBlack"
       }`}
       onClick={() => handleTransaction()}
     >

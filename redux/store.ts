@@ -19,6 +19,7 @@ import collectionDetailsReducer from "./reducers/collectionDetailsSlice";
 import modalReducer from "./reducers/modalSlice";
 import successModalReducer from "./reducers/successModalSlice";
 import fullScreenVideoReducer from "./reducers/fullScreenVideoSlice";
+import lookAroundReducer from "./reducers/lookAroundSlice";
 
 const reducer = combineReducers({
   lensProfileReducer,
@@ -39,7 +40,8 @@ const reducer = combineReducers({
   collectionDetailsReducer,
   modalReducer,
   successModalReducer,
-  fullScreenVideoReducer
+  fullScreenVideoReducer,
+  lookAroundReducer
 });
 
 export const store = configureStore({

@@ -85,6 +85,8 @@ export type PlayerProps = {
   wrapperRef: Ref<HTMLDivElement>;
   dispatchVideos: Publication[];
   collectedArray: boolean[];
+  fullScreen: boolean;
+  muted: boolean;
 };
 
 export type ComponentProps = {
@@ -99,6 +101,7 @@ export type ComponentProps = {
   setDuration: (e: number) => void;
   dispatchVideos: Publication[];
   collectedArray: boolean[];
+  muted: boolean;
 };
 
 export type UseChannelsResults = {
@@ -122,4 +125,41 @@ export type ChannelsProps = {
   videosLoading: boolean;
   dispatchVideos: Publication[];
   collected: boolean[];
+};
+
+export type TunesProps = {
+  streamRef: Ref<ReactPlayer>;
+  formatTime: (time: number) => string;
+  currentTime: number;
+  duration: number;
+  volume: number;
+  volumeOpen: boolean;
+  setVolumeOpen: (volumeOpen: boolean) => void;
+  handleVolumeChange: (e: FormEvent) => void;
+  isPlaying: boolean;
+  handleHeart: () => void;
+  heart: boolean;
+  mirrorVideo: () => Promise<void>;
+  likeVideo: () => Promise<void>;
+  collectVideo: () => Promise<void>;
+  mirrorLoading: boolean;
+  collectLoading: boolean;
+  likeLoading: boolean;
+  profileId: string;
+  setIsPlaying: (e: boolean) => void;
+  setCurrentTime: (e: number) => void;
+  setDuration: (e: number) => void;
+  wrapperRef: Ref<HTMLDivElement>;
+  progressRef: Ref<HTMLDivElement>;
+  handleSeek: (
+    e: MouseEvent<HTMLDivElement, MouseEvent<Element, MouseEvent>>
+  ) => void;
+  videos: Publication[];
+  liked: boolean[];
+  mirrored: boolean[];
+  videosLoading: boolean;
+  collected: boolean[];
+  collectAmount: number[];
+  mirrorAmount: number[];
+  likeAmount: number[];
 };

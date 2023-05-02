@@ -4,17 +4,31 @@ import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
 import Draggable from "react-draggable";
 import { FullScreenVideoProps } from "../types/modals.types";
+import Player from "../../Tunes/modules/Player";
 
 const FullScreenVideo: FunctionComponent<FullScreenVideoProps> = ({
   dispatch,
   mainVideo,
-  playerRef,
   videoRef,
+  heart,
+  streamRef,
+  videosLoading,
+  isPlaying,
+  videos,
+  likedArray,
+  mirroredArray,
+  volume,
+  setCurrentTime,
+  setDuration,
+  wrapperRef,
+  dispatchVideos,
+  collectedArray,
+  fullScreenVideo
 }): JSX.Element => {
   return (
     <Draggable cancel=".frame" enableUserSelectHack={false} nodeRef={videoRef}>
       <div
-        className="absolute z-20 w-3/5 xl:w-1/3 h-96 px-8 pb-8 pt-4 cursor-grab active:cursor-grabbing items-center justify-center border-4 border-black rounded-lg top-1/3 left-1/3 flex flex-col"
+        className={"absolute z-20 w-3/5 xl:w-1/3 h-96 px-8 pb-8 pt-4 cursor-grab active:cursor-grabbing items-center justify-center border-4 border-black rounded-lg top-1/3 left-1/3 flex flex-col"}
         id="videoplayer"
         ref={videoRef as any}
       >
@@ -41,9 +55,24 @@ const FullScreenVideo: FunctionComponent<FullScreenVideoProps> = ({
           </div>
         </div>
         <div className="relative w-full h-full justify-self-end row-start-2 border border-offBlue col-start-1 rounded-md bg-offBlack">
-          <video autoPlay playsInline ref={playerRef} muted controls={false} className="relative w-full h-full">
-            <source src={mainVideo.local} />
-          </video>
+          <Player
+            heart={heart}
+            streamRef={streamRef}
+            mainVideo={mainVideo}
+            isPlaying={isPlaying}
+            setCurrentTime={setCurrentTime}
+            setDuration={setDuration}
+            videos={videos}
+            likedArray={likedArray}
+            mirroredArray={mirroredArray}
+            volume={volume}
+            wrapperRef={wrapperRef}
+            videosLoading={videosLoading}
+            dispatchVideos={dispatchVideos}
+            collectedArray={collectedArray}
+            fullScreen={true}
+            muted={true}
+          />
         </div>
       </div>
     </Draggable>

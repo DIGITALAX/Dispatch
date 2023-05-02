@@ -22,10 +22,12 @@ const Player: FunctionComponent<PlayerProps> = ({
   wrapperRef,
   dispatchVideos,
   collectedArray,
+  fullScreen,
+  muted
 }): JSX.Element => {
   return (
     <div
-      className={`relative justify-center items-center flex w-16 h-10`}
+      className={`relative justify-center items-center flex  ${fullScreen ? "w-full h-full" : "w-16 h-10"}`}
       key={mainVideo.local}
       ref={wrapperRef}
     >
@@ -55,6 +57,7 @@ const Player: FunctionComponent<PlayerProps> = ({
           setDuration={setDuration}
           dispatchVideos={dispatchVideos}
           collectedArray={collectedArray}
+          muted={muted}
         />
       )}
     </div>

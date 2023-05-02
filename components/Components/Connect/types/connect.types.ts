@@ -1,5 +1,5 @@
-import { Profile, Publication } from "@/components/Home/types/lens.types";
-import { AnyAction, Dispatch } from "redux";
+import { Profile } from "@/components/Home/types/lens.types";
+import { NextRouter } from "next/router";
 
 export type UseConnectResults = {
   handleConnect: () => void;
@@ -14,6 +14,7 @@ export type ConnectProps = {
   connected: boolean;
   authStatus: boolean;
   profile: Profile | undefined;
+  router: NextRouter;
 };
 
 export type AuthProps = {
@@ -22,12 +23,14 @@ export type AuthProps = {
   connected: boolean;
   authStatus: boolean;
   profile: Profile | undefined;
+  router: NextRouter;
 };
 
 export type WalletProps = {
   handleTransaction: () => void;
   isConnected: boolean;
   buttonText: string;
+  router: NextRouter;
 };
 
 export type ProfileProps = {

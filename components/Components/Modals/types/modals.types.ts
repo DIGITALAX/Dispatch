@@ -13,7 +13,6 @@ export type FullScreenVideoProps = {
   dispatch: Dispatch<AnyAction>;
   mainVideo: MainVideoState;
   videoRef: RefObject<HTMLElement> | undefined;
-  playerRef: Ref<HTMLVideoElement> | undefined;
 };
 
 export type SuccessProps = {

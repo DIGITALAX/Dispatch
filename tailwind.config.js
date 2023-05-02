@@ -48,6 +48,9 @@ module.exports = {
         chroma:
           "url('https://chromadin.infura-ipfs.io/ipfs/QmbfVYvza1xVqGRWiremt4LVKkTPDA8bnURdu39cgP71gd')",
       },
+      transformOrigin: {
+        homeAnim: "0 0",
+      },
       fontSize: {
         xxs: "0.5rem",
       },
