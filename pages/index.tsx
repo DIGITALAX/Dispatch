@@ -23,8 +23,7 @@ export default function Home() {
   const dispatchVideos = useSelector(
     (state: RootState) => state.app.channelsReducer.value
   );
-  const { videos, liked, mirrored, videosLoading, collected, hover, setHover } =
-    useChannels();
+  const { videos, liked, mirrored, videosLoading, collected } = useChannels();
   return (
     <div className="relative w-full h-full flex flex-col overflow-x-hidden selection:bg-ama selection:text-moda bg-offBlack">
       <Head>
@@ -50,7 +49,7 @@ export default function Home() {
           />
         </div>
       </div>
-      <div className="relative w-full h-full flex flex-row items-start justify-start px-8 pb-10 gap-6">
+      <div className="relative w-full h-full flex flex-row items-start justify-start px-8 pb-16 gap-14">
         <Options dispatch={dispatch} />
         <Switcher />
       </div>
@@ -62,8 +61,6 @@ export default function Home() {
         videosLoading={videosLoading}
         dispatchVideos={dispatchVideos}
         collected={collected}
-        hover={hover}
-        setHover={setHover}
       />
       <Tunes />
       <Marquee />

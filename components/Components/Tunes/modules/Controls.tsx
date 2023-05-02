@@ -51,7 +51,7 @@ const Controls: FunctionComponent<ControlsProps> = ({
   );
 
   return (
-    <div className="relative h-fit flex flex-col md:flex-row w-full gap-3 items-center galaxy:px-2 justify-center">
+    <div className="relative h-fit flex flex-col md:flex-row w-full gap-3 items-center galaxy:px-2 justify-center min-h-fit">
       <div className="relative w-fit md:w-56 h-full flex justify-center items-center gap-3">
         <div className="relative flex flex-row w-full h-full items-center">
           <div

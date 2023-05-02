@@ -5,7 +5,7 @@ export interface PageState {
 }
 
 const initialPageState: PageState = {
-  value: "drops",
+  value: "collections",
 };
 
 export const pageSlice = createSlice({

@@ -2,25 +2,20 @@ import { FunctionComponent } from "react";
 import FillIn from "../../Inputs/modules/FillIn";
 import ImageUpload from "../../Inputs/modules/ImageUpload";
 import ButtonAdd from "../../Inputs/modules/ButtonAdd";
-import { AddDropProps } from "../types/drops.types";
 import { setDropSwitcher } from "@/redux/reducers/dropSwitcherSlice";
 import { BsRewindFill } from "react-icons/bs";
-import DropDown from "../../Inputs/modules/DropDown";
+import { AddCollectionProps } from "../types/collections.types";
 
-const AddDrop: FunctionComponent<AddDropProps> = ({
-  dropImage,
+const AddCollection: FunctionComponent<AddCollectionProps> = ({
+  collectionImage,
   imageLoading,
   uploadImage,
-  addDrop,
-  addDropLoading,
-  handleDropTitle,
+  addCollection,
+  addCollectionLoading,
   dispatch,
-  availableCollectionIds,
-  chosenCollections,
-  setChosenCollections,
-  open,
-  setOpen,
-  setImageLoading,
+  handleCollectionTitle,
+  handleCollectionDescription,
+  setImageLoading
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full flex flex-col justify-start items-start text-white gap-4">
@@ -44,17 +39,17 @@ const AddDrop: FunctionComponent<AddDropProps> = ({
             <div className="relative w-fit h-fit font-economica text-lg">
               Drop Name
             </div>
-            <FillIn textArea={false} changeFunction={handleDropTitle} />
+            <FillIn textArea={false} changeFunction={handleCollectionTitle} />
           </div>
           <div className="relative flex flex-col gap-2 w-1/2 h-fit">
             <div className="relative w-fit h-fit font-economica text-lg">
               Drop Poster
             </div>
             <ImageUpload
-              image={dropImage}
+              image={collectionImage}
               imageLoading={imageLoading}
               uploadImage={uploadImage}
-              loaderGeneral={addDropLoading}
+              loaderGeneral={addCollectionLoading}
               setImageLoading={setImageLoading}
             />
           </div>
@@ -62,19 +57,12 @@ const AddDrop: FunctionComponent<AddDropProps> = ({
             <div className="relative w-fit h-fit font-economica text-lg">
               Choose Collections
             </div>
-            <DropDown
-              values={availableCollectionIds}
-              chosen={chosenCollections}
-              setChosen={setChosenCollections}
-              open={open}
-              setOpen={setOpen}
-            />
           </div>
           <div className="relative flex flex-col gap-2 w-fit h-fit justify-start items-center">
             <ButtonAdd
               text={"Add Drop"}
-              functionAdd={addDrop}
-              loader={addDropLoading}
+              functionAdd={addCollection}
+              loader={addCollectionLoading}
             />
           </div>
         </div>
@@ -86,4 +74,4 @@ const AddDrop: FunctionComponent<AddDropProps> = ({
   );
 };
 
-export default AddDrop;
+export default AddCollection;

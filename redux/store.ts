@@ -11,6 +11,11 @@ import channelsReducer from "./reducers/channelsSlice";
 import reactIdReducer from "./reducers/reactIdSlice";
 import indexModalReducer from "./reducers/indexModalSlice";
 import dispatcherReducer from "./reducers/dispatcherSlice";
+import dropDetailsReducer from "./reducers/dropDetailsSlice";
+import allDropsReducer from "./reducers/allDropsSlice";
+import collectionSwitcherReducer from "./reducers/collectionSwitcherSlice";
+import allCollectionsReducer from "./reducers/allCollectionsSlice";
+import collectionDetailsReducer from "./reducers/collectionDetailsSlice";
 
 const reducer = combineReducers({
   lensProfileReducer,
@@ -24,6 +29,11 @@ const reducer = combineReducers({
   reactIdReducer,
   indexModalReducer,
   dispatcherReducer,
+  dropDetailsReducer,
+  allDropsReducer,
+  collectionSwitcherReducer,
+  allCollectionsReducer,
+  collectionDetailsReducer,
 });
 
 export const store = configureStore({

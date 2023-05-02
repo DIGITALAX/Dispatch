@@ -6,8 +6,9 @@ const Options: FunctionComponent<OptionsProps> = ({
   dispatch,
 }): JSX.Element => {
   return (
-    <div className="relative w-fit h-full flex flex-col gap-8 items-center justify-center text-center">
+    <div className="relative w-fit h-full flex flex-col gap-4 items-center justify-center text-center">
       {Array.from([
+        "collections",
         "drops",
         "token gated",
         "fulfillment",

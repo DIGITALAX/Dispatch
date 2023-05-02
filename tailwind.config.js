@@ -12,6 +12,8 @@ module.exports = {
         geom: "Geometria",
         earl: "Earls Revenge",
         economica: "Economica R",
+        economicaB: "Economica B",
+        digi: "DS DIGITAL",
       },
       colors: {
         verde: "#25EC68",
@@ -30,6 +32,10 @@ module.exports = {
         cit: "#F7B500",
         b1: "#6BD6FC",
         b2: "#1696FC",
+      },
+      zIndex: {
+        1: "1",
+        2: "2",
       },
       backgroundImage: {
         chroma:

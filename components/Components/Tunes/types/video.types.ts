@@ -118,8 +118,6 @@ export type UseChannelsResults = {
   likeAmount: number[];
   collectAmount: number[];
   mirrorAmount: number[];
-  hover: boolean[];
-  setHover: (e: boolean[]) => void;
 };
 
 export type ChannelsProps = {
@@ -130,6 +128,4 @@ export type ChannelsProps = {
   videosLoading: boolean;
   dispatchVideos: Publication[];
   collected: boolean[];
-  hover: boolean[];
-  setHover: (e: boolean[]) => void;
 };

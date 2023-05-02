@@ -15,6 +15,12 @@
 }
 
 @font-face {
+  font-family: "DS Digital";
+  font-weight: 400;
+  src: url("/fonts/DSDigi.ttf");
+}
+
+@font-face {
   font-family: "Earls Revenge";
   font-weight: 400;
   src: url("/fonts/EarlsRevenge.ttf");
@@ -24,6 +30,12 @@
   font-family: "Economica R";
   font-weight: 400;
   src: url("/fonts/EconomicaRegular.ttf");
+}
+
+@font-face {
+  font-family: "Economica B";
+  font-weight: 400;
+  src: url("/fonts/EconomicaBold.ttf");
 }
 
 html {
@@ -76,4 +88,23 @@ html {
   to {
     background-size: 200% 200%;
   }
+}
+
+div::-webkit-scrollbar {
+  width: 0.01rem;
+  height: 0.1rem;
+}
+
+div::-webkit-scrollbar {
+  width: 0.01rem;
+}
+
+div::-webkit-scrollbar-track:active {
+  background-color: #f3f6f7 !important;
+  opacity: 80%;
+  border-radius: 200px;
+}
+
+div::-webkit-scrollbar-thumb:active {
+  background-color: #f62ada !important;
 }

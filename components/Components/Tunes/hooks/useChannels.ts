@@ -47,7 +47,6 @@ const useChannels = (): UseChannelsResults => {
   const [likeAmount, setLikeAmount] = useState<number[]>([]);
   const [collectAmount, setCollectAmount] = useState<number[]>([]);
   const [videos, setVideos] = useState<Publication[]>([]);
-  const [hover, setHover] = useState<boolean[]>([]);
 
   const getVideos = async (): Promise<void> => {
     setVideosLoading(true);
@@ -73,7 +72,6 @@ const useChannels = (): UseChannelsResults => {
       );
       dispatch(setChannelsRedux(sortedArr));
       setVideos(sortedArr);
-      setHover(Array.from({ length: sortedArr?.length }, () => false));
       setCollected(sortedArr.map((obj: Publication) => obj.hasCollectedByMe));
       setMirrorAmount(
         sortedArr.map((obj: Publication) => obj.stats.totalAmountOfMirrors)
@@ -207,8 +205,6 @@ const useChannels = (): UseChannelsResults => {
     likeAmount,
     collectAmount,
     mirrorAmount,
-    hover,
-    setHover,
   };
 };
 
