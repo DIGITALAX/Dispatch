@@ -33,6 +33,12 @@ module.exports = {
         b1: "#6BD6FC",
         b2: "#1696FC",
       },
+      height: {
+        100: "27rem",
+        128: "32rem",
+        184: "42rem",
+        210: "47rem",
+      },
       zIndex: {
         1: "1",
         2: "2",
@@ -40,6 +46,9 @@ module.exports = {
       backgroundImage: {
         chroma:
           "url('https://chromadin.infura-ipfs.io/ipfs/QmbfVYvza1xVqGRWiremt4LVKkTPDA8bnURdu39cgP71gd')",
+      },
+      fontSize: {
+        xxs: "0.5rem",
       },
     },
   },

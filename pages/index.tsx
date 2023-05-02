@@ -49,7 +49,7 @@ export default function Home() {
           />
         </div>
       </div>
-      <div className="relative w-full h-full flex flex-row items-start justify-start px-8 pb-16 gap-14">
+      <div className="relative w-full h-210 flex flex-row items-start justify-start px-8 pb-16 gap-14">
         <Options dispatch={dispatch} />
         <Switcher />
       </div>

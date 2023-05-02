@@ -5,7 +5,7 @@ export interface CollectionSwitcherState {
 }
 
 const initialCollectionSwitcherState: CollectionSwitcherState = {
-  value: "drops",
+  value: "collections",
 };
 
 export const collectionSwitcherSlice = createSlice({

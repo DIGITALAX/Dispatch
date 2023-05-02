@@ -10,7 +10,8 @@ const ImageUpload: FunctionComponent<ImageUploadProps> = ({
   imageLoading,
   uploadImage,
   loaderGeneral,
-  setImageLoading
+  setImageLoading,
+  type
 }): JSX.Element => {
   return (
     <div className="relative w-40 h-40 border border-white rounded-md flex flex-col p-3">
@@ -21,13 +22,14 @@ const ImageUpload: FunctionComponent<ImageUploadProps> = ({
             layout="fill"
             objectFit="cover"
             className="rounded-md w-full h-full flex"
+            draggable={false}
           />
         </div>
       )}
       <div className="relative w-full h-full items-end justify-end flex">
         <label
           className="relative w-8 h-8 rounded-sm bg-azul flex flex-col items-center justify-center cursor-pointer active:scale-95"
-          onChange={(e: FormEvent) => uploadImage(e, setImageLoading)}
+          onChange={(e: FormEvent) => uploadImage(e, setImageLoading, type)}
         >
           <div
             className={`relative w-fit h-fit flex items-center justify-center ${

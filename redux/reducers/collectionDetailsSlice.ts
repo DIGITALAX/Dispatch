@@ -13,7 +13,7 @@ const initialCollectionDetailsState: CollectionDetailsState = {
   title: "",
   description: "",
   image: "",
-  amount: 0,
+  amount: 1,
   acceptedTokens: [],
   tokenPrices: [],
 };

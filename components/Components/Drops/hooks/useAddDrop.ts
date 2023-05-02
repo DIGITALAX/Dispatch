@@ -115,7 +115,7 @@ const useAddDrop = () => {
     );
   };
 
-  const getCollectionsForDrop = async (): Promise<void> => {
+  const getAvailableCollections = async (): Promise<void> => {
     try {
       const colls = await getAllCollections({
         owner: address,
@@ -143,7 +143,7 @@ const useAddDrop = () => {
 
   useEffect(() => {
     if (address && auth) {
-      getCollectionsForDrop();
+      getAvailableCollections();
     }
   }, []);
 

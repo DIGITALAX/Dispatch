@@ -2,24 +2,30 @@ import { FormEvent } from "react";
 
 export type FillInProps = {
   textArea: boolean;
-  changeFunction: (e: FormEvent) => void;
+  changeFunction: (e?: any) => void;
+  type?: string;
+  width: string;
+  defaultValue: string;
 };
 
 export type ButtonAddProps = {
   text: string;
   functionAdd: () => Promise<void>;
   loader: boolean;
+  width: string;
 };
 
 export type ImageUploadProps = {
   image: string;
   imageLoading: boolean;
   uploadImage: (
-    e: FormEvent,
-    setImageLoading: (e: boolean) => void
+    e: FormEvent<Element>,
+    setImageLoading: (e: boolean) => void,
+    type: string
   ) => Promise<void>;
   loaderGeneral: boolean;
   setImageLoading: (e: boolean) => void;
+  type: string;
 };
 
 export type DropDownProps = {

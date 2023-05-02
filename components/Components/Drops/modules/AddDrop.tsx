@@ -8,7 +8,6 @@ import { BsRewindFill } from "react-icons/bs";
 import DropDown from "../../Inputs/modules/DropDown";
 
 const AddDrop: FunctionComponent<AddDropProps> = ({
-  dropImage,
   imageLoading,
   uploadImage,
   addDrop,
@@ -21,6 +20,7 @@ const AddDrop: FunctionComponent<AddDropProps> = ({
   open,
   setOpen,
   setImageLoading,
+  dropDetails,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full flex flex-col justify-start items-start text-white gap-4">
@@ -44,18 +44,25 @@ const AddDrop: FunctionComponent<AddDropProps> = ({
             <div className="relative w-fit h-fit font-economica text-lg">
               Drop Name
             </div>
-            <FillIn textArea={false} changeFunction={handleDropTitle} />
+            <FillIn
+              textArea={false}
+              changeFunction={(e) => handleDropTitle(e)}
+              type="string"
+              width="full"
+              defaultValue={dropDetails.title}
+            />
           </div>
           <div className="relative flex flex-col gap-2 w-1/2 h-fit">
             <div className="relative w-fit h-fit font-economica text-lg">
               Drop Poster
             </div>
             <ImageUpload
-              image={dropImage}
+              image={dropDetails.image}
               imageLoading={imageLoading}
               uploadImage={uploadImage}
               loaderGeneral={addDropLoading}
               setImageLoading={setImageLoading}
+              type="drop"
             />
           </div>
           <div className="relative flex flex-col gap-2 w-1/2 h-fit">
@@ -75,6 +82,7 @@ const AddDrop: FunctionComponent<AddDropProps> = ({
               text={"Add Drop"}
               functionAdd={addDrop}
               loader={addDropLoading}
+              width={"20"}
             />
           </div>
         </div>

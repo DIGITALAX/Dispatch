@@ -14,6 +14,9 @@ const CollectionsSwitcher: FunctionComponent = (): JSX.Element => {
   const allCollectionsRedux = useSelector(
     (state: RootState) => state.app.allCollectionsReducer.value
   );
+  const collectionDetails = useSelector(
+    (state: RootState) => state.app.collectionDetailsReducer
+  );
 
   const dispatch = useDispatch();
   const { allCollections } = useAllCollections();
@@ -23,14 +26,18 @@ const CollectionsSwitcher: FunctionComponent = (): JSX.Element => {
     setImageLoading,
     handleCollectionDescription,
     handleCollectionTitle,
-    addCollectionLoading
+    addCollectionLoading,
+    handleCollectionPrices,
+    handleCollectionAmount,
+    addCollection,
+    price,
+    setPrice
   } = useAddCollection();
 
   switch (collectionSwitcher) {
     case "add":
       return (
         <AddCollection
-          collectionImage={collectionImage}
           imageLoading={imageLoading}
           uploadImage={uploadImage}
           addCollection={addCollection}
@@ -39,8 +46,11 @@ const CollectionsSwitcher: FunctionComponent = (): JSX.Element => {
           handleCollectionTitle={handleCollectionTitle}
           handleCollectionDescription={handleCollectionDescription}
           handleCollectionAmount={handleCollectionAmount}
-          handleCollectionPrice={handleCollectionPrice}
+          handleCollectionPrices={handleCollectionPrices}
           setImageLoading={setImageLoading}
+          collectionDetails={collectionDetails}
+          setPrice={setPrice}
+          price={price}
         />
       );
 

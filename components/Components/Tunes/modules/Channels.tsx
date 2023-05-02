@@ -76,7 +76,7 @@ const Channels: FunctionComponent<ChannelsProps> = ({
                 >
                   <div className="relative w-fit h-fit flex flex-row items-center">
                     <div
-                      className="relative w-fit h-fit text-xs font-arcade flex justify-start break-word"
+                      className="relative w-fit h-fit text-xs font-arcade flex justify-start break-all"
                       id={`record${(index % 3) + 1}`}
                     >
                       {content?.metadata?.content?.split("\n\n")[0]?.length > 34

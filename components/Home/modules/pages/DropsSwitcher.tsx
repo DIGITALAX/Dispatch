@@ -11,8 +11,8 @@ const DropsSwitcher: FunctionComponent = (): JSX.Element => {
   const dropSwitcher = useSelector(
     (state: RootState) => state.app.dropSwitcherReducer.value
   );
-  const dropImage = useSelector(
-    (state: RootState) => state.app.dropDetailsReducer.image
+  const dropDetails= useSelector(
+    (state: RootState) => state.app.dropDetailsReducer
   );
   const allDropsRedux = useSelector(
     (state: RootState) => state.app.allDropsReducer.value
@@ -37,7 +37,6 @@ const DropsSwitcher: FunctionComponent = (): JSX.Element => {
     case "add":
       return (
         <AddDrop
-          dropImage={dropImage}
           imageLoading={imageLoading}
           uploadImage={uploadImage}
           addDrop={addDrop}
@@ -50,6 +49,7 @@ const DropsSwitcher: FunctionComponent = (): JSX.Element => {
           open={open}
           setOpen={setOpen}
           setImageLoading={setImageLoading}
+          dropDetails={dropDetails}
         />
       );
 

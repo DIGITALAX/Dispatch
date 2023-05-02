@@ -17,7 +17,7 @@ const useImageUpload = () => {
   const [type, setType] = useState<string>("");
 
   const uploadImage = async (
-    e: FormEvent,
+    e: FormEvent<Element>,
     setImageLoading: (e: boolean) => void,
     type: string
   ) => {
