@@ -10,8 +10,8 @@ export interface CollectionDetailsState {
 }
 
 const initialCollectionDetailsState: CollectionDetailsState = {
-  title: "",
-  description: "",
+  title: "Collection Title",
+  description: "Collection Description :)",
   image: "",
   amount: 1,
   acceptedTokens: [],
