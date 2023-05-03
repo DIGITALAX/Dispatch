@@ -6,7 +6,7 @@ const ButtonAdd: FunctionComponent<ButtonAddProps> = ({
   text,
   functionAdd,
   loader,
-  width
+  width,
 }): JSX.Element => {
   return (
     <div

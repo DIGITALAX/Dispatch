@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-comment-textnodes */
 import { FunctionComponent } from "react";
 import FillIn from "../../Inputs/modules/FillIn";
 import ImageUpload from "../../Inputs/modules/ImageUpload";
