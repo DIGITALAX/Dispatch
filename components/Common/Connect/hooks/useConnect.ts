@@ -20,6 +20,7 @@ import { useRouter } from "next/router";
 import { setAuthStatus } from "@/redux/reducers/authStatusSlice";
 import { setLensProfile } from "@/redux/reducers/lensProfileSlice";
 import { setLookAround } from "@/redux/reducers/lookAroundSlice";
+import { setCreatorToken } from "@/lib/utils";
 
 const useConnect = (): UseConnectResults => {
   const { openConnectModal } = useConnectModal();
@@ -130,6 +131,7 @@ const useConnect = (): UseConnectResults => {
         dispatch(setLookAround(true));
       }
     }
+    setCreatorToken(data ? data : false);
   }, [data, isSuccess]);
 
   return { handleConnect, handleLensSignIn, handleRefreshProfile, connected };
