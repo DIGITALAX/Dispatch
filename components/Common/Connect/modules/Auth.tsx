@@ -15,9 +15,9 @@ const Auth: FunctionComponent<AuthProps> = ({
 }): JSX.Element => {
   let action: string;
   const decideStringAction = () => {
-    if (connected && authStatus) {
+    if (connected) {
       if (router.asPath.includes("dashboard")) {
-        if (profile?.handle) {
+        if (profile?.handle && authStatus) {
           action = "profile";
         }
       } else {
