@@ -47,16 +47,16 @@ export default function Dashboard() {
         <title>Chromadin Dispatcher</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="relative w-full flex flex-row items-center justify-start px-8 pt-8 pb-10">
-        <div className="relative w-full h-fit flex flex-row items-center justify-start">
-          <div className="relative font-arcade w-fit justify-start items-center h-fit text-white text-2xl flex">
+      <div className="relative w-full flex flex-col sm:flex-row items-center justify-start px-8 pt-8 pb-10">
+        <div className="relative w-full h-fit flex preG:flex-row items-center justify-start flex-col">
+          <div className="relative font-arcade w-fit justify-start items-center h-fit text-white text-lg preG:text-2xl flex">
             chromadin dispatcher
           </div>
-          <div className="relative font-geom w-fit justify-start items-center h-fit py-4 px-3 text-white text-lg flex">
+          <div className="relative font-geom w-fit justify-start items-center h-fit py-4 px-3 text-white text-sm preG:text-lg flex">
             | {pages}
           </div>
         </div>
-        <div className="relative w-fit h-fit justify-end items-center">
+        <div className="relative w-fit h-fit justify-start sm:justify-end items-center flex">
           <Connect
             handleConnect={handleConnect}
             handleLensSignIn={handleLensSignIn}
@@ -67,7 +67,15 @@ export default function Dashboard() {
           />
         </div>
       </div>
-      <div className="relative w-full h-210 flex flex-row items-start justify-start px-8 pb-16 gap-14">
+      <div
+        className="relative w-full h-full mid:h-210 flex flex-col mid:flex-row items-start justify-start px-8 pb-16 gap-14"
+        style={{
+          minHeight:
+            typeof window !== "undefined" && window.innerWidth > 768
+              ? "calc(100vh - 10.5rem)"
+              : "calc(100vh - 12.5rem)",
+        }}
+      >
         <Options dispatch={dispatch} />
         <Switcher />
       </div>

@@ -41,7 +41,7 @@ const Video: FunctionComponent = (): JSX.Element => {
     likeAmount,
   } = useChannels();
   return (
-    <div className="sticky w-full h-full flex flex-col items-center justify-center bottom-0">
+    <div className="sticky w-full h-full flex flex-col items-center justify-center bottom-0 z-1">
       <Channels
         videos={videos}
         dispatch={dispatch}

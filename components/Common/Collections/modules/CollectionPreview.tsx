@@ -13,7 +13,7 @@ const CollectionPreview: FunctionComponent<CollectionPreviewProps> = ({
       <div className="relative w-3/4 h-fit items-center justify-center text-ama font-earl text-xl flex text-center break-all">
         {collectionDetails?.title}
       </div>
-      <div className="relative w-3/4 h-32 items-start justify-center text-white font-earl text-xs flex text-center px-3  overflow-y-scroll break-all  overflow-x-hidden whitespace-pre-wrap">
+      <div className="relative w-3/4 h-16 mid:h-32 items-start justify-center text-white font-earl text-xs flex text-center px-3  overflow-y-scroll break-all  overflow-x-hidden whitespace-pre-wrap">
         {collectionDetails?.description}
       </div>
       <div className="relative w-full h-fit items-center justify-center text-ama font-earl text-base flex">
@@ -22,7 +22,7 @@ const CollectionPreview: FunctionComponent<CollectionPreviewProps> = ({
       <div className="relative w-full h-fit flex flex-col">
         <div className="relative w-full h-full flex flex-col items-center justify-center pt-4">
           <div
-            className="relative w-60 h-60 rounded-br-lg rounded-tl-lg border border-white"
+            className="relative w-40 h-40 preG:w-60 preG:h-60 rounded-br-lg rounded-tl-lg border border-white"
             id="staticLoad"
           >
             {collectionDetails?.image !== "" && (

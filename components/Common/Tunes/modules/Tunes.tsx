@@ -39,9 +39,9 @@ const Tunes: FunctionComponent<TunesProps> = ({
     (state: RootState) => state.app.authStatusReducer.value
   );
   return (
-    <div className="relative w-full h-16 bg-chroma bg-cover flex gap-2 justify-center items-center">
+    <div className="relative w-full h-24 md:h-16 bg-chroma bg-cover flex gap-2 justify-center items-center">
       <div
-        className={`relative w-full h-16 flex gap-2 items-center justify-center flex-row bg-black/50 p-2`}
+        className={`relative w-full h-24 md:h-16 flex gap-2 items-center justify-center flex-row bg-black/50 p-2`}
       >
         <Player
           streamRef={streamRef}

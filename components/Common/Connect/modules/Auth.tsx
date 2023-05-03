@@ -2,6 +2,8 @@ import { FunctionComponent } from "react";
 import Wallet from "./Wallet";
 import Profile from "./Profile";
 import { AuthProps } from "../types/connect.types";
+import { useRouter } from "next/router";
+import Dashboard from "./Dashboard";
 
 const Auth: FunctionComponent<AuthProps> = ({
   connected,
@@ -13,8 +15,14 @@ const Auth: FunctionComponent<AuthProps> = ({
 }): JSX.Element => {
   let action: string;
   const decideStringAction = () => {
-    if (authStatus && connected && profile?.handle) {
-      action = "profile";
+    if (connected && authStatus) {
+      if (router.asPath.includes("dashboard")) {
+        if (profile?.handle) {
+          action = "profile";
+        }
+      } else {
+        action = "dashboard";
+      }
     }
     return action;
   };
@@ -22,6 +30,9 @@ const Auth: FunctionComponent<AuthProps> = ({
   switch (decideStringAction()) {
     case "profile":
       return <Profile profile={profile} />;
+
+    case "dashboard":
+      return <Dashboard router={router} />;
 
     default:
       return (

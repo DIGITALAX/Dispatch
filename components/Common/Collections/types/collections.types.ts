@@ -33,3 +33,8 @@ export type CollectionPreviewProps = {
   setPrice: (e: { value: number; currency: string }) => void;
   price: { value: number; currency: string }  | undefined;
 };
+
+export type CollectionPricesProps = {
+  collectionDetails: CollectionDetailsState;
+  handleCollectionPrices: (e: FormEvent, address: string) => void;
+}

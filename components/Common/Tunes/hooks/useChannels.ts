@@ -136,8 +136,6 @@ const useChannels = (): UseChannelsResults => {
     );
   };
 
-  console.log(videoSync);
-
   const refetchInteractions = async () => {
     let data: ApolloQueryResult<any>;
     try {

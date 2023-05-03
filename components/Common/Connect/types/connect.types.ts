@@ -36,3 +36,7 @@ export type WalletProps = {
 export type ProfileProps = {
   profile: Profile | undefined;
 };
+
+export type DashboardProps = {
+  router: NextRouter;
+};

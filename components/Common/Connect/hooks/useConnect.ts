@@ -126,7 +126,6 @@ const useConnect = (): UseConnectResults => {
     if (isSuccess) {
       if (data && router) {
         dispatch(setIsCreator(data));
-        router.push("/dashboard");
       } else {
         dispatch(setLookAround(true));
       }

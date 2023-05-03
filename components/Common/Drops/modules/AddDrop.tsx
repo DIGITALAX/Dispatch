@@ -39,7 +39,7 @@ const AddDrop: FunctionComponent<AddDropProps> = ({
       <div className="relative w-full h-fit items-start justify-start font-economicaB text-xl">
         ADD DROP
       </div>
-      <div className="relative w-full h-full flex flex-row">
+      <div className="relative w-full h-full flex flex-col gap-10 md:flex-row">
         <div className="relative w-full h-full flex flex-col gap-5">
           <div className="relative flex flex-col gap-2 w-1/2 h-fit">
             <div className="relative w-fit h-fit font-economica text-lg">
@@ -87,7 +87,7 @@ const AddDrop: FunctionComponent<AddDropProps> = ({
             />
           </div>
         </div>
-        <div className="relative w-full h-full flex flex-col">
+        <div className="relative w-full h-full flex flex-row md:flex-wrap flex-nowrap overflow-x-scroll md:overflow-x-auto">
           // all colections in drop
         </div>
       </div>

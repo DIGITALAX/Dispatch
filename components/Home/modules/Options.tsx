@@ -6,7 +6,7 @@ const Options: FunctionComponent<OptionsProps> = ({
   dispatch,
 }): JSX.Element => {
   return (
-    <div className="relative w-fit h-full flex flex-col gap-4 items-center justify-center text-center">
+    <div className="relative w-full mid:w-fit h-full flex flex-row mid:flex-col gap-5 items-start mid:items-center justify-center text-center sm:flex-nowrap flex-wrap">
       {Array.from([
         "collections",
         "drops",
@@ -18,7 +18,7 @@ const Options: FunctionComponent<OptionsProps> = ({
         return (
           <div
             key={index}
-            className={`relative w-fit h-fit gap-2 flex flex-col items-center justify-center ${
+            className={`relative w-16 h-fit gap-2 flex flex-col items-center justify-center ${
               index !== 0 && index !== 1 && "opacity-60"
             }`}
             onClick={
@@ -33,7 +33,7 @@ const Options: FunctionComponent<OptionsProps> = ({
                 "cursor-pointer active:scale-95 hover:opacity-70"
               }`}
             ></div>
-            <div className="relative w-fit h-fit font-earl text-white text-sm">
+            <div className="relative w-fit h-fit font-earl text-white text-sm break-words">
               {label}
             </div>
           </div>

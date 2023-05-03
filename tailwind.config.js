@@ -54,6 +54,15 @@ module.exports = {
       fontSize: {
         xxs: "0.5rem",
       },
+      screens: {
+        galaxy: "300px",
+        preG: "480px",
+        new: "500px",
+        mid: "950px",
+        tablet: "1260px",
+        wrap: "1360px",
+        alto: "1950px",
+      },
     },
   },
   plugins: [],

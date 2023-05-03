@@ -7,7 +7,12 @@ const Page404: FunctionComponent<Page404Props> = ({ router }): JSX.Element => {
   return (
     <div
       className="relative w-full flex flex-col items-center justify-center gap-4"
-      style={{ height: "calc(100vh - 10.5rem)" }}
+      style={{
+        height:
+          typeof window !== "undefined" && window.innerWidth > 768
+            ? "calc(100vh - 10.5rem)"
+            : "calc(100vh - 12.5rem)",
+      }}
     >
       <div className="relative w-full h-fit flex items-center justify-center font-earl text-white text-base sm:text-lg text-center row-start-1">
         Frequency out of range. <br />

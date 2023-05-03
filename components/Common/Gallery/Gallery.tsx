@@ -1,17 +1,27 @@
+import { INFURA_GATEWAY } from "@/lib/constants";
 import React, { FunctionComponent, useEffect, useRef } from "react";
 
 const images: string[] = [
-  "/images/home/gallery1.png",
-  "/images/home/gallery2.png",
-  "/images/home/gallery3.png",
-  "/images/home/gallery4.png",
-  "/images/home/gallery5.png",
-  "/images/home/gallery6.png",
-  "/images/home/gallery7.png",
-  "/images/home/gallery8.png",
-  "/images/home/gallery9.png",
-  "/images/home/gallery10.png",
-  "/images/home/gallery11.png",
+  `${INFURA_GATEWAY}/ipfs/QmPqg4kzgy8YhzNaLfuBZZKRfqW1eJALpga5BnaN9hmQt1`,
+  `${INFURA_GATEWAY}/ipfs/QmPiei2mqpuicg67JZq4Upa29qoWKZzeA2fkVEdGEx6R9z`,
+  `${INFURA_GATEWAY}/ipfs/QmNxET4gxnRduWfDVQocab47KBQja7Y942GU7KFUvFj2H1`,
+  `${INFURA_GATEWAY}/ipfs/QmQSk2qtuiMk2Tz829s3ojcKT9Hu4ZBXYmcxUruxZUgoy2`,
+  `${INFURA_GATEWAY}/ipfs/QmUEvzAsMQTUPfGCLTb6ykcXsKcfkK9wKSxM5XDJ7uozXW`,
+  `${INFURA_GATEWAY}/ipfs/QmNkrAeAdmV5fuQR78xkf13ufcGyt3hUucQBwNHBJPErG1`,
+  `${INFURA_GATEWAY}/ipfs/QmebE8idtZkGN6mBVNHkYjuuKWz13EKKgQSnzA5D5xYUwW`,
+  `${INFURA_GATEWAY}/ipfs/QmUSKQaRqeiHLjUfPJwuwhJMNp1CdStDAdgUMcdBW56MAT`,
+  `${INFURA_GATEWAY}/ipfs/QmPS7uBvR7f3WuDQURDEgZfSL9ydkR1Vy6o3LpX2jrw9NL`,
+  `${INFURA_GATEWAY}/ipfs/QmXmbtdi4vsMKEhiQfrhnq13KWqZpq2MPDoibRHJSoSQ1B`,
+  `${INFURA_GATEWAY}/ipfs/QmRDynVkyHX65MG6diwmbXTz6KNiWB2W1zvf2FJ5HV3rTV`,
+  `${INFURA_GATEWAY}/ipfs/QmQVC9hQbiSdtjxqgQojA5awCS6ty9zUCW8tvjj4YMHMy8`,
+  `${INFURA_GATEWAY}/ipfs/QmTLiFsx3eQaELcepmeM3aiF2vvNBXCnRAL8CGf9SY44Ep`,
+  `${INFURA_GATEWAY}/ipfs/Qmf7FUfwNqDJH2N8TFHkHfpUPorE1KRrFCsF614N9CxCNW`,
+  `${INFURA_GATEWAY}/ipfs/QmfKrFmuTVGhLnqD19XAvWstqxJLmv7Q98nNqd1rGEZbHf`,
+  `${INFURA_GATEWAY}/ipfs/QmQW6M42chDzb8GvkfwsyhvxmFqh8SsyXjkXY6XvJ41bkp`,
+  `${INFURA_GATEWAY}/ipfs/QmXYxHAG93HFaMarr8B7c96Uu7ZAcJJojeUfg4GdsqoDYa`,
+  `${INFURA_GATEWAY}/ipfs/QmaR2euFccMcy2jA3ijHqPUe5gSeAdwG73HbNfdqtGmi1q`,
+  `${INFURA_GATEWAY}/ipfs/QmXFK53vEo9QaE4LMEzwScxjSDECtmgBMCAhPEGVR1DKFe`,
+  `${INFURA_GATEWAY}/ipfs/QmUzdLgkbHdmDt5qmrKpnJnMj4MdL3fX3UQVjLZidkrER1`,
 ];
 
 const Gallery: FunctionComponent = (): JSX.Element => {

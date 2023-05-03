@@ -25,8 +25,13 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div
-        className="relative w-full flex flex-col items-center justify-center z-1"
-        style={{ height: "calc(100vh - 10.5rem)" }}
+        className="relative w-full flex flex-col items-center justify-center"
+        style={{
+          height:
+            typeof window !== "undefined" && window.innerWidth > 768
+              ? "calc(100vh - 10.5rem)"
+              : "calc(100vh - 12.5rem)",
+        }}
       >
         <Gallery />
         <div className="relative font-arcade w-full justify-center items-center h-fit text-white text-2xl flex">
