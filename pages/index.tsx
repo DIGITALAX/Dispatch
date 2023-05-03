@@ -45,8 +45,7 @@ export default function Home() {
         {lookAround && (
           <div className="relative w-fit h-fit text-ama font-economica text-center flex items-center justify center break-words flex flex-col gap-2">
             <div className="relative w-fit h-fit items-center justify-center flex">
-              You aren't whitelisted as a creator with Chromadin. Would you like
-              to be?
+              You haven’t made it as a creator in the beta yet.
             </div>
             <a
               href="https://www.digitalax.xyz"
@@ -54,7 +53,7 @@ export default function Home() {
               rel="noreferrer"
               className="relative w-fit h-fit items-center justify-center flex underline"
             >
-              Reach out.
+              Let’s change that?
             </a>
           </div>
         )}

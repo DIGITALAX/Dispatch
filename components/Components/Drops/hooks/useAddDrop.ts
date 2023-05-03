@@ -103,7 +103,7 @@ const useAddDrop = () => {
         setSuccessModal({
           actionOpen: true,
           actionMedia: dropValues.image,
-          actionLink: `https://www.chromadin.xyz${dropValues.title}`,
+          actionLink: `http://localhost:3001/#collect?option=history?search=${dropValues.title}`,
           actionMessage: "Drop Live! You can view your live drop here:",
         })
       );
@@ -126,8 +126,8 @@ const useAddDrop = () => {
         setIndexModal({
           actionValue: false,
           actionMessage: "",
-        })
-      }, 4000)
+        });
+      }, 4000);
     }
     setAddDropLoading(false);
   };
