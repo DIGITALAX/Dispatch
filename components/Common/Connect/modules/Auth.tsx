@@ -2,7 +2,6 @@ import { FunctionComponent } from "react";
 import Wallet from "./Wallet";
 import Profile from "./Profile";
 import { AuthProps } from "../types/connect.types";
-import { useRouter } from "next/router";
 import Dashboard from "./Dashboard";
 
 const Auth: FunctionComponent<AuthProps> = ({

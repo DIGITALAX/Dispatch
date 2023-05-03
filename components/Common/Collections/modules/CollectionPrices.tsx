@@ -7,6 +7,7 @@ import { CollectionPricesProps } from "../types/collections.types";
 const CollectionPrices: FunctionComponent<CollectionPricesProps> = ({
   collectionDetails,
   handleCollectionPrices,
+  loader,
 }): JSX.Element => {
   return (
     <div className="relative flex flex-col gap-2 w-full h-fit font-economica">
@@ -62,6 +63,8 @@ const CollectionPrices: FunctionComponent<CollectionPricesProps> = ({
                   : "14"
               }
               defaultValue={String(collectionDetails?.tokenPrices?.[index])}
+              loader={loader}
+              disabled={collectionDetails?.disabled}
             />
             <div className="relative w-fit h-fit flex items-center justify-center text-xs">
               {value[1]}

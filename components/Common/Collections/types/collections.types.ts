@@ -31,10 +31,33 @@ export type AddCollectionProps = {
 export type CollectionPreviewProps = {
   collectionDetails: CollectionDetailsState;
   setPrice: (e: { value: number; currency: string }) => void;
-  price: { value: number; currency: string }  | undefined;
+  price: { value: number; currency: string } | undefined;
 };
 
 export type CollectionPricesProps = {
   collectionDetails: CollectionDetailsState;
   handleCollectionPrices: (e: FormEvent, address: string) => void;
+  loader: boolean;
+};
+
+export interface Collection {
+  amount: string;
+  collectionId: string;
+  name: string;
+  owner: string;
+  drop: {
+    name: string;
+    image: string;
+  };
+  uri: {
+    description: string;
+    external_url: string;
+    image: string;
+    name: string;
+    type: string;
+  };
+  basePrices: string[];
+  acceptedTokens: string[];
+  tokenIds: string[];
+  soldTokens: string[] | null;
 }

@@ -53,6 +53,8 @@ const AddCollection: FunctionComponent<AddCollectionProps> = ({
               type={"string"}
               width="full"
               defaultValue={collectionDetails?.title}
+              loader={addCollectionLoading}
+              disabled={collectionDetails?.disabled}
             />
           </div>
           <div className="relative flex flex-col gap-2 w-full h-fit">
@@ -64,6 +66,8 @@ const AddCollection: FunctionComponent<AddCollectionProps> = ({
               changeFunction={(e) => handleCollectionDescription(e)}
               width="full"
               defaultValue={collectionDetails?.description}
+              loader={addCollectionLoading}
+              disabled={collectionDetails?.disabled}
             />
           </div>
           <div className="relative flex flex-col new:flex-row w-full h-full items-start justify-start gap-5 new:gap-10 new:pb-0 pb-5">
@@ -91,6 +95,8 @@ const AddCollection: FunctionComponent<AddCollectionProps> = ({
                   type={"number"}
                   width={"full"}
                   defaultValue={String(collectionDetails?.amount)}
+                  loader={addCollectionLoading}
+                  disabled={collectionDetails?.disabled}
                 />
               </div>
             </div>
@@ -104,6 +110,7 @@ const AddCollection: FunctionComponent<AddCollectionProps> = ({
               <CollectionPrices
                 collectionDetails={collectionDetails}
                 handleCollectionPrices={handleCollectionPrices}
+                loader={addCollectionLoading}
               />
             </div>
           </div>
@@ -113,6 +120,7 @@ const AddCollection: FunctionComponent<AddCollectionProps> = ({
               width={"28"}
               functionAdd={addCollection}
               loader={addCollectionLoading}
+              disabled={collectionDetails?.disabled}
             />
           </div>
         </div>

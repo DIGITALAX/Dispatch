@@ -4,8 +4,14 @@ import { graphClient } from "@/lib/subgraph/client";
 const COLLECTIONS = `
   query {
     collectionMinteds(where: $where, orderDirection: desc) {
+      uri
+      acceptedTokens
+      basePrices
+      amount
       name
       collectionId
+      soldTokens
+      tokenIds
     }
   }
 `;

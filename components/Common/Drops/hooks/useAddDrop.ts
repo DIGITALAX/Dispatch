@@ -1,7 +1,7 @@
 import getAllCollections from "@/graphql/subgraph/queries/getAllCollections";
 import getAllDrops from "@/graphql/subgraph/queries/getAllDrops";
 import getCollectionsInDrop from "@/graphql/subgraph/queries/getCollectionsInDrop";
-import { CHROMADIN_DROP_CONTRACT } from "@/lib/constants";
+import { CHROMADIN_DROP_CONTRACT, MUMBAI_DROP } from "@/lib/constants";
 import { setAllDropsRedux } from "@/redux/reducers/allDropsSlice";
 import { setDropDetails } from "@/redux/reducers/dropDetailsSlice";
 import { setIndexModal } from "@/redux/reducers/indexModalSlice";
@@ -34,7 +34,7 @@ const useAddDrop = () => {
   const [chosenCollections, setChosenCollections] = useState<string[]>([]);
 
   const { config, isSuccess } = usePrepareContractWrite({
-    address: CHROMADIN_DROP_CONTRACT,
+    address: MUMBAI_DROP,
     abi: [
       {
         inputs: [
@@ -78,11 +78,14 @@ const useAddDrop = () => {
         method: "POST",
         body: JSON.stringify({
           name: dropValues.title,
-          image: dropValues.image,
+          image: `ipfs://${dropValues.image}`,
         }),
       });
       const responseJSON = await response.json();
-      setDropArgs([dropValues.collectionIds as any, responseJSON]);
+      setDropArgs([
+        dropValues.collectionIds as any,
+        `ipfs://${responseJSON.cid}`,
+      ]);
     } catch (err: any) {
       console.error(err.message);
     }
@@ -103,7 +106,7 @@ const useAddDrop = () => {
         setSuccessModal({
           actionOpen: true,
           actionMedia: dropValues.image,
-          actionLink: `http://localhost:3001/#collect?option=history?search=${dropValues.title}`,
+          actionLink: `http://www.chromadin.xyz/#collect?option=history?search=${dropValues.title}`,
           actionMessage: "Drop Live! You can view your live drop here:",
         })
       );

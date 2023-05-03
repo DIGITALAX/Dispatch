@@ -19,7 +19,7 @@ export default function Home() {
     (state: RootState) => state.app.lookAroundReducer.value
   );
   return (
-    <div className="relative w-full h-full flex flex-col bg-offBlack">
+    <div className="relative w-full h-full flex flex-col bg-offBlack items-center justify-center">
       <Head>
         <title>Chromadin Dispatcher</title>
         <link rel="icon" href="/favicon.ico" />
@@ -34,7 +34,7 @@ export default function Home() {
         }}
       >
         <Gallery />
-        <div className="relative font-arcade w-full justify-center items-center h-fit text-white text-2xl flex">
+        <div className="relative font-arcade w-full justify-center items-center h-fit text-white text-2xl flex text-center">
           chromadin dispatcher
         </div>
         <div className="relative w-full h-fit justify-center items-center">

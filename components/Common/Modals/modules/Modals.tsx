@@ -55,7 +55,7 @@ const Modals = () => {
           message={successModal.message}
         />
       )}
-      {indexingModal?.value && <Indexing message={indexingModal.message} />}
+      {!indexingModal?.value && <Indexing message={indexingModal.message} />}
     </>
   );
 };

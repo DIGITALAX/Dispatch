@@ -14,7 +14,7 @@ import { useEffect, useState } from "react";
 import generateChallenge from "@/graphql/lens/queries/generateChallenge";
 import getDefaultProfile from "@/graphql/lens/queries/getDefaultProfile";
 import { useContractRead } from "wagmi";
-import { CHROMADIN_ACCESS_CONTROLS } from "@/lib/constants";
+import { CHROMADIN_ACCESS_CONTROLS, MUMBAI_ACCESS_CONTROLS } from "@/lib/constants";
 import { setIsCreator } from "@/redux/reducers/isCreatorSlice";
 import { useRouter } from "next/router";
 import { setAuthStatus } from "@/redux/reducers/authStatusSlice";
@@ -30,7 +30,7 @@ const useConnect = (): UseConnectResults => {
   const router = useRouter();
 
   const { data, isSuccess } = useContractRead({
-    address: CHROMADIN_ACCESS_CONTROLS,
+    address: MUMBAI_ACCESS_CONTROLS,
     abi: [
       {
         inputs: [

@@ -32,7 +32,7 @@ const Error: FunctionComponent<ErrorProps> = ({
               </div>
               <div className="relative w-full h-fit row-start-2 grid grid-flow-col auto-cols-auto px-4">
                 <div className="relative w-fit h-fit font-earl text-white text-xl place-self-center text-center">
-                  {message}
+                  {message} 
                 </div>
               </div>
             </div>

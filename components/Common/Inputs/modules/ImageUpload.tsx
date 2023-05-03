@@ -11,14 +11,16 @@ const ImageUpload: FunctionComponent<ImageUploadProps> = ({
   uploadImage,
   loaderGeneral,
   setImageLoading,
-  type
+  type,
 }): JSX.Element => {
   return (
     <div className="relative w-40 h-40 border border-white rounded-md flex flex-col p-3">
       {image !== "" && (
         <div className="absolute top-0 left-0 w-full h-full flex object-cover">
           <Image
-            src={`${INFURA_GATEWAY}/ipfs/${image}`}
+            src={`${INFURA_GATEWAY}/ipfs/${
+              image.includes("ipfs://") ? image.split("ipfs://")[1] : image
+            }`}
             layout="fill"
             objectFit="cover"
             className="rounded-md w-full h-full flex"
@@ -28,7 +30,9 @@ const ImageUpload: FunctionComponent<ImageUploadProps> = ({
       )}
       <div className="relative w-full h-full items-end justify-end flex">
         <label
-          className="relative w-8 h-8 rounded-sm bg-azul flex flex-col items-center justify-center cursor-pointer active:scale-95"
+          className={`"relative w-8 h-8 rounded-sm bg-azul flex flex-col items-center justify-center ${
+            !loaderGeneral && "cursor-pointer active:scale-95"
+          }`}
           onChange={(e: FormEvent) => uploadImage(e, setImageLoading, type)}
         >
           <div

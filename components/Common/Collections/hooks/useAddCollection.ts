@@ -1,6 +1,8 @@
 import getAllCollections from "@/graphql/subgraph/queries/getAllCollections";
-import { CHROMADIN_COLLECTION_CONTRACT } from "@/lib/constants";
-import { setAllCollectionsRedux } from "@/redux/reducers/allCollectionsSlice";
+import {
+  CHROMADIN_COLLECTION_CONTRACT,
+  MUMBAI_COLLECTION,
+} from "@/lib/constants";
 import { setCollectionDetails } from "@/redux/reducers/collectionDetailsSlice";
 import { setIndexModal } from "@/redux/reducers/indexModalSlice";
 import { setModal } from "@/redux/reducers/modalSlice";
@@ -13,7 +15,6 @@ import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
 
 const useAddCollection = () => {
   const dispatch = useDispatch();
-  const { address } = useAccount();
   const availableTokens = [
     ["WMATIC", "0x6199a505ec1707695ce49b59a07a147f2d50f22d"],
     ["WETH", "0x7ceb23fd6bc0add59e62ac25578270cff1b9f619"],
@@ -40,7 +41,7 @@ const useAddCollection = () => {
   >();
 
   const { config, isSuccess } = usePrepareContractWrite({
-    address: CHROMADIN_COLLECTION_CONTRACT,
+    address: MUMBAI_COLLECTION,
     abi: [
       {
         inputs: [
@@ -92,6 +93,7 @@ const useAddCollection = () => {
         actionAmount: collectionValues?.amount,
         actionAcceptedTokens: collectionValues?.acceptedTokens,
         actionTokenPrices: collectionValues?.tokenPrices,
+        actionDisabled: false,
       })
     );
   };
@@ -105,6 +107,7 @@ const useAddCollection = () => {
         actionAmount: collectionValues?.amount,
         actionAcceptedTokens: collectionValues?.acceptedTokens,
         actionTokenPrices: collectionValues?.tokenPrices,
+        actionDisabled: false,
       })
     );
   };
@@ -118,6 +121,7 @@ const useAddCollection = () => {
         actionAmount: Number((e.target as HTMLFormElement).value),
         actionAcceptedTokens: collectionValues?.acceptedTokens,
         actionTokenPrices: collectionValues?.tokenPrices,
+        actionDisabled: false,
       })
     );
   };
@@ -129,7 +133,7 @@ const useAddCollection = () => {
     const tokenPrices = collectionValues?.tokenPrices && [
       ...collectionValues?.tokenPrices,
     ];
-    const tokenIndex = acceptedTokens.indexOf(address);
+    const tokenIndex = acceptedTokens?.indexOf(address);
 
     setEditingIndex(tokenIndex);
 
@@ -155,6 +159,7 @@ const useAddCollection = () => {
         actionAmount: collectionValues?.amount,
         actionAcceptedTokens: acceptedTokens,
         actionTokenPrices: tokenPrices,
+        actionDisabled: false,
       })
     );
   };
@@ -185,18 +190,18 @@ const useAddCollection = () => {
         body: JSON.stringify({
           name: collectionValues?.title,
           description: collectionValues?.description,
-          image: collectionValues?.image,
+          image: `ipfs://${collectionValues?.image}`,
           external_url: "https://www.chromadin.xyz/",
         }),
       });
       const responseJSON = await response.json();
       setCollectionArgs([
-        responseJSON,
+        `ipfs://${responseJSON.cid}`,
         collectionValues?.amount as any,
         collectionValues?.title,
         collectionValues?.acceptedTokens as any,
-        collectionValues?.tokenPrices.map(
-          (price) => BigInt(price) * BigInt(10 ** 18)
+        collectionValues?.tokenPrices.map((price) =>
+          (BigInt(price) * BigInt(10 ** 18)).toString()
         ) as any,
       ]);
     } catch (err: any) {
@@ -216,8 +221,6 @@ const useAddCollection = () => {
       );
       const tx = await writeAsync?.();
       await tx?.wait();
-      const newCollections = await getAllCollections({ creator: address });
-      dispatch(setAllCollectionsRedux(newCollections.data.collectionMinteds));
       dispatch(
         setIndexModal({
           actionValue: false,
@@ -241,6 +244,7 @@ const useAddCollection = () => {
           actionAmount: 1,
           actionAcceptedTokens: [],
           actionTokenPrices: [],
+          actionDisabled: false,
         })
       );
     } catch (err: any) {

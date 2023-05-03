@@ -13,7 +13,7 @@ const CollectionPreview: FunctionComponent<CollectionPreviewProps> = ({
       <div className="relative w-3/4 h-fit items-center justify-center text-ama font-earl text-xl flex text-center break-all">
         {collectionDetails?.title}
       </div>
-      <div className="relative w-3/4 h-16 mid:h-32 items-start justify-center text-white font-earl text-xs flex text-center px-3  overflow-y-scroll break-all  overflow-x-hidden whitespace-pre-wrap">
+      <div className="relative w-3/4 max-h-16 mid:max-h-32 items-start justify-center text-white font-earl text-xs flex text-center px-3  overflow-y-scroll break-all  overflow-x-hidden whitespace-pre-wrap">
         {collectionDetails?.description}
       </div>
       <div className="relative w-full h-fit items-center justify-center text-ama font-earl text-base flex">
@@ -27,7 +27,13 @@ const CollectionPreview: FunctionComponent<CollectionPreviewProps> = ({
           >
             {collectionDetails?.image !== "" && (
               <Image
-                src={`${INFURA_GATEWAY}/ipfs/${collectionDetails?.image}`}
+                src={
+                  collectionDetails?.image?.includes("ipfs://")
+                    ? `${INFURA_GATEWAY}/ipfs/${
+                        collectionDetails?.image?.split("ipfs://")[1]
+                      }`
+                    : `${INFURA_GATEWAY}/ipfs/${collectionDetails?.image}`
+                }
                 className="rounded-br-lg rounded-tl-lg w-full h-full"
                 layout="fill"
                 draggable={false}
@@ -73,9 +79,11 @@ const CollectionPreview: FunctionComponent<CollectionPreviewProps> = ({
                     }`}
                     key={index}
                     onClick={() => {
-                      const index = collectionDetails?.acceptedTokens?.findIndex(
-                        (token) => token.toLowerCase() === item[2].toLowerCase()
-                      );
+                      const index =
+                        collectionDetails?.acceptedTokens?.findIndex(
+                          (token) =>
+                            token.toLowerCase() === item[2].toLowerCase()
+                        );
                       if (index !== undefined && index >= 0) {
                         setPrice({
                           value: collectionDetails?.tokenPrices[index],

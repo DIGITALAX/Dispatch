@@ -7,6 +7,8 @@ const FillIn: FunctionComponent<FillInProps> = ({
   type,
   width,
   defaultValue,
+  loader,
+  disabled,
 }): JSX.Element => {
   return (
     <>
@@ -16,6 +18,7 @@ const FillIn: FunctionComponent<FillInProps> = ({
           style={{ resize: "none" }}
           onChange={changeFunction}
           defaultValue={defaultValue}
+          disabled={loader || disabled}
         ></textarea>
       ) : (
         <input
@@ -24,6 +27,7 @@ const FillIn: FunctionComponent<FillInProps> = ({
           type={type}
           min={0}
           defaultValue={defaultValue}
+          disabled={loader || disabled}
         />
       )}
     </>

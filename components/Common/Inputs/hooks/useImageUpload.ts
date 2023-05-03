@@ -63,6 +63,7 @@ const useImageUpload = () => {
             actionAmount: collectionValues?.amount,
             actionAcceptedTokens: collectionValues?.acceptedTokens,
             actionTokenPrices: collectionValues?.tokenPrices,
+            actionDisabled: false
           })
         );
       }

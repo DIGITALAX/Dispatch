@@ -51,6 +51,7 @@ const AddDrop: FunctionComponent<AddDropProps> = ({
               type="string"
               width="full"
               defaultValue={dropDetails.title}
+              loader={addDropLoading}
             />
           </div>
           <div className="relative flex flex-col gap-2 w-1/2 h-fit">

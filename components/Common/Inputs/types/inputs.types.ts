@@ -6,6 +6,8 @@ export type FillInProps = {
   type?: string;
   width: string;
   defaultValue: string;
+  loader?: boolean;
+  disabled?: boolean;
 };
 
 export type ButtonAddProps = {
@@ -13,6 +15,7 @@ export type ButtonAddProps = {
   functionAdd: () => Promise<void>;
   loader: boolean;
   width: string;
+  disabled?: boolean;
 };
 
 export type ImageUploadProps = {
