@@ -11,8 +11,11 @@ const DropsSwitcher: FunctionComponent = (): JSX.Element => {
   const dropSwitcher = useSelector(
     (state: RootState) => state.app.dropSwitcherReducer.value
   );
-  const dropDetails= useSelector(
+  const dropDetails = useSelector(
     (state: RootState) => state.app.dropDetailsReducer
+  );
+  const allCollections = useSelector(
+    (state: RootState) => state.app.allCollectionsReducer.value
   );
   const allDropsRedux = useSelector(
     (state: RootState) => state.app.allDropsReducer.value
@@ -29,7 +32,8 @@ const DropsSwitcher: FunctionComponent = (): JSX.Element => {
     setChosenCollections,
     chosenCollections,
     imageLoading,
-    setImageLoading
+    setImageLoading,
+    alreadyInDrop,
   } = useAddDrop();
   const { allDrops } = useAllDrops();
 
@@ -50,6 +54,8 @@ const DropsSwitcher: FunctionComponent = (): JSX.Element => {
           setOpen={setOpen}
           setImageLoading={setImageLoading}
           dropDetails={dropDetails}
+          alreadyInDrop={alreadyInDrop}
+          allCollections={allCollections}
         />
       );
 

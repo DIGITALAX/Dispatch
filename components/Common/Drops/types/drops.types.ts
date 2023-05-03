@@ -1,6 +1,7 @@
 import { DropDetailsState } from "@/redux/reducers/dropDetailsSlice";
 import { FormEvent } from "react";
 import { AnyAction, Dispatch } from "redux";
+import { Collection } from "../../Collections/types/collections.types";
 
 export type AllDropsProps = {
   dispatch: Dispatch<AnyAction>;
@@ -26,4 +27,16 @@ export type AddDropProps = {
   setOpen: (e: boolean) => void;
   setImageLoading: (e: boolean) => void;
   dropDetails: DropDetailsState;
+  allCollections: Collection[];
+  alreadyInDrop: string[];
 };
+
+export interface Drop {
+  dropId: string;
+  creator: string;
+  collectionIds: string;
+  uri: {
+    name: string;
+    image: string;
+  };
+}

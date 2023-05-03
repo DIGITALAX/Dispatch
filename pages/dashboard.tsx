@@ -68,7 +68,7 @@ export default function Dashboard() {
         </div>
       </div>
       <div
-        className="relative w-full h-full mid:h-210 flex flex-col mid:flex-row items-start justify-start px-8 pb-16 gap-14"
+        className="relative w-full h-full lg:h-210 flex flex-col mid:flex-row items-start justify-start px-8 pb-16 gap-14"
         style={{
           minHeight:
             typeof window !== "undefined" && window.innerWidth > 768
@@ -77,7 +77,9 @@ export default function Dashboard() {
         }}
       >
         <Options dispatch={dispatch} />
-        <Switcher />
+        <div style={{ height: "100%", overflowY: "auto" }}>
+          <Switcher />
+        </div>
       </div>
     </div>
   );

@@ -19,6 +19,7 @@ const getAllDrops = async (where: any): Promise<FetchResult<any>> => {
       where,
     },
     fetchPolicy: "no-cache",
+    errorPolicy: "all"
   });
 };
 

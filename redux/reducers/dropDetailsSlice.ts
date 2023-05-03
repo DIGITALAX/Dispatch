@@ -4,12 +4,14 @@ export interface DropDetailsState {
   title: string;
   image: string;
   collectionIds: number[];
+  disabled: boolean;
 }
 
 const initialDropDetailsState: DropDetailsState = {
-  title: "",
+  title: "Drop Title",
   image: "",
   collectionIds: [],
+  disabled: false,
 };
 
 export const dropDetailsSlice = createSlice({
@@ -18,11 +20,19 @@ export const dropDetailsSlice = createSlice({
   reducers: {
     setDropDetails: (
       state: DropDetailsState,
-      { payload: { actionTitle, actionImage, actionCollectionIds } }
+      {
+        payload: {
+          actionTitle,
+          actionImage,
+          actionCollectionIds,
+          actionDisabled,
+        },
+      }
     ) => {
       state.title = actionTitle;
       state.image = actionImage;
       state.collectionIds = actionCollectionIds;
+      state.disabled = actionDisabled;
     },
   },
 });

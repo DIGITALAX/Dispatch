@@ -19,8 +19,11 @@ const useAddDrop = () => {
   const dropValues = useSelector(
     (state: RootState) => state.app.dropDetailsReducer
   );
-  const auth = useSelector(
-    (state: RootState) => state.app.authStatusReducer.value
+  const dropSwitcher = useSelector(
+    (state: RootState) => state.app.dropSwitcherReducer.value
+  );
+  const allCollections = useSelector(
+    (state: RootState) => state.app.allCollectionsReducer.value
   );
   const [imageLoading, setImageLoading] = useState<boolean>(false);
   const [addDropLoading, setAddDropLoading] = useState<boolean>(false);
@@ -32,6 +35,7 @@ const useAddDrop = () => {
   >();
   const [open, setOpen] = useState<boolean>(false);
   const [chosenCollections, setChosenCollections] = useState<string[]>([]);
+  const [alreadyInDrop, setAlreadyInDrop] = useState<string[]>([]);
 
   const { config, isSuccess } = usePrepareContractWrite({
     address: MUMBAI_DROP,
@@ -83,7 +87,14 @@ const useAddDrop = () => {
       });
       const responseJSON = await response.json();
       setDropArgs([
-        dropValues.collectionIds as any,
+        chosenCollections.map((chosenName) => {
+          const matchingCollection = allCollections.find(
+            (collection) => collection.name === chosenName
+          );
+          return matchingCollection
+            ? Number(matchingCollection.collectionId)
+            : null;
+        }) as any,
         `ipfs://${responseJSON.cid}`,
       ]);
     } catch (err: any) {
@@ -115,6 +126,7 @@ const useAddDrop = () => {
           actionTitle: "",
           actionImage: "",
           actionCollectionIds: [],
+          actionDisabled: false,
         })
       );
     } catch (err: any) {
@@ -126,10 +138,12 @@ const useAddDrop = () => {
         })
       );
       setTimeout(() => {
-        setIndexModal({
-          actionValue: false,
-          actionMessage: "",
-        });
+        dispatch(
+          setIndexModal({
+            actionValue: false,
+            actionMessage: "",
+          })
+        );
       }, 4000);
     }
     setAddDropLoading(false);
@@ -141,6 +155,7 @@ const useAddDrop = () => {
         actionTitle: (e.target as HTMLFormElement).value,
         actionImage: dropValues.image,
         actionCollectionIds: dropValues.collectionIds,
+        actionDisabled: false,
       })
     );
   };
@@ -153,12 +168,28 @@ const useAddDrop = () => {
       const drops = await getAllDrops({
         creator: address,
       });
-      const collIds = colls.data.collectionMinteds.map(
-        (c: any) => c.collectionId
+
+      const dropIds = drops.data.dropCreateds.flatMap(
+        (d: any) => d.collectionIds
       );
-      const dropIds = drops.data.dropCreateds.map((d: any) => d.collectionId);
       setAvailableCollectionIds(
-        collIds.filter((id: string) => !dropIds.includes(id))
+        colls.data.collectionMinteds
+          .filter((c: any) => !dropIds.includes(c.collectionId))
+          .map((c: any) => c.name)
+      );
+      setChosenCollections(
+        allCollections
+          .filter((cd) =>
+            (dropValues.collectionIds as any).includes(cd.collectionId)
+          )
+          .map((cd) => cd.name)
+      );
+      setAlreadyInDrop(
+        allCollections
+          .filter((cd) =>
+            (dropValues.collectionIds as any).includes(cd.collectionId)
+          )
+          .map((cd) => cd.name)
       );
     } catch (err: any) {
       console.error(err.message);
@@ -172,10 +203,10 @@ const useAddDrop = () => {
   }, [isSuccess]);
 
   useEffect(() => {
-    if (address && auth) {
+    if (address && dropSwitcher === "add") {
       getAvailableCollections();
     }
-  }, []);
+  }, [dropSwitcher]);
 
   return {
     addDropLoading,
@@ -188,6 +219,7 @@ const useAddDrop = () => {
     setOpen,
     imageLoading,
     setImageLoading,
+    alreadyInDrop,
   };
 };
 

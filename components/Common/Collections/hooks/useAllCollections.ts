@@ -37,12 +37,14 @@ const useAllCollections = () => {
               .replace(/"/g, "")
               .trim()
           );
-          if (drops.data.dropCreateds.length > 0) {
-            const collectionDrops = drops.data.dropCreateds
-              .filter((drop: any) =>
-                drop.collectionIds.includes(collection.collectionId)
-              )
-              .sort((a: any, b: any) => b.dropId - a.dropId);
+
+          const collectionDrops = drops.data.dropCreateds
+            .filter((drop: any) =>
+              drop.collectionIds.includes(collection.collectionId)
+            )
+            .sort((a: any, b: any) => b.dropId - a.dropId);
+
+          if (collectionDrops.length > 0) {
             dropjson = await fetchIPFSJSON(
               collectionDrops[0]?.dropURI
                 ?.split("ipfs://")[1]
@@ -74,8 +76,15 @@ const useAllCollections = () => {
     }
   }, []);
 
+  console.log({m: successModal.message})
+
   useEffect(() => {
-    if (successModal.message.includes("Collection Minted!")) {
+    console.log("hi")
+    if (
+      successModal.message.includes("Collection Minted!") ||
+      successModal.message.includes("Drop Live!")
+    ) {
+      console.log("here");
       getCollectionsAll();
     }
   }, [successModal.open]);

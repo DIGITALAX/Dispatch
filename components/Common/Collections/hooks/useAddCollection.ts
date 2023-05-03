@@ -173,7 +173,8 @@ const useAddCollection = () => {
       collectionValues.acceptedTokens.length < 1 ||
       collectionValues.tokenPrices.length < 1 ||
       collectionValues.acceptedTokens.length !==
-        collectionValues.tokenPrices.length
+        collectionValues.tokenPrices.length ||
+      collectionValues.tokenPrices.some((value) => /^0+$/.test(String(value)))
     ) {
       dispatch(
         setModal({
@@ -256,10 +257,12 @@ const useAddCollection = () => {
         })
       );
       setTimeout(() => {
-        setIndexModal({
-          actionValue: false,
-          actionMessage: "",
-        });
+        dispatch(
+          setIndexModal({
+            actionValue: false,
+            actionMessage: "",
+          })
+        );
       }, 4000);
     }
     setAddCollectionLoading(false);

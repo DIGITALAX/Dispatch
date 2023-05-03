@@ -37,4 +37,5 @@ export type DropDownProps = {
   chosen: string[];
   open: boolean;
   setOpen: (e: boolean) => void;
+  alreadyInDrop: string[];
 };

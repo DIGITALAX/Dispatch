@@ -8,11 +8,13 @@ const DropDown: FunctionComponent<DropDownProps> = ({
   chosen,
   open,
   setOpen,
+  alreadyInDrop,
 }): JSX.Element => {
   return (
-    <div className="relative w-40 h-fit flex flex-col items-start justify-center text-white font-economica text-center">
+    <div className="relative w-40 min-w-fit h-fit flex flex-col items-start justify-center text-white font-economica text-center">
       <div
-        className="relative w-full h-8 border border-white rounded-lg py-1.5 px-3 flex items-center justify-center flex-row cursor-pointer"
+        className={`relative min-w-fit w-full h-8 border border-white rounded-lg py-1.5 px-3 flex items-center justify-center flex-row cursor-pointer
+        `}
         onClick={() =>
           setOpen(
             values.filter((value) => !chosen.includes(value)).length > 0
@@ -21,8 +23,8 @@ const DropDown: FunctionComponent<DropDownProps> = ({
           )
         }
       >
-        <div className="relative w-full h-full flex items-center justify-center text-center">
-          {values.filter((value) => !chosen.includes(value))[0]}
+        <div className="relative w-full h-full flex items-center justify-center text-center whitespace-nowrap">
+          Available Collections
         </div>
         <div className="relative w-full h-fit flex items-center justify-end -top-px">
           <FaSortDown />
@@ -52,14 +54,21 @@ const DropDown: FunctionComponent<DropDownProps> = ({
       <div className="relative w-40 h-14 flex flex-row flex-wrap text-xs gap-1 py-3 overflow-y-scroll">
         {chosen.length > 0 &&
           chosen.map((label: string, index: number) => {
+            const shouldFilter =
+              alreadyInDrop.includes(label) && chosen.length > 1;
             return (
               <div
-                className="relative w-fit h-fit py-px px-1 border border-white rounded-md cursor-pointer"
+                className={`relative w-fit h-fit py-px px-1 border border-white rounded-md hover:opacity-70 ${
+                  !alreadyInDrop.includes(label) && "cursor-pointer"
+                }`}
                 key={index}
                 onClick={() => {
-                  setChosen(
-                    chosen.filter((chosenLabel) => chosenLabel !== label)
-                  );
+                  if (!shouldFilter) {
+                    setChosen(
+                      chosen.filter((chosenLabel) => chosenLabel !== label)
+                    );
+                  }
+                  setOpen(false);
                 }}
               >
                 {label}

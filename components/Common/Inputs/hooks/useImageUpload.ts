@@ -52,6 +52,7 @@ const useImageUpload = () => {
             actionTitle: dropValues.title,
             actionImage: mainImage,
             actionCollectionIds: dropValues.collectionIds,
+            actionDisabled: false,
           })
         );
       } else if (type === "collection") {
@@ -63,7 +64,7 @@ const useImageUpload = () => {
             actionAmount: collectionValues?.amount,
             actionAcceptedTokens: collectionValues?.acceptedTokens,
             actionTokenPrices: collectionValues?.tokenPrices,
-            actionDisabled: false
+            actionDisabled: false,
           })
         );
       }
