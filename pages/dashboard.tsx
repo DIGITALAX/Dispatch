@@ -37,7 +37,7 @@ export default function Dashboard() {
     return <FetchMoreLoading size={"4rem"} height={"calc(100vh - 10.5rem)"} />;
   }
 
-  if ((!authorized || !authStatus) && !loading) {
+  if (!authorized && !loading) {
     return <Page404 router={router} />;
   }
 
