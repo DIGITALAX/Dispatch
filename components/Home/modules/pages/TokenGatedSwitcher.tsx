@@ -1,4 +1,4 @@
-import AllPosts from "@/components/Components/TokenGated/modules/AllPosts";
+import AllPosts from "@/components/Common/TokenGated/modules/AllPosts";
 import { RootState } from "@/redux/store";
 import { FunctionComponent } from "react";
 import { useSelector } from "react-redux";

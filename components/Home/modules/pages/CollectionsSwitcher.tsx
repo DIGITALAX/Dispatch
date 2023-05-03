@@ -1,8 +1,8 @@
-import useAddCollection from "@/components/Components/Collections/hooks/useAddCollection";
-import useAllCollections from "@/components/Components/Collections/hooks/useAllCollections";
-import AddCollection from "@/components/Components/Collections/modules/AddCollection";
-import AllCollections from "@/components/Components/Collections/modules/AllCollections";
-import useImageUpload from "@/components/Components/Inputs/hooks/useImageUpload";
+import useAddCollection from "@/components/Common/Collections/hooks/useAddCollection";
+import useAllCollections from "@/components/Common/Collections/hooks/useAllCollections";
+import AddCollection from "@/components/Common/Collections/modules/AddCollection";
+import AllCollections from "@/components/Common/Collections/modules/AllCollections";
+import useImageUpload from "@/components/Common/Inputs/hooks/useImageUpload";
 import { RootState } from "@/redux/store";
 import { FunctionComponent } from "react";
 import { useDispatch, useSelector } from "react-redux";

@@ -1,8 +1,8 @@
-import useAddDrop from "@/components/Components/Drops/hooks/useAddDrop";
-import useAllDrops from "@/components/Components/Drops/hooks/useAllDrops";
-import AddDrop from "@/components/Components/Drops/modules/AddDrop";
-import AllDrops from "@/components/Components/Drops/modules/AllDrops";
-import useImageUpload from "@/components/Components/Inputs/hooks/useImageUpload";
+import useAddDrop from "@/components/Common/Drops/hooks/useAddDrop";
+import useAllDrops from "@/components/Common/Drops/hooks/useAllDrops";
+import AddDrop from "@/components/Common/Drops/modules/AddDrop";
+import AllDrops from "@/components/Common/Drops/modules/AllDrops";
+import useImageUpload from "@/components/Common/Inputs/hooks/useImageUpload";
 import { RootState } from "@/redux/store";
 import { FunctionComponent } from "react";
 import { useDispatch, useSelector } from "react-redux";

@@ -1,6 +1,6 @@
-import useConnect from "@/components/Components/Connect/hooks/useConnect";
-import Connect from "@/components/Components/Connect/modules/Connect";
-import Gallery from "@/components/Components/Gallery/Gallery";
+import useConnect from "@/components/Common/Connect/hooks/useConnect";
+import Connect from "@/components/Common/Connect/modules/Connect";
+import Gallery from "@/components/Common/Gallery/Gallery";
 import { RootState } from "@/redux/store";
 import Head from "next/head";
 import { useRouter } from "next/router";
