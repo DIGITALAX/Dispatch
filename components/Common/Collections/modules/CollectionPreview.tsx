@@ -17,7 +17,7 @@ const CollectionPreview: FunctionComponent<CollectionPreviewProps> = ({
         {collectionDetails?.description}
       </div>
       <div className="relative w-full h-fit items-center justify-center text-ama font-earl text-base flex">
-        {collectionDetails?.amount}
+        {Math.ceil(collectionDetails?.amount)}
       </div>
       <div className="relative w-full h-fit flex flex-col items-center justify-center">
         <div className="relative w-fit h-fit flex flex-col items-center justify-center p-3 border border-white rounded-br-lg rounded-tl-lg">

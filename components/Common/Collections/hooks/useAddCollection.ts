@@ -200,7 +200,7 @@ const useAddCollection = () => {
       const responseJSON = await response.json();
       setCollectionArgs([
         `ipfs://${responseJSON.cid}`,
-        collectionValues?.amount as any,
+        Math.ceil(collectionValues?.amount) as any,
         collectionValues?.title,
         collectionValues?.acceptedTokens as any,
         collectionValues?.tokenPrices.map((price) => {
@@ -209,7 +209,10 @@ const useAddCollection = () => {
             return (BigInt(price) * BigInt(10 ** 18)).toString();
           } else {
             // If price has decimals, convert it to BigInt accordingly
-            const [wholePart, decimalPart] = price.toFixed(2).toString().split(".");
+            const [wholePart, decimalPart] = price
+              .toFixed(2)
+              .toString()
+              .split(".");
             const decimalPlaces = decimalPart.length;
             const factor = BigInt(10 ** (18 - decimalPlaces));
             const adjustedPrice = BigInt(wholePart + decimalPart) * factor;
