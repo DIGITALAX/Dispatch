@@ -39,7 +39,7 @@
 }
 
 html {
-  background-color: #131313;
+  background-color: #000000;
 }
 
 #record1 {
@@ -172,4 +172,12 @@ input[type="range"]::-moz-range-thumb {
   height: 1rem;
   width: 1rem;
   border-radius: 9999px;
+}
+
+#dispatcherBack {
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  -webkit-text-stroke: 1px #FFFC80;
+  color: transparent;
 }

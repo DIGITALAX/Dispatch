@@ -50,7 +50,7 @@ export default function Dashboard() {
 
   if (authorized && !loading && address) {
     return (
-      <div className="relative w-full h-full flex flex-col overflow-x-hidden selection:bg-ama selection:text-moda bg-offBlack">
+      <div className="relative w-full h-full flex flex-col overflow-x-hidden selection:bg-ama selection:text-moda bg-black">
         <Head>
           <title>Chromadin Dispatcher</title>
           <link rel="icon" href="/favicon.ico" />
