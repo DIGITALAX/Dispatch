@@ -30,8 +30,8 @@ const useAllCollections = () => {
         creator: address,
       });
       const collections = await collectionGetter(colls, drops);
-      setAllCollections(collections);
-      dispatch(setAllCollectionsRedux(collections));
+      setAllCollections(collections ? collections : []);
+      dispatch(setAllCollectionsRedux(collections ? collections : []));
     } catch (err: any) {
       console.error(err.message);
     }

@@ -43,7 +43,7 @@ const useAllDrops = () => {
         })
       );
       const collections = await collectionGetter(colls, drops);
-      dispatch(setAllCollectionsRedux(collections));
+      dispatch(setAllCollectionsRedux(collections ? collections : []));
       setAllDrops(drops);
       dispatch(setAllDropsRedux(drops));
     } catch (err: any) {
@@ -53,7 +53,7 @@ const useAllDrops = () => {
   };
 
   useEffect(() => {
-    if (!allDropsRedux || allDropsRedux.length < 1) {
+    if (!allDropsRedux || allDropsRedux?.length < 1) {
       getDropsAll();
     }
   }, []);

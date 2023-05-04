@@ -169,10 +169,10 @@ const useAddCollection = () => {
       !collectionValues.title ||
       !collectionValues.description ||
       collectionValues.amount < 1 ||
-      collectionValues.acceptedTokens.length < 1 ||
-      collectionValues.tokenPrices.length < 1 ||
-      collectionValues.acceptedTokens.length !==
-        collectionValues.tokenPrices.length ||
+      collectionValues.acceptedTokens?.length < 1 ||
+      collectionValues.tokenPrices?.length < 1 ||
+      collectionValues.acceptedTokens?.length !==
+        collectionValues.tokenPrices?.length ||
       collectionValues.tokenPrices.some((value) => /^0+$/.test(String(value)))
     ) {
       dispatch(
@@ -290,7 +290,7 @@ const useAddCollection = () => {
           ),
           currency: matchingToken[0],
         });
-      } else if (collectionValues?.acceptedTokens.length > 0) {
+      } else if (collectionValues?.acceptedTokens?.length > 0) {
         const lastCurrencyAddress =
           collectionValues?.acceptedTokens.slice(-1)[0];
         const lastMatchingToken = availableTokens.find(

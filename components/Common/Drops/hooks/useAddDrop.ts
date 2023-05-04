@@ -90,7 +90,7 @@ const useAddDrop = () => {
     if (
       !dropValues.image ||
       !dropValues.title ||
-      chosenCollections.length < 1
+      chosenCollections?.length < 1
     ) {
       dispatch(
         setModal({
@@ -197,7 +197,7 @@ const useAddDrop = () => {
         (d: any) => d.collectionIds
       );
       setAvailableCollectionIds(
-        colls.data.collectionMinteds
+        colls?.data?.collectionMinteds
           .filter((c: any) => !dropIds.includes(c.collectionId))
           .map((c: any) => c.name)
       );
@@ -222,7 +222,7 @@ const useAddDrop = () => {
 
   const addMore = async () => {
     try {
-      if (chosenCollections.length === alreadyInDrop.length) {
+      if (chosenCollections?.length === alreadyInDrop?.length) {
         dispatch(
           setModal({
             actionOpen: true,
@@ -239,7 +239,7 @@ const useAddDrop = () => {
             allCollections.find((collection) => {
               return (
                 collection.name ===
-                chosenCollections[chosenCollections.length - 1]
+                chosenCollections[chosenCollections?.length - 1]
               );
             })?.collectionId
           ) as any,

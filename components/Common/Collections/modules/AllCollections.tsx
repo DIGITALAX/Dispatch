@@ -48,7 +48,7 @@ const AllCollections: FunctionComponent<AllCollectionsProps> = ({
               </div>
             );
           })
-        : (allCollections.length < 1
+        : (allCollections?.length < 1
             ? allCollectionsRedux
             : allCollections
           )?.map((value: Collection, index: number) => {

@@ -43,7 +43,7 @@ const AllDrops: FunctionComponent<AllDropsProps> = ({
               </div>
             );
           })
-        : (allDrops.length < 1 ? allDropsRedux : allDrops).map(
+        : (allDrops?.length < 1 ? allDropsRedux : allDrops).map(
             (value: Drop, index: number) => {
               return (
                 <div
@@ -96,7 +96,7 @@ const AllDrops: FunctionComponent<AllDropsProps> = ({
                         {value?.uri?.name}
                       </div>
                       <div className="text-ama text-sm md:text-base font-earl flex items-center justify-center">
-                        {Number(value?.collectionIds.length)} Collections
+                        {Number(value?.collectionIds?.length)} Collections
                       </div>
                       <div className="relative w-full h-fit flex flex-row gap-2 items-center justify-center flex-wrap">
                         <div
