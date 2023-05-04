@@ -25,7 +25,6 @@ const useAllCollections = () => {
       const colls = await getAllCollections({
         owner: address,
       });
-
       const drops = await getAllDrops({
         creator: address,
       });
