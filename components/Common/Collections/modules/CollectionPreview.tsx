@@ -48,7 +48,7 @@ const CollectionPreview: FunctionComponent<CollectionPreviewProps> = ({
               [
                 "QmYYUQ8nGDnyuk8jQSung1WmTksvLEQBXjnCctdRrKtsNk",
                 "WMATIC",
-                "0x6199a505ec1707695ce49b59a07a147f2d50f22d",
+                "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270",
               ],
               [
                 "QmZRhUgjK6bJM8fC7uV145yf66q2e7vGeT7CLosw1SdMdN",

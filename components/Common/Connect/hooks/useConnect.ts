@@ -30,7 +30,7 @@ const useConnect = (): UseConnectResults => {
   const router = useRouter();
 
   const { data, isSuccess } = useContractRead({
-    address: MUMBAI_ACCESS_CONTROLS,
+    address: CHROMADIN_ACCESS_CONTROLS,
     abi: [
       {
         inputs: [

@@ -40,7 +40,7 @@ const useAddDrop = () => {
   const [alreadyInDrop, setAlreadyInDrop] = useState<string[]>([]);
 
   const { config, isSuccess } = usePrepareContractWrite({
-    address: MUMBAI_DROP,
+    address: CHROMADIN_DROP_CONTRACT,
     abi: [
       {
         inputs: [
@@ -66,7 +66,7 @@ const useAddDrop = () => {
 
   const { config: addConfig, isSuccess: addIsSuccess } =
     usePrepareContractWrite({
-      address: MUMBAI_DROP,
+      address: CHROMADIN_DROP_CONTRACT,
       abi: [
         {
           inputs: [

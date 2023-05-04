@@ -1,4 +1,3 @@
-import getAllCollections from "@/graphql/subgraph/queries/getAllCollections";
 import {
   CHROMADIN_COLLECTION_CONTRACT,
   MUMBAI_COLLECTION,
@@ -11,12 +10,12 @@ import { RootState } from "@/redux/store";
 import { BigNumber } from "ethers";
 import { FormEvent, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
+import { useContractWrite, usePrepareContractWrite } from "wagmi";
 
 const useAddCollection = () => {
   const dispatch = useDispatch();
   const availableTokens = [
-    ["WMATIC", "0x6199a505ec1707695ce49b59a07a147f2d50f22d"],
+    ["WMATIC", "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270"],
     ["WETH", "0x7ceb23fd6bc0add59e62ac25578270cff1b9f619"],
     ["USDT", "0xc2132d05d31c914a87c6611c10748aeb04b58e8f"],
     ["MONA", "0x6968105460f67c3bf751be7c15f92f5286fd0ce5"],
@@ -41,7 +40,7 @@ const useAddCollection = () => {
   >();
 
   const { config, isSuccess } = usePrepareContractWrite({
-    address: MUMBAI_COLLECTION,
+    address: CHROMADIN_COLLECTION_CONTRACT,
     abi: [
       {
         inputs: [
