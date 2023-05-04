@@ -181,3 +181,11 @@ input[type="range"]::-moz-range-thumb {
   -webkit-text-stroke: 1px #FFFC80;
   color: transparent;
 }
+
+#pageBack {
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  -webkit-text-stroke: 1px #FC9CF3;
+  color: transparent; 
+}

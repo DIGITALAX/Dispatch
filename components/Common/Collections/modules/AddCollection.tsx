@@ -26,7 +26,7 @@ const AddCollection: FunctionComponent<AddCollectionProps> = ({
   return (
     <div className="relative w-full h-full flex flex-col justify-start items-start text-white gap-4">
       <div
-        className="relative w-fit h-fit items-center justify-start font-economicaB text-sm flex flex-row gap-2 opacity-70 cursor-pointer active:scale-95"
+        className="relative w-fit h-fit items-center justify-start font-earl text-sm flex flex-row gap-2 opacity-70 cursor-pointer active:scale-95"
         onClick={() => dispatch(setCollectionSwitcher("collections"))}
       >
         <div className="relative w-fit h-fit ">
@@ -36,13 +36,13 @@ const AddCollection: FunctionComponent<AddCollectionProps> = ({
           return
         </div>
       </div>
-      <div className="relative w-fit h-fit items-start justify-start font-economicaB text-xl">
+      <div className="relative w-fit h-fit items-start justify-start font-earl text-xl">
         ADD COLLECTION
       </div>
       <div className="relative w-full h-full flex flex-col md:flex-row gap-4 mid:gap-10">
         <div className="relative w-full mid:w-1/2 h-fit flex gap-5 flex-col md:order-1 order-2">
           <div className="relative flex flex-col gap-2 w-full h-fit">
-            <div className="relative w-fit h-fit font-economica text-lg">
+            <div className="relative w-fit h-fit font-earl text-lg">
               Collection Name
             </div>
             <FillIn
@@ -56,7 +56,7 @@ const AddCollection: FunctionComponent<AddCollectionProps> = ({
             />
           </div>
           <div className="relative flex flex-col gap-2 w-full h-fit">
-            <div className="relative w-fit h-fit font-economica text-lg">
+            <div className="relative w-fit h-fit font-earl text-lg">
               Collection Description
             </div>
             <FillIn
@@ -71,7 +71,7 @@ const AddCollection: FunctionComponent<AddCollectionProps> = ({
           <div className="relative flex flex-col new:flex-row w-full h-full items-start justify-start gap-5 new:gap-10 new:pb-0 pb-5">
             <div className="relative w-full md:w-fit mid:w-full h-full flex flex-col gap-5">
               <div className="relative flex flex-col gap-2 w-fit mid:w-full h-fit">
-                <div className="relative w-fit h-fit font-economica text-lg">
+                <div className="relative w-fit h-fit font-earl text-lg">
                   Collection Art
                 </div>
                 <ImageUpload
@@ -85,7 +85,7 @@ const AddCollection: FunctionComponent<AddCollectionProps> = ({
                 />
               </div>
               <div className="relative w-full h-fit flex flex-col gap-2">
-                <div className="relative w-fit h-fit font-economica text-lg">
+                <div className="relative w-fit h-fit font-earl text-lg">
                   Collection Amount
                 </div>
                 <FillIn
@@ -99,7 +99,7 @@ const AddCollection: FunctionComponent<AddCollectionProps> = ({
                 />
               </div>
             </div>
-            <div className="relative w-full h-fit flex flex-col gap-2 font-economica justify-start">
+            <div className="relative w-full h-fit flex flex-col gap-2 font-earl justify-start">
               <div className="relative w-fit h-fit text-lg">
                 Collection Prices
               </div>

@@ -11,7 +11,7 @@ const ButtonAdd: FunctionComponent<ButtonAddProps> = ({
 }): JSX.Element => {
   return (
     <div
-      className={`relative w-${width} h-8 bg-azul font-economicaB text-offBlack flex items-center justify-center px-4 py-1.5 rounded-md text-sm ${
+      className={`relative w-${width} h-10 bg-marip border border-black font-earl text-center text-lunar rounded-tl-lg rounded-br-lg flex items-center justify-center px-4 py-1.5 text-sm ${
         !loader && !disabled && "cursor-pointer active:scale-95"
       }`}
       onClick={loader || disabled ? () => {} : () => functionAdd()}

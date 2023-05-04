@@ -23,6 +23,7 @@ const useAllCollections = () => {
     setCollectionsLoading(true);
     try {
       const colls = await getAllCollections(address);
+      console.log({colls})
       const drops = await getAllDrops(address);
       const collections = await collectionGetter(colls, drops);
       setAllCollections(collections ? collections : []);

@@ -47,8 +47,6 @@ const Auth: FunctionComponent<AuthProps> = ({
               ? "SOCIAL"
               : "CONNECT"
           }
-          isConnected={connected}
-          router={router}
         />
       );
   }

@@ -36,7 +36,7 @@ export default function Home() {
       >
         <Gallery />
         <div className="relative font-arcade w-full justify-center items-center h-fit text-white text-2xl flex text-center flex-col">
-        <div
+          <div
             className="absolute items-center justify-center flex -top-2 opacity-70"
             id="dispatcherBack"
           >
@@ -64,7 +64,7 @@ export default function Home() {
           />
         </div>
         {lookAround && (
-          <div className="relative w-fit h-fit text-ama font-economica text-center flex items-center justify center break-words flex flex-col gap-2">
+          <div className="relative w-fit h-fit text-ama font-earl text-center flex items-center justify center break-words flex flex-col gap-2">
             <div className="relative w-fit h-fit items-center justify-center flex">
               You haven’t made it as a creator in the beta yet.
             </div>

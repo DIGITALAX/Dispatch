@@ -28,7 +28,8 @@ const Options: FunctionComponent<OptionsProps> = ({
             }
           >
             <div
-              className={`relative w-14 h-12 flex rounded-xl bg-azul ${
+              id="option"
+              className={`relative w-12 h-12 flex border border-white rounded-br-xl rounded-bl-xl bg-midi rounded-tl-lg ${
                 (index === 0 || index === 1) &&
                 "cursor-pointer active:scale-95 hover:opacity-70"
               }`}

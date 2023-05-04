@@ -31,9 +31,7 @@ export type AuthProps = {
 
 export type WalletProps = {
   handleTransaction: () => void;
-  isConnected: boolean;
   buttonText: string;
-  router: NextRouter;
 };
 
 export type ProfileProps = {

@@ -18,7 +18,8 @@ export default function Dashboard() {
   const { address, isConnected } = useAccount();
   const [loading, setLoading] = useState<boolean>(true);
   const [authorized, setAuthorized] = useState<boolean>(false);
-  const { handleConnect, handleLensSignIn, connected, openAccountModal } = useConnect();
+  const { handleConnect, handleLensSignIn, connected, openAccountModal } =
+    useConnect();
   const profile = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile
   );
@@ -57,11 +58,39 @@ export default function Dashboard() {
         </Head>
         <div className="relative w-full flex flex-col sm:flex-row items-center justify-start px-8 pt-8 pb-10">
           <div className="relative w-full h-fit flex preG:flex-row items-center justify-start flex-col">
-            <div className="relative font-arcade w-fit justify-start items-center h-fit text-white text-lg preG:text-2xl flex">
-              chromadin dispatcher
+            <div className="relative font-arcade w-fit justify-start items-center h-fit text-white text-lg preG:text-2xl flex py-2 px-3 border-r border-r-white">
+              <div
+                className="absolute items-center justify-center flex top-px opacity-70"
+                id="dispatcherBack"
+              >
+                chromadin dispatcher
+              </div>
+              <div
+                className="absolute items-center justify-center flex top-1.5"
+                id="dispatcherBack"
+              >
+                chromadin dispatcher
+              </div>
+              <div className="relative items-center justify-center flex top-2">
+                chromadin dispatcher
+              </div>
             </div>
-            <div className="relative font-geom w-fit justify-start items-center h-fit py-4 px-3 text-white text-sm preG:text-lg flex">
-              | {pages}
+            <div className="relative font-arcade w-fit justify-start items-center h-fit py-4 px-3 text-white text-sm preG:text-lg flex flex-col top-1.5">
+              <div
+                className="absolute w-fit h-fit flex items-center justify-center top-2 opacity-70"
+                id="pageBack"
+              >
+                {pages}
+              </div>
+              <div
+                className="absolute w-fit h-fit flex items-center justify-center top-3"
+                id="pageBack"
+              >
+                {pages}
+              </div>
+              <div className="relative w-fit h-fit flex items-center justify-center">
+                {pages}
+              </div>
             </div>
           </div>
           <div className="relative w-fit h-fit justify-start sm:justify-end items-center flex">

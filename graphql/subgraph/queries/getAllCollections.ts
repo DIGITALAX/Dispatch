@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 import { graphClient } from "@/lib/subgraph/client";
 
 const COLLECTIONS = `
-  query {
+  query($owner: String!) {
     collectionMinteds(where: {owner: $owner}, orderDirection: desc) {
       uri
       acceptedTokens
@@ -20,7 +20,7 @@ const getAllCollections = async (owner: any): Promise<any> => {
   const queryPromise = graphClient.query({
     query: gql(COLLECTIONS),
     variables: {
-      where: { owner },
+      owner: owner
     },
     fetchPolicy: "no-cache",
     errorPolicy: "all",

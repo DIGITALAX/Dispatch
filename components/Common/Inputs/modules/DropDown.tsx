@@ -12,7 +12,7 @@ const DropDown: FunctionComponent<DropDownProps> = ({
   disabled,
 }): JSX.Element => {
   return (
-    <div className="relative w-40 min-w-fit h-fit flex flex-col items-start justify-center text-white font-economica text-center">
+    <div className="relative w-40 min-w-fit h-fit flex flex-col items-start justify-center text-white font-earl text-center">
       <div
         className={`relative min-w-fit w-full h-8 border border-white rounded-lg py-1.5 px-3 flex items-center justify-center flex-row cursor-pointer
         `}
@@ -24,16 +24,16 @@ const DropDown: FunctionComponent<DropDownProps> = ({
           )
         }
       >
-        <div className="relative w-full h-full flex items-center justify-center text-center whitespace-nowrap">
-          Available Collections
+        <div className="relative w-full h-full flex items-center justify-center text-center whitespace-nowrap text-xs">
+          Avail. Collections
         </div>
-        <div className="relative w-full h-fit flex items-center justify-end -top-px">
+        <div className="relative w-full h-fit flex items-center justify-end -top-1">
           <FaSortDown />
         </div>
       </div>
       {values.filter((value) => !chosen.includes(value)).length > 0 && open && (
         <div
-          className={`absolute flex flex-col items-start w-full z-1 overflow-y-scroll max-h-32 h-fit top-8 text-sm`}
+          className={`absolute flex flex-col items-start w-full z-1 overflow-y-scroll max-h-32 h-fit top-8 text-xs`}
         >
           {values
             ?.filter((value) => !chosen.includes(value))

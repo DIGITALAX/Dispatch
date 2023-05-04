@@ -15,7 +15,7 @@ const AllDrops: FunctionComponent<AllDropsProps> = ({
     <div className="relative w-full h-fit flex flex-row mid:justify-start mid:items-start items-center justify-center flex-wrap gap-8 overflow-y-scroll">
       <div className="relative w-52 h-52 sm:w-60 sm:h-60 flex items-center justify-center">
         <div
-          className="relative w-fit h-fit bg-azul px-3 py-1.5 font-economica text-offBlack text-sm cursor-pointer active:scale-95"
+          className="relative w-fit h-fit bg-marip px-3 py-1.5 font-earl text-black rounded-tr-lg rounded-bl-lg text-sm cursor-pointer active:scale-95"
           onClick={() => {
             dispatch(setDropSwitcher("add"));
             dispatch(
@@ -100,7 +100,7 @@ const AllDrops: FunctionComponent<AllDropsProps> = ({
                       </div>
                       <div className="relative w-full h-fit flex flex-row gap-2 items-center justify-center flex-wrap">
                         <div
-                          className="relative w-fit h-8 py-2 px-3 bg-offBlack rounded-md border border-white text-white font-economica text-xs flex items-center justify-center"
+                          className="relative w-fit h-8 py-2 px-3 bg-offBlack rounded-md border border-white text-white font-earl text-xs flex items-center justify-center"
                           onClick={(event) => {
                             event.stopPropagation();
                             window.open(
@@ -112,7 +112,7 @@ const AllDrops: FunctionComponent<AllDropsProps> = ({
                           view on market
                         </div>
                         <div
-                          className="relative w-fit h-8 py-2 px-3 bg-offBlack rounded-md border border-white text-white font-economica text-xs flex items-center justify-center"
+                          className="relative w-fit h-8 py-2 px-3 bg-offBlack rounded-md border border-white text-white font-earl text-xs flex items-center justify-center"
                           onClick={(event) => {
                             event.stopPropagation();
                             dispatch(

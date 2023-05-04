@@ -33,6 +33,11 @@ module.exports = {
         b1: "#6BD6FC",
         b2: "#1696FC",
         offBlue: "#81A8F8",
+        midi: "#A6BEE2",
+        greenG: "#AFFFA1",
+        marip: "#FFFC80",
+        lunar: "#C86FFF",
+        lily: "#F0BBF4",
       },
       height: {
         100: "27rem",

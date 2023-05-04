@@ -2,7 +2,7 @@ import { FetchResult, gql } from "@apollo/client";
 import { graphClient } from "@/lib/subgraph/client";
 
 const DROPS = `
-  query {
+  query($creator: String!) {
     dropCreateds(orderDirection: desc, where: {creator: $creator}) {
       dropId
       dropURI
@@ -16,9 +16,7 @@ const getAllDrops = async (creator: any): Promise<FetchResult<any>> => {
   return graphClient.query({
     query: gql(DROPS),
     variables: {
-      where: {
-        creator,
-      },
+      creator: creator,
     },
     fetchPolicy: "no-cache",
     errorPolicy: "all",

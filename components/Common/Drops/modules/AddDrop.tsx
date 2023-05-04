@@ -34,7 +34,7 @@ const AddDrop: FunctionComponent<AddDropProps> = ({
   return (
     <div className="relative w-full h-full flex flex-col justify-start items-start text-white gap-4">
       <div
-        className="relative w-fit h-fit items-center justify-start font-economicaB text-sm flex flex-row gap-2 opacity-70 cursor-pointer active:scale-95"
+        className="relative w-fit h-fit items-center justify-start font-earl text-sm flex flex-row gap-2 opacity-70 cursor-pointer active:scale-95"
         onClick={() => {
           dispatch(setDropSwitcher("drops"));
           setOpen(false);
@@ -47,13 +47,13 @@ const AddDrop: FunctionComponent<AddDropProps> = ({
           return
         </div>
       </div>
-      <div className="relative w-full h-fit items-start justify-start font-economicaB text-xl">
+      <div className="relative w-full h-fit items-start justify-start font-earl text-xl">
         ADD DROP
       </div>
       <div className="relative w-full h-full flex flex-col gap-10 md:flex-row">
         <div className="relative w-full h-full flex flex-col gap-5">
           <div className="relative flex flex-col gap-2 w-1/2 h-fit">
-            <div className="relative w-fit h-fit font-economica text-lg">
+            <div className="relative w-fit h-fit font-earl text-lg">
               Drop Name
             </div>
             <FillIn
@@ -67,7 +67,7 @@ const AddDrop: FunctionComponent<AddDropProps> = ({
             />
           </div>
           <div className="relative flex flex-col gap-2 w-1/2 h-fit">
-            <div className="relative w-fit h-fit font-economica text-lg">
+            <div className="relative w-fit h-fit font-earl text-lg">
               Drop Poster
             </div>
             <ImageUpload
@@ -81,7 +81,7 @@ const AddDrop: FunctionComponent<AddDropProps> = ({
             />
           </div>
           <div className="relative flex flex-col gap-2 w-full h-fit">
-            <div className="relative w-fit h-fit font-economica text-lg">
+            <div className="relative w-fit h-fit font-earl text-lg">
               Choose Collections
             </div>
             <DropDown
@@ -103,7 +103,7 @@ const AddDrop: FunctionComponent<AddDropProps> = ({
             />
           </div>
           {dropDetails.disabled === true && (
-            <div className="relative w-fit h-fit flex flex-col text-xs font-earl text-ama">
+            <div className="relative w-fit h-fit flex flex-col text-xs font-earl text-marip">
               (Add One New Collection At A Time)
             </div>
           )}
@@ -181,7 +181,7 @@ const AddDrop: FunctionComponent<AddDropProps> = ({
                         / {Number(value?.tokenIds?.length)}
                       </div>
                       <div
-                        className="relative w-fit h-8 py-2 px-3 bg-offBlack rounded-md border border-white text-white font-economica text-xs flex items-center justify-center"
+                        className="relative w-fit h-8 py-2 px-3 bg-offBlack rounded-md border border-white text-white font-earl text-xs flex items-center justify-center"
                         onClick={
                           value?.drop?.name
                             ? (event) => {

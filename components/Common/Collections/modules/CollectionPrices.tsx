@@ -10,7 +10,7 @@ const CollectionPrices: FunctionComponent<CollectionPricesProps> = ({
   loader,
 }): JSX.Element => {
   return (
-    <div className="relative flex flex-col gap-2 w-full h-fit font-economica">
+    <div className="relative flex flex-col gap-2 w-full h-fit font-earl">
       {Array.from([
         [
           "QmYYUQ8nGDnyuk8jQSung1WmTksvLEQBXjnCctdRrKtsNk",
