@@ -29,6 +29,7 @@ export type ImageUploadProps = {
   loaderGeneral: boolean;
   setImageLoading: (e: boolean) => void;
   type: string;
+  disabled: boolean;
 };
 
 export type DropDownProps = {
@@ -38,4 +39,5 @@ export type DropDownProps = {
   open: boolean;
   setOpen: (e: boolean) => void;
   alreadyInDrop: string[];
+  disabled: boolean;
 };

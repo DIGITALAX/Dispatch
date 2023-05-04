@@ -4,6 +4,7 @@ import getCollectionsInDrop from "@/graphql/subgraph/queries/getCollectionsInDro
 import { CHROMADIN_DROP_CONTRACT, MUMBAI_DROP } from "@/lib/constants";
 import { setAllDropsRedux } from "@/redux/reducers/allDropsSlice";
 import { setDropDetails } from "@/redux/reducers/dropDetailsSlice";
+import { setDropSwitcher } from "@/redux/reducers/dropSwitcherSlice";
 import { setIndexModal } from "@/redux/reducers/indexModalSlice";
 import { setModal } from "@/redux/reducers/modalSlice";
 import { setSuccessModal } from "@/redux/reducers/successModalSlice";
@@ -33,6 +34,7 @@ const useAddDrop = () => {
   const [dropArgs, setDropArgs] = useState<
     [readonly BigNumber[], string] | undefined
   >();
+  const [addArgs, setAddArgs] = useState<[BigNumber, BigNumber] | undefined>();
   const [open, setOpen] = useState<boolean>(false);
   const [chosenCollections, setChosenCollections] = useState<string[]>([]);
   const [alreadyInDrop, setAlreadyInDrop] = useState<string[]>([]);
@@ -61,6 +63,28 @@ const useAddDrop = () => {
   });
 
   const { writeAsync } = useContractWrite(config);
+
+  const { config: addConfig, isSuccess: addIsSuccess } =
+    usePrepareContractWrite({
+      address: MUMBAI_DROP,
+      abi: [
+        {
+          inputs: [
+            { internalType: "uint256", name: "_dropId", type: "uint256" },
+            { internalType: "uint256", name: "_collectionId", type: "uint256" },
+          ],
+          name: "addCollectionToDrop",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+      ],
+      functionName: "addCollectionToDrop",
+      enabled: Boolean(addArgs),
+      args: addArgs,
+    });
+
+  const { writeAsync: writeAddAsync } = useContractWrite(addConfig);
 
   const addDrop = async (): Promise<void> => {
     if (
@@ -162,11 +186,11 @@ const useAddDrop = () => {
 
   const getAvailableCollections = async (): Promise<void> => {
     try {
-      const colls = await getAllCollections({
-        owner: address,
-      });
       const drops = await getAllDrops({
         creator: address,
+      });
+      const colls = await getAllCollections({
+        owner: address,
       });
 
       const dropIds = drops.data.dropCreateds.flatMap(
@@ -196,11 +220,89 @@ const useAddDrop = () => {
     }
   };
 
+  const addMore = async () => {
+    try {
+      if (chosenCollections.length === alreadyInDrop.length) {
+        dispatch(
+          setModal({
+            actionOpen: true,
+            actionMessage: "Missing fields detected; please try again",
+          })
+        );
+        return;
+      }
+      setAddDropLoading(true);
+      try {
+        setAddArgs([
+          Number(dropValues.id) as any,
+          Number(
+            allCollections.find((collection) => {
+              return (
+                collection.name ===
+                chosenCollections[chosenCollections.length - 1]
+              );
+            })?.collectionId
+          ) as any,
+        ]);
+      } catch (err: any) {
+        console.error(err.message);
+      }
+      setAddDropLoading(false);
+    } catch (err: any) {
+      console.error(err.message);
+    }
+  };
+
+  const addMoreWrite = async () => {
+    setAddDropLoading(true);
+    try {
+      const tx = await writeAddAsync?.();
+      await tx?.wait();
+      const newDrops = await getAllDrops({ creator: address });
+      dispatch(setAllDropsRedux(newDrops.data.dropCreateds));
+      await getCollectionsInDrop({
+        dropId: newDrops.data.dropCreateds[0].dropId,
+      });
+      dispatch(
+        setSuccessModal({
+          actionOpen: true,
+          actionMedia: dropValues.image,
+          actionLink: `http://www.chromadin.xyz/#collect?option=history?search=${dropValues.title}`,
+          actionMessage: "Collection Added! You can view your live drop here:",
+        })
+      );
+      dispatch(setDropSwitcher("drops"));
+    } catch (err: any) {
+      console.error(err.message);
+      dispatch(
+        setIndexModal({
+          actionValue: true,
+          actionMessage: "Unsuccessful. Please Try Again.",
+        })
+      );
+      setTimeout(() => {
+        dispatch(
+          setIndexModal({
+            actionValue: false,
+            actionMessage: "",
+          })
+        );
+      }, 4000);
+    }
+    setAddDropLoading(false);
+  };
+
   useEffect(() => {
     if (isSuccess) {
       addDropWrite();
     }
   }, [isSuccess]);
+
+  useEffect(() => {
+    if (addIsSuccess) {
+      addMoreWrite();
+    }
+  }, [addIsSuccess]);
 
   useEffect(() => {
     if (address && dropSwitcher === "add") {
@@ -219,6 +321,7 @@ const useAddDrop = () => {
     setOpen,
     imageLoading,
     setImageLoading,
+    addMore,
     alreadyInDrop,
   };
 };

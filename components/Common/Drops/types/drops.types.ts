@@ -7,6 +7,7 @@ export type AllDropsProps = {
   dispatch: Dispatch<AnyAction>;
   allDrops: any[];
   allDropsRedux: any[];
+  dropsLoading: boolean;
 };
 
 export type AddDropProps = {
@@ -29,6 +30,7 @@ export type AddDropProps = {
   dropDetails: DropDetailsState;
   allCollections: Collection[];
   alreadyInDrop: string[];
+  addMore: () => Promise<void>;
 };
 
 export interface Drop {

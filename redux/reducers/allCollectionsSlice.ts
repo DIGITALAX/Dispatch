@@ -1,7 +1,8 @@
+import { Collection } from "@/components/Common/Collections/types/collections.types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface AllCollectionsState {
-  value: any[];
+  value: Collection[];
 }
 
 const initialAllCollectionsState: AllCollectionsState = {

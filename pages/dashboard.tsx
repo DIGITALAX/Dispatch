@@ -77,7 +77,7 @@ export default function Dashboard() {
         }}
       >
         <Options dispatch={dispatch} />
-        <div style={{ height: "100%", overflowY: "auto" }}>
+        <div style={{ height: "100%", overflowY: "auto" }} className="w-full flex">
           <Switcher />
         </div>
       </div>

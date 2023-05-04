@@ -6,6 +6,7 @@ export type AllCollectionsProps = {
   dispatch: Dispatch<AnyAction>;
   allCollections: any[];
   allCollectionsRedux: any[];
+  collectionsLoading: boolean;
 };
 
 export type AddCollectionProps = {

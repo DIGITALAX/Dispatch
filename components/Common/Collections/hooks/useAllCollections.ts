@@ -1,12 +1,11 @@
 import getAllCollections from "@/graphql/subgraph/queries/getAllCollections";
-import fetchIPFSJSON from "@/lib/helpers/fetchIPFSJSON";
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
-import { Collection } from "../types/collections.types";
 import getAllDrops from "@/graphql/subgraph/queries/getAllDrops";
 import { setAllCollectionsRedux } from "@/redux/reducers/allCollectionsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import collectionGetter from "@/lib/helpers/collectionGetter";
 
 const useAllCollections = () => {
   const { address } = useAccount();
@@ -15,59 +14,28 @@ const useAllCollections = () => {
   const successModal = useSelector(
     (state: RootState) => state.app.successModalReducer
   );
+  const [collectionsLoading, setCollectionsLoading] = useState<boolean>(false);
   const collectionsDispatched = useSelector(
     (state: RootState) => state.app.allCollectionsReducer.value
   );
 
   const getCollectionsAll = async (): Promise<void> => {
-    let dropjson: any;
+    setCollectionsLoading(true);
     try {
       const colls = await getAllCollections({
         owner: address,
       });
+
       const drops = await getAllDrops({
         creator: address,
       });
-
-      const collections = await Promise.all(
-        colls.data.collectionMinteds.map(async (collection: Collection) => {
-          const json = await fetchIPFSJSON(
-            (collection.uri as any)
-              ?.split("ipfs://")[1]
-              .replace(/"/g, "")
-              .trim()
-          );
-
-          const collectionDrops = drops.data.dropCreateds
-            .filter((drop: any) =>
-              drop.collectionIds.includes(collection.collectionId)
-            )
-            .sort((a: any, b: any) => b.dropId - a.dropId);
-
-          if (collectionDrops.length > 0) {
-            dropjson = await fetchIPFSJSON(
-              collectionDrops[0]?.dropURI
-                ?.split("ipfs://")[1]
-                .replace(/"/g, "")
-                .trim()
-            );
-          }
-
-          return {
-            ...collection,
-            uri: json,
-            drop: {
-              name: dropjson?.name,
-              image: dropjson?.image,
-            },
-          };
-        })
-      );
+      const collections = await collectionGetter(colls, drops);
       setAllCollections(collections);
       dispatch(setAllCollectionsRedux(collections));
     } catch (err: any) {
       console.error(err.message);
     }
+    setCollectionsLoading(false);
   };
 
   useEffect(() => {
@@ -76,20 +44,13 @@ const useAllCollections = () => {
     }
   }, []);
 
-  console.log({m: successModal.message})
-
   useEffect(() => {
-    console.log("hi")
-    if (
-      successModal.message.includes("Collection Minted!") ||
-      successModal.message.includes("Drop Live!")
-    ) {
-      console.log("here");
+    if (successModal.message.includes("Collection Minted!")) {
       getCollectionsAll();
     }
   }, [successModal.open]);
 
-  return { allCollections };
+  return { allCollections, collectionsLoading };
 };
 
 export default useAllCollections;

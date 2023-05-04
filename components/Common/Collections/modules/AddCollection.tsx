@@ -24,9 +24,7 @@ const AddCollection: FunctionComponent<AddCollectionProps> = ({
   price,
 }): JSX.Element => {
   return (
-    <div
-      className="relative w-full h-full flex flex-col justify-start items-start text-white gap-4"
-    >
+    <div className="relative w-full h-full flex flex-col justify-start items-start text-white gap-4">
       <div
         className="relative w-fit h-fit items-center justify-start font-economicaB text-sm flex flex-row gap-2 opacity-70 cursor-pointer active:scale-95"
         onClick={() => dispatch(setCollectionSwitcher("collections"))}
@@ -83,6 +81,7 @@ const AddCollection: FunctionComponent<AddCollectionProps> = ({
                   loaderGeneral={addCollectionLoading}
                   setImageLoading={setImageLoading}
                   type="collection"
+                  disabled={collectionDetails.disabled}
                 />
               </div>
               <div className="relative w-full h-fit flex flex-col gap-2">

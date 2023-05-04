@@ -34,8 +34,9 @@ const DropsSwitcher: FunctionComponent = (): JSX.Element => {
     imageLoading,
     setImageLoading,
     alreadyInDrop,
+    addMore,
   } = useAddDrop();
-  const { allDrops } = useAllDrops();
+  const { allDrops, dropsLoading } = useAllDrops();
 
   switch (dropSwitcher) {
     case "add":
@@ -56,6 +57,7 @@ const DropsSwitcher: FunctionComponent = (): JSX.Element => {
           dropDetails={dropDetails}
           alreadyInDrop={alreadyInDrop}
           allCollections={allCollections}
+          addMore={addMore}
         />
       );
 
@@ -65,6 +67,7 @@ const DropsSwitcher: FunctionComponent = (): JSX.Element => {
           dispatch={dispatch}
           allDrops={allDrops}
           allDropsRedux={allDropsRedux}
+          dropsLoading={dropsLoading}
         />
       );
   }

@@ -4,8 +4,10 @@ import { RootState } from "@/redux/store";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useAccount } from "wagmi";
-import { Drop } from "../types/drops.types";
 import fetchIPFSJSON from "@/lib/helpers/fetchIPFSJSON";
+import collectionGetter from "@/lib/helpers/collectionGetter";
+import { setAllCollectionsRedux } from "@/redux/reducers/allCollectionsSlice";
+import getAllCollections from "@/graphql/subgraph/queries/getAllCollections";
 
 const useAllDrops = () => {
   const dispatch = useDispatch();
@@ -17,11 +19,16 @@ const useAllDrops = () => {
   const allDropsRedux = useSelector(
     (state: RootState) => state.app.allDropsReducer.value
   );
+  const [dropsLoading, setDropsLoading] = useState<boolean>(false);
 
   const getDropsAll = async (): Promise<void> => {
+    setDropsLoading(true);
     try {
       const data = await getAllDrops({
         creator: address,
+      });
+      const colls = await getAllCollections({
+        owner: address,
       });
       const drops = await Promise.all(
         data.data.dropCreateds.map(async (drop: any) => {
@@ -35,11 +42,14 @@ const useAllDrops = () => {
           };
         })
       );
+      const collections = await collectionGetter(colls, drops);
+      dispatch(setAllCollectionsRedux(collections));
       setAllDrops(drops);
       dispatch(setAllDropsRedux(drops));
     } catch (err: any) {
       console.error(err.message);
     }
+    setDropsLoading(false);
   };
 
   useEffect(() => {
@@ -48,15 +58,16 @@ const useAllDrops = () => {
     }
   }, []);
 
-  console.log({ m: successModal.message });
-
   useEffect(() => {
-    if (successModal.message.includes("Drop Live!")) {
+    if (
+      successModal.message.includes("Drop Live!") ||
+      successModal.message.includes("Collection Added!")
+    ) {
       getDropsAll();
     }
   }, [successModal.open]);
 
-  return { allDrops };
+  return { allDrops, dropsLoading };
 };
 
 export default useAllDrops;

@@ -19,7 +19,7 @@ const CollectionsSwitcher: FunctionComponent = (): JSX.Element => {
   );
 
   const dispatch = useDispatch();
-  const { allCollections } = useAllCollections();
+  const { allCollections, collectionsLoading } = useAllCollections();
   const { uploadImage } = useImageUpload();
   const {
     imageLoading,
@@ -60,6 +60,7 @@ const CollectionsSwitcher: FunctionComponent = (): JSX.Element => {
           dispatch={dispatch}
           allCollections={allCollections}
           allCollectionsRedux={allCollectionsRedux}
+          collectionsLoading={collectionsLoading}
         />
       );
   }

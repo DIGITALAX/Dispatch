@@ -5,6 +5,7 @@ export interface DropDetailsState {
   image: string;
   collectionIds: number[];
   disabled: boolean;
+  id?: number;
 }
 
 const initialDropDetailsState: DropDetailsState = {
@@ -12,6 +13,7 @@ const initialDropDetailsState: DropDetailsState = {
   image: "",
   collectionIds: [],
   disabled: false,
+  id: undefined,
 };
 
 export const dropDetailsSlice = createSlice({
@@ -26,6 +28,7 @@ export const dropDetailsSlice = createSlice({
           actionImage,
           actionCollectionIds,
           actionDisabled,
+          actionId,
         },
       }
     ) => {
@@ -33,6 +36,7 @@ export const dropDetailsSlice = createSlice({
       state.image = actionImage;
       state.collectionIds = actionCollectionIds;
       state.disabled = actionDisabled;
+      state.id = actionId;
     },
   },
 });

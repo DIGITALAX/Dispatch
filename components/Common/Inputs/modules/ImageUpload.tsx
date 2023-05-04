@@ -12,6 +12,7 @@ const ImageUpload: FunctionComponent<ImageUploadProps> = ({
   loaderGeneral,
   setImageLoading,
   type,
+  disabled
 }): JSX.Element => {
   return (
     <div className="relative w-40 h-40 border border-white rounded-md flex flex-col p-3">
@@ -55,7 +56,7 @@ const ImageUpload: FunctionComponent<ImageUploadProps> = ({
             multiple={false}
             name="images"
             className="caret-transparent"
-            disabled={imageLoading || loaderGeneral ? true : false}
+            disabled={imageLoading || loaderGeneral || disabled ? true : false}
           />
         </label>
       </div>

@@ -29,6 +29,7 @@ const AddDrop: FunctionComponent<AddDropProps> = ({
   dropDetails,
   allCollections,
   alreadyInDrop,
+  addMore,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full flex flex-col justify-start items-start text-white gap-4">
@@ -76,6 +77,7 @@ const AddDrop: FunctionComponent<AddDropProps> = ({
               loaderGeneral={addDropLoading}
               setImageLoading={setImageLoading}
               type="drop"
+              disabled={dropDetails.disabled}
             />
           </div>
           <div className="relative flex flex-col gap-2 w-full h-fit">
@@ -89,17 +91,22 @@ const AddDrop: FunctionComponent<AddDropProps> = ({
               open={open}
               setOpen={setOpen}
               alreadyInDrop={alreadyInDrop}
+              disabled={dropDetails.disabled}
             />
           </div>
           <div className="relative flex flex-col gap-2 w-fit h-fit justify-start items-center">
             <ButtonAdd
-              text={"Add Drop"}
-              functionAdd={addDrop}
+              text={dropDetails.disabled ? "Add More" : "Add Drop"}
+              functionAdd={dropDetails.disabled ? addMore : addDrop}
               loader={addDropLoading}
               width={"28"}
-              disabled={dropDetails.disabled}
             />
           </div>
+          {dropDetails.disabled === true && (
+            <div className="relative w-fit h-fit flex flex-col text-xs font-earl text-ama">
+              (Add One New Collection At A Time)
+            </div>
+          )}
         </div>
         <div className="relative w-full h-fit max-h-full flex flex-row overflow-x-scroll gap-8 flex-wrap overflow-y-scroll">
           {allCollections
