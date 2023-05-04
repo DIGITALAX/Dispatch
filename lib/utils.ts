@@ -15,6 +15,6 @@ export const getCreaterToken = () => {
       return false;
     }
 
-    return Boolean(data);
+    return data;
   }
 };
