@@ -13,7 +13,7 @@ const Error: FunctionComponent<ErrorProps> = ({
         className="relative w-full md:w-[30vw] h-52 col-start-1 place-self-center rounded-lg bg-cover"
         id="videoplayer"
       >
-        <div className="relative w-full row-start-2 h-full grid grid-flow-col auto-cols-auto bg-offBlack/90 rounded-lg">
+        <div className="relative w-full row-start-2 h-full grid grid-flow-col auto-cols-auto bg-black/90 rounded-lg">
           <div className="relative w-full h-full col-start-1 rounded-xl place-self-center">
             <div className="relative w-full h-full grid grid-flow-row auto-rows-auto gap-10 pb-8">
               <div className="relative w-fit h-fit row-start-1 self-center justify-self-end pr-3 pt-3 cursor-pointer">

@@ -51,7 +51,7 @@ const FullScreenVideo: FunctionComponent<FullScreenVideoProps> = ({
             />
           </div>
         </div>
-        <div className="relative w-full h-full justify-self-end row-start-2 border border-offBlue col-start-1 rounded-md bg-offBlack">
+        <div className="relative w-full h-full justify-self-end row-start-2 border border-offBlue col-start-1 rounded-md bg-black">
           <Player
             streamRef={streamRef}
             mainVideo={mainVideo}

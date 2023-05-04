@@ -15,6 +15,12 @@
 }
 
 @font-face {
+  font-family: "Chillax B";
+  font-weight: 400;
+  src: url("/fonts/ChillaxBold.otf");
+}
+
+@font-face {
   font-family: "DS Digital";
   font-weight: 400;
   src: url("/fonts/DSDigi.ttf");
@@ -188,4 +194,12 @@ input[type="range"]::-moz-range-thumb {
   background-clip: text;
   -webkit-text-stroke: 1px #FC9CF3;
   color: transparent; 
+}
+
+#itemBack {
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  -webkit-text-stroke: 0.8px #FFFC80;
+  color: transparent;
 }

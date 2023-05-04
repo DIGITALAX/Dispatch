@@ -36,7 +36,7 @@ const Player: FunctionComponent<PlayerProps> = ({
         />
       )}
       {videoSync.videosLoading ? (
-        <div className="relative w-16 h-10 bg-offBlack flex flex-col items-center justify-center">
+        <div className="relative w-16 h-10 bg-black flex flex-col items-center justify-center">
           <FetchMoreLoading size="1rem" height="fit-content" />
         </div>
       ) : (

@@ -15,7 +15,7 @@ const ImageUpload: FunctionComponent<ImageUploadProps> = ({
   disabled
 }): JSX.Element => {
   return (
-    <div className="relative w-40 h-40 border border-white rounded-md flex flex-col p-3">
+    <div className="relative w-40 h-40 border border-lily rounded-tr-lg rounded-bl-lg flex flex-col p-3">
       {image !== "" && (
         <div className="absolute top-0 left-0 w-full h-full flex object-cover">
           <Image
@@ -24,14 +24,14 @@ const ImageUpload: FunctionComponent<ImageUploadProps> = ({
             }`}
             layout="fill"
             objectFit="cover"
-            className="rounded-md w-full h-full flex"
+            className="rounded-tr-lg rounded-bl-lg w-full h-full flex"
             draggable={false}
           />
         </div>
       )}
       <div className="relative w-full h-full items-end justify-end flex">
         <label
-          className={`"relative w-8 h-8 rounded-sm bg-azul flex flex-col items-center justify-center ${
+          className={`relative w-8 h-8 rounded-tr-lg rounded-bl-lg bg-lily flex flex-col items-center justify-center ${
             !loaderGeneral && "cursor-pointer active:scale-95"
           }`}
           onChange={(e: FormEvent) => uploadImage(e, setImageLoading, type)}

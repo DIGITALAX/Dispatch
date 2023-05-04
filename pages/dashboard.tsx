@@ -58,20 +58,20 @@ export default function Dashboard() {
         </Head>
         <div className="relative w-full flex flex-col sm:flex-row items-center justify-start px-8 pt-8 pb-10">
           <div className="relative w-full h-fit flex preG:flex-row items-center justify-start flex-col">
-            <div className="relative font-arcade w-fit justify-start items-center h-fit text-white text-lg preG:text-2xl flex py-2 px-3 border-r border-r-white">
+            <div className="relative font-arcade w-fit justify-start items-center h-fit text-white text-lg preG:text-2xl flex py-2 px-3 preG:border-r preG:border-r-white">
               <div
-                className="absolute items-center justify-center flex top-px opacity-70"
+                className="absolute items-center justify-center flex top-px opacity-70 break-words"
                 id="dispatcherBack"
               >
                 chromadin dispatcher
               </div>
               <div
-                className="absolute items-center justify-center flex top-1.5"
+                className="absolute items-center justify-center flex top-1.5 break-words"
                 id="dispatcherBack"
               >
                 chromadin dispatcher
               </div>
-              <div className="relative items-center justify-center flex top-2">
+              <div className="relative items-center justify-center flex top-2 break-words">
                 chromadin dispatcher
               </div>
             </div>

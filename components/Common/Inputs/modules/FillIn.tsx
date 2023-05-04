@@ -14,7 +14,7 @@ const FillIn: FunctionComponent<FillInProps> = ({
     <>
       {textArea ? (
         <textarea
-          className={`relative w-${width} h-24 rounded-lg border border-white bg-offBlack font-earl text-white px-1 focus:ring-verde focus:ring-2`}
+          className={`relative w-${width} h-24 rounded-tr-lg rounded-bl-lg border border-lily bg-black font-earl text-white px-1 focus:ring-verde focus:ring-2`}
           style={{ resize: "none" }}
           onChange={changeFunction}
           defaultValue={defaultValue}
@@ -22,7 +22,7 @@ const FillIn: FunctionComponent<FillInProps> = ({
         ></textarea>
       ) : (
         <input
-          className={`relative w-${width} h-10 rounded-lg border border-white bg-offBlack font-earl text-white px-1 focus:ring-verde focus:ring-2`}
+          className={`relative w-${width} h-10 rounded-tr-lg rounded-bl-lg border border-lily bg-black font-earl text-white px-1 focus:ring-verde focus:ring-2`}
           onChange={changeFunction}
           type={type}
           min={0}

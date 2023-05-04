@@ -118,7 +118,7 @@ const AllCollections: FunctionComponent<AllCollectionsProps> = ({
                       / {Number(value?.tokenIds?.length)}
                     </div>
                     <div
-                      className="relative w-fit h-8 py-2 px-3 bg-offBlack rounded-md border border-white text-white font-earl text-xs flex items-center justify-center"
+                      className="relative w-fit h-8 py-2 px-3 bg-black rounded-md border border-white text-white font-earl text-xs flex items-center justify-center"
                       onClick={
                         value.drop.name
                           ? (event) => {

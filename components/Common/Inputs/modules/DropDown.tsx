@@ -14,7 +14,7 @@ const DropDown: FunctionComponent<DropDownProps> = ({
   return (
     <div className="relative w-40 min-w-fit h-fit flex flex-col items-start justify-center text-white font-earl text-center">
       <div
-        className={`relative min-w-fit w-full h-8 border border-white rounded-lg py-1.5 px-3 flex items-center justify-center flex-row cursor-pointer
+        className={`relative min-w-fit w-full h-8 border border-lily rounded-tr-lg rounded-bl-lg py-1.5 px-3 flex items-center justify-center flex-row cursor-pointer
         `}
         onClick={() =>
           setOpen(
@@ -41,7 +41,7 @@ const DropDown: FunctionComponent<DropDownProps> = ({
               return (
                 <div
                   key={index}
-                  className="relative w-full h-8 border border-white rounded-lg py-1.5 px-3 flex items-center justify-center flex-row cursor-pointer bg-offBlack hover:opacity-70"
+                  className="relative w-full h-8 border border-lily rounded-tr-lg rounded-bl-lg py-1.5 px-3 flex items-center justify-center flex-row cursor-pointer bg-black hover:opacity-70"
                   onClick={() => {
                     if (disabled && chosen?.length !== alreadyInDrop?.length) {
                       const newChosen = [...chosen];
@@ -67,7 +67,7 @@ const DropDown: FunctionComponent<DropDownProps> = ({
 
             return (
               <div
-                className={`relative w-fit h-fit py-px px-1 border border-white rounded-md hover:opacity-70 ${
+                className={`relative w-fit h-fit py-px px-1 border border-lily rounded-tr-lg rounded-bl-lg hover:opacity-70 ${
                   !alreadyInDrop.includes(label) && "cursor-pointer"
                 }`}
                 key={index}

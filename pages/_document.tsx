@@ -74,6 +74,13 @@ export default function Document() {
           crossOrigin="anonymous"
           type="font/ttf"
         />
+        <link
+          rel="preload"
+          href="/fonts/ChillaxBold.otf"
+          as="font"
+          crossOrigin="anonymous"
+          type="font/otf"
+        />
         <style
           dangerouslySetInnerHTML={{
             __html: `
@@ -112,6 +119,13 @@ export default function Document() {
                 font-weight: 400;
                 src: url("./fonts/EconomicaBold.ttf");
               }
+
+              @font-face {
+                font-family: "Chillax B";
+                font-weight: 400;
+                src: url("./fonts/ChillaxBold.otf");
+              }
+              
             `,
           }}
         ></style>

@@ -14,6 +14,7 @@ module.exports = {
         economica: "Economica R",
         economicaB: "Economica B",
         digi: "DS DIGITAL",
+        chill: "Chillax B"
       },
       colors: {
         verde: "#25EC68",
@@ -21,7 +22,7 @@ module.exports = {
         light: "#DDC2DE",
         azul: "#B9D9FF",
         lensLight: "#ABFE2C",
-        offBlack: "#131313",
+        black: "#131313",
         pink: "#F06AAF",
         pesa: "#C9D8E4",
         ama: "#FBDB86",
@@ -38,6 +39,7 @@ module.exports = {
         marip: "#FFFC80",
         lunar: "#C86FFF",
         lily: "#F0BBF4",
+        pos: "#5433FD"
       },
       height: {
         100: "27rem",

@@ -69,7 +69,7 @@ const Channels: FunctionComponent<ChannelsProps> = ({
                   </video>
                 </div>
                 <div
-                  className={`absolute top-0 right-0 w-full h-full bg-offBlack/70 rounded-lg p-2 opacity-0 hover:opacity-100`}
+                  className={`absolute top-0 right-0 w-full h-full bg-black/70 rounded-lg p-2 opacity-0 hover:opacity-100`}
                 >
                   <div className="relative w-fit h-fit flex flex-row items-center">
                     <div
