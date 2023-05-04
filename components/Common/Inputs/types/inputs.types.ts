@@ -15,6 +15,7 @@ export type ButtonAddProps = {
   functionAdd: () => Promise<void>;
   loader: boolean;
   width: string;
+  type: string;
   disabled?: boolean;
 };
 
