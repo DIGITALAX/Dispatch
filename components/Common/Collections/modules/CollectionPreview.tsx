@@ -19,12 +19,9 @@ const CollectionPreview: FunctionComponent<CollectionPreviewProps> = ({
       <div className="relative w-full h-fit items-center justify-center text-ama font-earl text-base flex">
         {collectionDetails?.amount}
       </div>
-      <div className="relative w-full h-fit flex flex-col">
-        <div className="relative w-full h-full flex flex-col items-center justify-center pt-4">
-          <div
-            className="relative w-40 h-40 preG:w-60 preG:h-60 rounded-br-lg rounded-tl-lg border border-white"
-            id="staticLoad"
-          >
+      <div className="relative w-full h-fit flex flex-col items-center justify-center">
+        <div className="relative w-fit h-fit flex flex-col items-center justify-center p-3 border border-white rounded-br-lg rounded-tl-lg">
+          <div className="relative w-40 h-52 preG:w-60 preG:h-72 border-2 border-lily bg-black">
             {collectionDetails?.image !== "" && (
               <Image
                 src={
@@ -34,7 +31,7 @@ const CollectionPreview: FunctionComponent<CollectionPreviewProps> = ({
                       }`
                     : `${INFURA_GATEWAY}/ipfs/${collectionDetails?.image}`
                 }
-                className="rounded-br-lg rounded-tl-lg w-full h-full"
+                className="w-full h-full"
                 layout="fill"
                 draggable={false}
                 objectFit="cover"

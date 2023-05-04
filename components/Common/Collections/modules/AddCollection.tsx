@@ -116,7 +116,7 @@ const AddCollection: FunctionComponent<AddCollectionProps> = ({
           <div className="relative flex flex-col gap-2 w-fit h-fit justify-start items-center">
             <ButtonAdd
               text={"Mint Collection"}
-              width={"28"}
+              width={"40"}
               functionAdd={addCollection}
               loader={addCollectionLoading}
               disabled={collectionDetails?.disabled}

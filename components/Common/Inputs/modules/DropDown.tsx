@@ -60,7 +60,7 @@ const DropDown: FunctionComponent<DropDownProps> = ({
             })}
         </div>
       )}
-      <div className="relative w-40 h-14 flex flex-row flex-wrap text-xs gap-1 py-3 overflow-y-scroll">
+      <div className="relative w-40 h-fit max-h-32 flex flex-row flex-wrap text-xs gap-1 py-3 overflow-y-scroll">
         {chosen?.length > 0 &&
           chosen.map((label: string, index: number) => {
             const shouldFilter = alreadyInDrop.includes(label) && disabled;
