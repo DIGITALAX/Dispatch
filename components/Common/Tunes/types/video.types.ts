@@ -38,6 +38,7 @@ export type ControlsProps = {
 
 export type UseControlsResults = {
   streamRef: Ref<ReactPlayer>;
+  fullVideoRef: Ref<ReactPlayer>;
   formatTime: (time: number) => string;
   volume: number;
   volumeOpen: boolean;

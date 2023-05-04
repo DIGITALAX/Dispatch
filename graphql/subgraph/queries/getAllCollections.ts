@@ -17,7 +17,6 @@ const COLLECTIONS = `
 `;
 
 const getAllCollections = async (owner: any): Promise<any> => {
-  console.log({where: { owner }})
   const queryPromise = graphClient.query({
     query: gql(COLLECTIONS),
     variables: {

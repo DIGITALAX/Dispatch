@@ -29,14 +29,14 @@ const Modals = () => {
   const dispatchVideos = useSelector(
     (state: RootState) => state.app.channelsReducer.value
   );
-  const { streamRef, wrapperRef } = useControls();
+  const { fullVideoRef, wrapperRef } = useControls();
   return (
     <>
       {fullScreenVideo.value && (
         <FullScreenVideo
           dispatch={dispatch}
           mainVideo={mainVideo}
-          streamRef={streamRef}
+          streamRef={fullVideoRef}
           wrapperRef={wrapperRef}
           videos={dispatchVideos}
           dispatchVideos={dispatchVideos}

@@ -22,7 +22,6 @@ const useAllCollections = () => {
   const getCollectionsAll = async (): Promise<void> => {
     setCollectionsLoading(true);
     try {
-      console.log({ address });
       const colls = await getAllCollections(address);
       const drops = await getAllDrops(address);
       const collections = await collectionGetter(colls, drops);
