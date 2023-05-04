@@ -206,14 +206,14 @@ const useAddCollection = () => {
         collectionValues?.tokenPrices.map((price) => {
           if (Number.isInteger(price)) {
             // If price is an integer, convert it to BigInt as before
-            return BigInt(price) * BigInt(10 ** 18);
+            return (BigInt(price) * BigInt(10 ** 18)).toString();
           } else {
             // If price has decimals, convert it to BigInt accordingly
-            const [wholePart, decimalPart] = price.toString().split(".");
+            const [wholePart, decimalPart] = price.toFixed(2).toString().split(".");
             const decimalPlaces = decimalPart.length;
             const factor = BigInt(10 ** (18 - decimalPlaces));
             const adjustedPrice = BigInt(wholePart + decimalPart) * factor;
-            return adjustedPrice;
+            return adjustedPrice.toString();
           }
         }) as any,
       ]);
