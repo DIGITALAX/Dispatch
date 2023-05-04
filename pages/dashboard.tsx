@@ -15,10 +15,10 @@ import { useAccount } from "wagmi";
 export default function Dashboard() {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { address } = useAccount();
+  const { address, isConnected } = useAccount();
   const [loading, setLoading] = useState<boolean>(true);
   const [authorized, setAuthorized] = useState<boolean>(false);
-  const { handleConnect, handleLensSignIn, connected } = useConnect();
+  const { handleConnect, handleLensSignIn, connected, openAccountModal } = useConnect();
   const profile = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile
   );
@@ -38,7 +38,7 @@ export default function Dashboard() {
     setTimeout(() => {
       setLoading(false);
     }, 3000);
-  }, []);
+  }, [isConnected]);
 
   if (loading) {
     return <FetchMoreLoading size={"4rem"} height={"calc(100vh - 10.5rem)"} />;
@@ -72,6 +72,7 @@ export default function Dashboard() {
               authStatus={authStatus}
               profile={profile}
               router={router}
+              openAccountModal={openAccountModal}
             />
           </div>
         </div>

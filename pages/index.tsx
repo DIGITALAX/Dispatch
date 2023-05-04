@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 
 export default function Home() {
   const router = useRouter();
-  const { handleConnect, handleLensSignIn, connected } = useConnect();
+  const { handleConnect, handleLensSignIn, connected, openAccountModal } = useConnect();
   const profile = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile
   );
@@ -45,6 +45,7 @@ export default function Home() {
             authStatus={authStatus}
             profile={profile}
             router={router}
+            openAccountModal={openAccountModal}
           />
         </div>
         {lookAround && (

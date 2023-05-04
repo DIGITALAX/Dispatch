@@ -9,6 +9,7 @@ const Connect: FunctionComponent<ConnectProps> = ({
   authStatus,
   profile,
   router,
+  openAccountModal
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full py-3 sm:py-8 lg:py-3 px-3 flex flex-col sm:flex-row lg:flex-col items-center gap-4 justify-start sm:justify-center">
@@ -19,6 +20,7 @@ const Connect: FunctionComponent<ConnectProps> = ({
         authStatus={authStatus}
         profile={profile}
         router={router}
+        openAccountModal={openAccountModal}
       />
     </div>
   );

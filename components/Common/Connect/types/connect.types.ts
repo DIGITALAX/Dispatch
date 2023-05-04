@@ -6,6 +6,7 @@ export type UseConnectResults = {
   handleLensSignIn: () => Promise<void>;
   handleRefreshProfile: () => Promise<void>;
   connected: boolean;
+  openAccountModal: (() => void) | undefined;
 };
 
 export type ConnectProps = {
@@ -15,6 +16,7 @@ export type ConnectProps = {
   authStatus: boolean;
   profile: Profile | undefined;
   router: NextRouter;
+  openAccountModal: (() => void) | undefined;
 };
 
 export type AuthProps = {
@@ -24,6 +26,7 @@ export type AuthProps = {
   authStatus: boolean;
   profile: Profile | undefined;
   router: NextRouter;
+  openAccountModal: (() => void) | undefined;
 };
 
 export type WalletProps = {
@@ -35,6 +38,7 @@ export type WalletProps = {
 
 export type ProfileProps = {
   profile: Profile | undefined;
+  openAccountModal: (() => void) | undefined;
 };
 
 export type DashboardProps = {
