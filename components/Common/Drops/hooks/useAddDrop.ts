@@ -217,6 +217,7 @@ const useAddDrop = () => {
   };
 
   const addMore = async () => {
+    console.log("add more")
     try {
       if (chosenCollections?.length === alreadyInDrop?.length) {
         dispatch(

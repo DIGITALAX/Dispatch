@@ -120,7 +120,6 @@ const AddCollection: FunctionComponent<AddCollectionProps> = ({
               functionAdd={addCollection}
               loader={addCollectionLoading}
               disabled={collectionDetails?.disabled}
-              type="coll"
             />
           </div>
         </div>

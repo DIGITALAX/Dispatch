@@ -100,7 +100,6 @@ const AddDrop: FunctionComponent<AddDropProps> = ({
               functionAdd={dropDetails.disabled ? addMore : addDrop}
               loader={addDropLoading}
               width={"28"}
-              type="drop"
             />
           </div>
           {dropDetails.disabled === true && (
