@@ -47,7 +47,7 @@ const useAllDrops = () => {
             };
           })
         ));
-      const collections = await collectionGetter(colls, drops);
+      const collections = await collectionGetter(colls, data);
       dispatch(setAllCollectionsRedux(collections ? collections : []));
       setAllDrops(drops ? drops : []);
       dispatch(setAllDropsRedux(drops ? drops : []));
