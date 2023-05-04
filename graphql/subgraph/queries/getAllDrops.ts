@@ -3,7 +3,7 @@ import { graphClient } from "@/lib/subgraph/client";
 
 const DROPS = `
   query {
-    dropCreateds(orderDirection: desc, where: $where) {
+    dropCreateds(orderDirection: desc, where: {creator: $creator}) {
       dropId
       dropURI
       creator
@@ -12,14 +12,16 @@ const DROPS = `
   }
 `;
 
-const getAllDrops = async (where: any): Promise<FetchResult<any>> => {
+const getAllDrops = async (creator: any): Promise<FetchResult<any>> => {
   return graphClient.query({
     query: gql(DROPS),
     variables: {
-      where,
+      where: {
+        creator,
+      },
     },
     fetchPolicy: "no-cache",
-    errorPolicy: "all"
+    errorPolicy: "all",
   });
 };
 

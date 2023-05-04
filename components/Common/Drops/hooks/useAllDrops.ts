@@ -24,12 +24,8 @@ const useAllDrops = () => {
   const getDropsAll = async (): Promise<void> => {
     setDropsLoading(true);
     try {
-      const data = await getAllDrops({
-        creator: address,
-      });
-      const colls = await getAllCollections({
-        owner: address,
-      });
+      const data = await getAllDrops(address);
+      const colls = await getAllCollections(address);
       const drops =
         data?.data?.dropCreateds &&
         (await Promise.all(

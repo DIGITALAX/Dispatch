@@ -1,6 +1,5 @@
 import getAllCollections from "@/graphql/subgraph/queries/getAllCollections";
 import getAllDrops from "@/graphql/subgraph/queries/getAllDrops";
-import getCollectionsInDrop from "@/graphql/subgraph/queries/getCollectionsInDrop";
 import { CHROMADIN_DROP_CONTRACT, MUMBAI_DROP } from "@/lib/constants";
 import { setAllDropsRedux } from "@/redux/reducers/allDropsSlice";
 import { setDropDetails } from "@/redux/reducers/dropDetailsSlice";
@@ -181,12 +180,8 @@ const useAddDrop = () => {
 
   const getAvailableCollections = async (): Promise<void> => {
     try {
-      const drops = await getAllDrops({
-        creator: address,
-      });
-      const colls = await getAllCollections({
-        owner: address,
-      });
+      const drops = await getAllDrops(address);
+      const colls = await getAllCollections(address);
 
       const dropIds = drops.data.dropCreateds.flatMap(
         (d: any) => d.collectionIds
@@ -253,11 +248,8 @@ const useAddDrop = () => {
     try {
       const tx = await writeAddAsync?.();
       await tx?.wait();
-      const newDrops = await getAllDrops({ creator: address });
+      const newDrops = await getAllDrops(address);
       dispatch(setAllDropsRedux(newDrops.data.dropCreateds));
-      await getCollectionsInDrop({
-        dropId: newDrops.data.dropCreateds[0].dropId,
-      });
       dispatch(
         setSuccessModal({
           actionOpen: true,

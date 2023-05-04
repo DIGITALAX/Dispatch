@@ -22,12 +22,9 @@ const useAllCollections = () => {
   const getCollectionsAll = async (): Promise<void> => {
     setCollectionsLoading(true);
     try {
-      const colls = await getAllCollections({
-        owner: address,
-      });
-      const drops = await getAllDrops({
-        creator: address,
-      });
+      console.log({ address });
+      const colls = await getAllCollections(address);
+      const drops = await getAllDrops(address);
       const collections = await collectionGetter(colls, drops);
       setAllCollections(collections ? collections : []);
       dispatch(setAllCollectionsRedux(collections ? collections : []));

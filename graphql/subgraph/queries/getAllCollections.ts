@@ -3,7 +3,7 @@ import { graphClient } from "@/lib/subgraph/client";
 
 const COLLECTIONS = `
   query {
-    collectionMinteds(where: $where, orderDirection: desc) {
+    collectionMinteds(where: {owner: $owner}, orderDirection: desc) {
       uri
       acceptedTokens
       basePrices
@@ -16,11 +16,12 @@ const COLLECTIONS = `
   }
 `;
 
-const getAllCollections = async (where: any): Promise<any> => {
+const getAllCollections = async (owner: any): Promise<any> => {
+  console.log({where: { owner }})
   const queryPromise = graphClient.query({
     query: gql(COLLECTIONS),
     variables: {
-      where,
+      where: { owner },
     },
     fetchPolicy: "no-cache",
     errorPolicy: "all",
