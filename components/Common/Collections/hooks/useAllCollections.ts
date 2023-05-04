@@ -20,7 +20,6 @@ const useAllCollections = () => {
   );
 
   const getCollectionsAll = async (): Promise<void> => {
-    console.log("here again")
     setCollectionsLoading(true);
     try {
       const colls = await getAllCollections({
@@ -46,7 +45,9 @@ const useAllCollections = () => {
 
   useEffect(() => {
     if (successModal.message.includes("Collection Minted!")) {
-      getCollectionsAll();
+      setTimeout(() => {
+        getCollectionsAll();
+      }, 5000);
     }
   }, [successModal.open]);
 

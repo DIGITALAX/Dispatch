@@ -137,7 +137,7 @@ const useAddDrop = () => {
           actionOpen: true,
           actionMedia: dropValues.image,
           actionLink: `http://www.chromadin.xyz/#collect?option=history?search=${dropValues.title}`,
-          actionMessage: "Drop Live! You can view your live drop here:",
+          actionMessage: "Drop Live! You can view your live drop here",
         })
       );
       dispatch(
@@ -187,7 +187,6 @@ const useAddDrop = () => {
       const colls = await getAllCollections({
         owner: address,
       });
-      console.log("available")
 
       const dropIds = drops.data.dropCreateds.flatMap(
         (d: any) => d.collectionIds
@@ -217,7 +216,6 @@ const useAddDrop = () => {
   };
 
   const addMore = async () => {
-    console.log("add more")
     try {
       if (chosenCollections?.length === alreadyInDrop?.length) {
         dispatch(

@@ -23,7 +23,6 @@ const useAllDrops = () => {
 
   const getDropsAll = async (): Promise<void> => {
     setDropsLoading(true);
-    console.log("inside")
     try {
       const data = await getAllDrops({
         creator: address,
@@ -51,7 +50,7 @@ const useAllDrops = () => {
       const collections = await collectionGetter(colls, drops);
       dispatch(setAllCollectionsRedux(collections ? collections : []));
       setAllDrops(drops ? drops : []);
-      dispatch(setAllDropsRedux(drops  ? drops : []));
+      dispatch(setAllDropsRedux(drops ? drops : []));
     } catch (err: any) {
       console.error(err.message);
     }
@@ -69,7 +68,9 @@ const useAllDrops = () => {
       successModal.message.includes("Drop Live!") ||
       successModal.message.includes("Collection Added!")
     ) {
-      getDropsAll();
+      setTimeout(() => {
+        getDropsAll();
+      }, 5000);
     }
   }, [successModal.open]);
 
