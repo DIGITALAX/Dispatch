@@ -136,7 +136,10 @@ const useAddCollection = () => {
 
     setEditingIndex(tokenIndex);
 
-    if ((e.target as HTMLFormElement).value === "") {
+    const value = (e.target as HTMLFormElement).value;
+    const formattedValue = value === "" ? "" : Number(value).toFixed(2);
+
+    if (formattedValue === "") {
       if (tokenIndex !== -1) {
         acceptedTokens.splice(tokenIndex, 1);
         tokenPrices.splice(tokenIndex, 1);
@@ -200,9 +203,19 @@ const useAddCollection = () => {
         collectionValues?.amount as any,
         collectionValues?.title,
         collectionValues?.acceptedTokens as any,
-        collectionValues?.tokenPrices.map((price) =>
-          (BigInt(price) * BigInt(10 ** 18)).toString()
-        ) as any,
+        collectionValues?.tokenPrices.map((price) => {
+          if (Number.isInteger(price)) {
+            // If price is an integer, convert it to BigInt as before
+            return BigInt(price) * BigInt(10 ** 18);
+          } else {
+            // If price has decimals, convert it to BigInt accordingly
+            const [wholePart, decimalPart] = price.toString().split(".");
+            const decimalPlaces = decimalPart.length;
+            const factor = BigInt(10 ** (18 - decimalPlaces));
+            const adjustedPrice = BigInt(wholePart + decimalPart) * factor;
+            return adjustedPrice;
+          }
+        }) as any,
       ]);
     } catch (err: any) {
       console.error(err.message);
@@ -267,6 +280,22 @@ const useAddCollection = () => {
     setAddCollectionLoading(false);
   };
 
+  console.log({
+    c: collectionValues?.tokenPrices.map((price) => {
+      if (Number.isInteger(price)) {
+        // If price is an integer, convert it to BigInt as before
+        return (BigInt(price) * BigInt(10 ** 18)).toString();
+      } else {
+        // If price has decimals, convert it to BigInt accordingly
+        const [wholePart, decimalPart] = price.toFixed(2).toString().split(".");
+        const decimalPlaces = decimalPart.length;
+        const factor = BigInt(10 ** (18 - decimalPlaces));
+        const adjustedPrice = BigInt(wholePart + decimalPart) * factor;
+        return adjustedPrice.toString();
+      }
+    }) as any,
+  });
+
   useEffect(() => {
     if (isSuccess) {
       addCollectionWrite();
@@ -284,9 +313,10 @@ const useAddCollection = () => {
       );
       if (matchingToken) {
         setPrice({
-          value: parseInt(
-            String(collectionValues.tokenPrices[editingIndex]),
-            10
+          value: Number(
+            parseFloat(
+              String(collectionValues.tokenPrices[editingIndex])
+            ).toFixed(2)
           ),
           currency: matchingToken[0],
         });
@@ -298,9 +328,10 @@ const useAddCollection = () => {
         );
         if (lastMatchingToken) {
           setPrice({
-            value: parseInt(
-              String(collectionValues.tokenPrices.slice(-1)[0]),
-              10
+            value: Number(
+              parseFloat(
+                String(collectionValues.tokenPrices.slice(-1)[0])
+              ).toFixed(2)
             ),
             currency: lastMatchingToken[0],
           });

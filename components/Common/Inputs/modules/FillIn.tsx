@@ -28,6 +28,7 @@ const FillIn: FunctionComponent<FillInProps> = ({
           min={0}
           defaultValue={defaultValue}
           disabled={loader || disabled}
+          step={0.01}
         />
       )}
     </>
