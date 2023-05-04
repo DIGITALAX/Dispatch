@@ -30,22 +30,27 @@ const useAllDrops = () => {
       const colls = await getAllCollections({
         owner: address,
       });
-      const drops = await Promise.all(
-        data.data.dropCreateds.map(async (drop: any) => {
-          const json = await fetchIPFSJSON(
-            (drop.dropURI as any)?.split("ipfs://")[1].replace(/"/g, "").trim()
-          );
+      const drops =
+        data?.data?.dropCreateds &&
+        (await Promise.all(
+          data.data?.dropCreateds?.map(async (drop: any) => {
+            const json = await fetchIPFSJSON(
+              (drop.dropURI as any)
+                ?.split("ipfs://")[1]
+                .replace(/"/g, "")
+                .trim()
+            );
 
-          return {
-            ...drop,
-            uri: json,
-          };
-        })
-      );
+            return {
+              ...drop,
+              uri: json,
+            };
+          })
+        ));
       const collections = await collectionGetter(colls, drops);
       dispatch(setAllCollectionsRedux(collections ? collections : []));
-      setAllDrops(drops);
-      dispatch(setAllDropsRedux(drops));
+      setAllDrops(drops ? drops : []);
+      dispatch(setAllDropsRedux(drops  ? drops : []));
     } catch (err: any) {
       console.error(err.message);
     }

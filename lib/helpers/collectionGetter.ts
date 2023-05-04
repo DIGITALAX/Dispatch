@@ -13,7 +13,7 @@ const collectionGetter = async (colls: any, drops: any): Promise<any> => {
           (collection.uri as any)?.split("ipfs://")[1].replace(/"/g, "").trim()
         );
 
-        const collectionDrops = drops.data.dropCreateds
+        const collectionDrops = drops.data?.dropCreateds
           .filter((drop: any) =>
             drop.collectionIds.includes(collection.collectionId)
           )
