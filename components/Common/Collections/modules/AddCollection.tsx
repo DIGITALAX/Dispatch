@@ -39,8 +39,8 @@ const AddCollection: FunctionComponent<AddCollectionProps> = ({
       <div className="relative w-fit h-fit items-start justify-start font-earl text-xl">
         ADD COLLECTION
       </div>
-      <div className="relative w-full h-full flex flex-col md:flex-row gap-4 mid:gap-10">
-        <div className="relative w-full mid:w-1/2 h-fit flex gap-5 flex-col md:order-1 order-2">
+      <div className="relative w-full h-full flex flex-col mode:flex-row gap-4 mid:gap-10">
+        <div className="relative w-full mid:w-1/2 h-fit flex gap-5 flex-col mode:order-1 order-2">
           <div className="relative flex flex-col gap-2 w-full h-fit">
             <div className="relative w-fit h-fit font-earl text-lg">
               Collection Name
@@ -69,7 +69,7 @@ const AddCollection: FunctionComponent<AddCollectionProps> = ({
             />
           </div>
           <div className="relative flex flex-col new:flex-row w-full h-full items-start justify-start gap-5 new:gap-10 new:pb-0 pb-5">
-            <div className="relative w-full md:w-fit mid:w-full h-full flex flex-col gap-5">
+            <div className="relative w-full mode:w-fit mid:w-full h-full flex flex-col gap-5">
               <div className="relative flex flex-col gap-2 w-fit mid:w-full h-fit">
                 <div className="relative w-fit h-fit font-earl text-lg">
                   Collection Art
@@ -123,7 +123,7 @@ const AddCollection: FunctionComponent<AddCollectionProps> = ({
             />
           </div>
         </div>
-        <div className="relative w-full h-full flex md:order-2 order-1">
+        <div className="relative w-full h-full flex mode:order-2 order-1">
           <CollectionPreview
             collectionDetails={collectionDetails}
             setPrice={setPrice}

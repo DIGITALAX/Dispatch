@@ -13,7 +13,7 @@ const AllDrops: FunctionComponent<AllDropsProps> = ({
 }): JSX.Element => {
   return (
     <div className="relative w-full h-fit flex flex-row mid:justify-start mid:items-start items-center justify-center flex-wrap gap-8 overflow-y-scroll">
-      <div className="relative w-52 h-52 sm:w-60 sm:h-60 flex items-center justify-center">
+      <div className="relative w-52 h-60 sm:w-60 sm:h-72 flex items-center justify-center">
         <div
           className="relative w-fit h-fit bg-marip px-3 py-1.5 font-earl text-black rounded-tr-lg rounded-bl-lg text-sm cursor-pointer active:scale-95"
           onClick={() => {
@@ -35,7 +35,7 @@ const AllDrops: FunctionComponent<AllDropsProps> = ({
         ? Array.from({ length: 9 }).map((_, index: number) => {
             return (
               <div
-                className="relative w-52 h-52 sm:w-60 sm:h-60 flex items-center justify-center border border-white cursor-pointer rounded-tr-lg rounded-bl-lg"
+                className="relative w-52 h-60 sm:w-60 sm:h-72 flex items-center justify-center border border-white cursor-pointer rounded-tr-lg rounded-bl-lg"
                 id="staticLoad"
                 key={index}
               >
