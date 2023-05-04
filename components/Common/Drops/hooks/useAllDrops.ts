@@ -23,6 +23,7 @@ const useAllDrops = () => {
 
   const getDropsAll = async (): Promise<void> => {
     setDropsLoading(true);
+    console.log("inside")
     try {
       const data = await getAllDrops({
         creator: address,

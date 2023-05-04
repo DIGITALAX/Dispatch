@@ -20,6 +20,7 @@ const useAllCollections = () => {
   );
 
   const getCollectionsAll = async (): Promise<void> => {
+    console.log("here again")
     setCollectionsLoading(true);
     try {
       const colls = await getAllCollections({

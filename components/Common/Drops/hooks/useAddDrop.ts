@@ -132,11 +132,6 @@ const useAddDrop = () => {
     try {
       const tx = await writeAsync?.();
       await tx?.wait();
-      const newDrops = await getAllDrops({ creator: address });
-      dispatch(setAllDropsRedux(newDrops.data.dropCreateds));
-      await getCollectionsInDrop({
-        dropId: newDrops.data.dropCreateds[0].dropId,
-      });
       dispatch(
         setSuccessModal({
           actionOpen: true,
@@ -192,6 +187,7 @@ const useAddDrop = () => {
       const colls = await getAllCollections({
         owner: address,
       });
+      console.log("available")
 
       const dropIds = drops.data.dropCreateds.flatMap(
         (d: any) => d.collectionIds
