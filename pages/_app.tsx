@@ -5,7 +5,7 @@ import { store } from "./../redux/store";
 import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { Provider } from "react-redux";
 import { configureChains, createClient, WagmiConfig } from "wagmi";
-import { polygon, polygonMumbai } from "wagmi/chains";
+import { polygon } from "wagmi/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import Modals from "@/components/Common/Modals/modules/Modals";
 import Video from "@/components/Common/Tunes/modules/Video";
@@ -14,7 +14,7 @@ import FetchMoreLoading from "@/components/Common/Loading/FetchMoreLoading";
 import { useRouter } from "next/router";
 
 const { chains, provider } = configureChains(
-  [polygonMumbai],
+  [polygon],
   [
     alchemyProvider({
       apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY as string,
