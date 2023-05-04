@@ -22,7 +22,7 @@ module.exports = {
         light: "#DDC2DE",
         azul: "#B9D9FF",
         lensLight: "#ABFE2C",
-        black: "#131313",
+        offBlack: "#131313",
         pink: "#F06AAF",
         pesa: "#C9D8E4",
         ama: "#FBDB86",
