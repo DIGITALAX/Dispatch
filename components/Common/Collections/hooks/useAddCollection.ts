@@ -246,7 +246,7 @@ const useAddCollection = () => {
           actionMedia: collectionValues.image,
           actionLink: "",
           actionMessage:
-            "Collection Minted! Before you're collection is live on the Market, you need to add it to a drop.",
+            "Collection Minted! Before your collection is live on the Market, you need to add it to a drop.",
         })
       );
       dispatch(
