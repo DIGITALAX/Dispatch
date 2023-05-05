@@ -32,46 +32,69 @@ const CollectionPrices: FunctionComponent<CollectionPricesProps> = ({
           "MONA",
           "0x6968105460f67c3bf751be7c15f92f5286fd0ce5",
         ],
-      ]).map((value: string[], index: number) => {
-        return (
-          <div
-            key={index}
-            className="relative w-full h-fit flex flex-row gap-3 items-center justify-start"
-          >
-            <div className="relative w-7 h-10 flex rounded-full flex-col items-center justify-center">
-              <Image
-                src={`${INFURA_GATEWAY}/ipfs/${value[0]}`}
-                draggable={false}
-                width={30}
-                height={35}
-                className="flex"
+      ])
+        .map((item: string[], index: number) => {
+          if (
+            collectionDetails?.acceptedTokens?.includes(item[2].toLowerCase())
+          ) {
+            const acceptedTokenIndex =
+              collectionDetails.acceptedTokens.findIndex(
+                (token) => token.toLowerCase() === item[2].toLowerCase()
+              );
+
+            return {
+              ...item,
+              price: String(
+                collectionDetails?.tokenPrices?.[acceptedTokenIndex]
+              ),
+            };
+          } else {
+            return {
+              ...item,
+              price: "",
+            };
+          }
+        })
+        .map((value: string[], index: number) => {
+          return (
+            <div
+              key={index}
+              className="relative w-full h-fit flex flex-row gap-3 items-center justify-start"
+            >
+              <div className="relative w-7 h-10 flex rounded-full flex-col items-center justify-center">
+                <Image
+                  src={`${INFURA_GATEWAY}/ipfs/${value[0]}`}
+                  draggable={false}
+                  width={30}
+                  height={35}
+                  className="flex"
+                />
+              </div>
+              <FillIn
+                textArea={false}
+                changeFunction={(e) => {
+                  handleCollectionPrices(e, value[2]);
+                }}
+                type={"number"}
+                width={
+                  typeof window !== "undefined" && window.innerWidth > 950
+                    ? "32"
+                    : typeof window !== "undefined" && window.innerWidth > 768
+                    ? "14"
+                    : typeof window !== "undefined" && window.innerWidth > 480
+                    ? "40"
+                    : "14"
+                }
+                defaultValue={(value as any).price}
+                loader={loader}
+                disabled={collectionDetails?.disabled}
               />
+              <div className="relative w-fit h-fit flex items-center justify-center text-xs">
+                {value[1]}
+              </div>
             </div>
-            <FillIn
-              textArea={false}
-              changeFunction={(e) => {
-                handleCollectionPrices(e, value[2]);
-              }}
-              type={"number"}
-              width={
-                typeof window !== "undefined" && window.innerWidth > 950
-                  ? "32"
-                  : typeof window !== "undefined" && window.innerWidth > 768
-                  ? "14"
-                  : typeof window !== "undefined" && window.innerWidth > 480
-                  ? "40"
-                  : "14"
-              }
-              defaultValue={String(collectionDetails?.tokenPrices?.[index])}
-              loader={loader}
-              disabled={collectionDetails?.disabled}
-            />
-            <div className="relative w-fit h-fit flex items-center justify-center text-xs">
-              {value[1]}
-            </div>
-          </div>
-        );
-      })}
+          );
+        })}
     </div>
   );
 };
