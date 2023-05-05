@@ -93,6 +93,7 @@ const useAddCollection = () => {
         actionAcceptedTokens: collectionValues?.acceptedTokens,
         actionTokenPrices: collectionValues?.tokenPrices,
         actionDisabled: false,
+        actionFileType: collectionValues.fileType
       })
     );
   };
@@ -107,6 +108,7 @@ const useAddCollection = () => {
         actionAcceptedTokens: collectionValues?.acceptedTokens,
         actionTokenPrices: collectionValues?.tokenPrices,
         actionDisabled: false,
+        actionFileType: collectionValues.fileType
       })
     );
   };
@@ -121,6 +123,7 @@ const useAddCollection = () => {
         actionAcceptedTokens: collectionValues?.acceptedTokens,
         actionTokenPrices: collectionValues?.tokenPrices,
         actionDisabled: false,
+        actionFileType: collectionValues.fileType
       })
     );
   };
@@ -162,6 +165,7 @@ const useAddCollection = () => {
         actionAcceptedTokens: acceptedTokens,
         actionTokenPrices: tokenPrices,
         actionDisabled: false,
+        actionFileType: collectionValues.fileType
       })
     );
   };
@@ -261,6 +265,7 @@ const useAddCollection = () => {
           actionAcceptedTokens: [],
           actionTokenPrices: [],
           actionDisabled: false,
+          actionFileType: ""
         })
       );
     } catch (err: any) {

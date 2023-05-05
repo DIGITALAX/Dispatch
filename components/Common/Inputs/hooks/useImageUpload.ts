@@ -15,6 +15,7 @@ const useImageUpload = () => {
     (state: RootState) => state.app.collectionDetailsReducer
   );
   const [type, setType] = useState<string>("");
+  const [fileType, setFileType] = useState<string>("");
 
   const uploadImage = async (
     e: FormEvent<Element>,
@@ -29,6 +30,7 @@ const useImageUpload = () => {
         return;
       }
       setType(type);
+      setFileType((e as any).target.files[0].type);
       setImageLoading(true);
       const response = await fetch("/api/ipfs", {
         method: "POST",
@@ -53,6 +55,7 @@ const useImageUpload = () => {
             actionImage: mainImage,
             actionCollectionIds: dropValues.collectionIds,
             actionDisabled: false,
+            actionFileType: fileType,
           })
         );
       } else if (type === "collection") {
@@ -65,6 +68,7 @@ const useImageUpload = () => {
             actionAcceptedTokens: collectionValues?.acceptedTokens,
             actionTokenPrices: collectionValues?.tokenPrices,
             actionDisabled: false,
+            actionFileType: fileType,
           })
         );
       }

@@ -28,6 +28,7 @@ const AllCollections: FunctionComponent<AllCollectionsProps> = ({
                 actionAcceptedTokens: [],
                 actionTokenPrices: [],
                 actionDisabled: false,
+                actionFileType: ""
               })
             );
             dispatch(setCollectionSwitcher("add"));
@@ -68,6 +69,7 @@ const AllCollections: FunctionComponent<AllCollectionsProps> = ({
                         (val: any) => Number(val) / 10 ** 18
                       ),
                       actionDisabled: true,
+                      actionFileType: value.fileType
                     })
                   );
                   dispatch(setCollectionSwitcher("add"));

@@ -39,7 +39,8 @@ const useAllDrops = () => {
 
             return {
               ...drop,
-              uri: json,
+              uri: json.json,
+              fileType: json.type,
             };
           })
         ));

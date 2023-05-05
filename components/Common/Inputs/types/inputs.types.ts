@@ -30,6 +30,7 @@ export type ImageUploadProps = {
   setImageLoading: (e: boolean) => void;
   type: string;
   disabled: boolean;
+  fileType: string;
 };
 
 export type DropDownProps = {

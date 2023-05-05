@@ -22,21 +22,38 @@ const CollectionPreview: FunctionComponent<CollectionPreviewProps> = ({
       <div className="relative w-full h-fit flex flex-col items-center justify-center">
         <div className="relative w-fit h-fit flex flex-col items-center justify-center p-3 border border-white rounded-br-lg rounded-tl-lg">
           <div className="relative w-40 h-52 preG:w-60 preG:h-72 border-2 border-lily bg-black">
-            {collectionDetails?.image !== "" && (
-              <Image
-                src={
-                  collectionDetails?.image?.includes("ipfs://")
-                    ? `${INFURA_GATEWAY}/ipfs/${
-                        collectionDetails?.image?.split("ipfs://")[1]
-                      }`
-                    : `${INFURA_GATEWAY}/ipfs/${collectionDetails?.image}`
-                }
-                className="w-full h-full"
-                layout="fill"
-                draggable={false}
-                objectFit="cover"
-              />
-            )}
+            {collectionDetails?.image !== "" &&
+              (collectionDetails.fileType !== "image/png" ? (
+                <video
+                  muted
+                  playsInline
+                  autoPlay
+                  className="w-full h-full flex object-cover"
+                >
+                  <source
+                    src={`${INFURA_GATEWAY}/ipfs/${
+                      collectionDetails?.image?.includes("ipfs://")
+                        ? collectionDetails?.image?.split("ipfs://")[1]
+                        : collectionDetails?.image
+                    }`}
+                    type="video/mp4"
+                  />
+                </video>
+              ) : (
+                <Image
+                  src={
+                    collectionDetails?.image?.includes("ipfs://")
+                      ? `${INFURA_GATEWAY}/ipfs/${
+                          collectionDetails?.image?.split("ipfs://")[1]
+                        }`
+                      : `${INFURA_GATEWAY}/ipfs/${collectionDetails?.image}`
+                  }
+                  className="w-full h-full"
+                  layout="fill"
+                  draggable={false}
+                  objectFit="cover"
+                />
+              ))}
           </div>
         </div>
         <div className="relative w-full h-fit flex flex-col items-center gap-3 pt-4 justify-center px-3">

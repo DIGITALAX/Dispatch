@@ -145,6 +145,7 @@ const useAddDrop = () => {
           actionImage: "",
           actionCollectionIds: [],
           actionDisabled: false,
+          actionFileType: ""
         })
       );
     } catch (err: any) {
@@ -174,6 +175,7 @@ const useAddDrop = () => {
         actionImage: dropValues.image,
         actionCollectionIds: dropValues.collectionIds,
         actionDisabled: false,
+        actionFileType: dropValues.fileType
       })
     );
   };

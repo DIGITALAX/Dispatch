@@ -82,6 +82,7 @@ const AddCollection: FunctionComponent<AddCollectionProps> = ({
                   setImageLoading={setImageLoading}
                   type="collection"
                   disabled={collectionDetails.disabled}
+                  fileType={collectionDetails.fileType}
                 />
               </div>
               <div className="relative w-full h-fit flex flex-col gap-2">

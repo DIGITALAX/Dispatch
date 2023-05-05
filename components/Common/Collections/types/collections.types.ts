@@ -61,4 +61,5 @@ export interface Collection {
   acceptedTokens: string[];
   tokenIds: string[];
   soldTokens: string[] | null;
+  fileType: string;
 }

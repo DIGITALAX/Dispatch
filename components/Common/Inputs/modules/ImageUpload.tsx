@@ -12,21 +12,40 @@ const ImageUpload: FunctionComponent<ImageUploadProps> = ({
   loaderGeneral,
   setImageLoading,
   type,
-  disabled
+  fileType,
+  disabled,
 }): JSX.Element => {
   return (
     <div className="relative w-40 h-40 border border-lily rounded-tr-lg rounded-bl-lg flex flex-col p-3">
       {image !== "" && (
         <div className="absolute top-0 left-0 w-full h-full flex object-cover">
-          <Image
-            src={`${INFURA_GATEWAY}/ipfs/${
-              image.includes("ipfs://") ? image.split("ipfs://")[1] : image
-            }`}
-            layout="fill"
-            objectFit="cover"
-            className="rounded-tr-lg rounded-bl-lg w-full h-full flex"
-            draggable={false}
-          />
+          {fileType !== "image/png" ? (
+            <video
+              muted
+              playsInline
+              autoPlay
+              className="rounded-tr-lg rounded-bl-lg w-full h-full flex object-cover"
+            >
+              <source
+                src={`${INFURA_GATEWAY}/ipfs/${
+                  image?.includes("ipfs://")
+                    ? image?.split("ipfs://")[1]
+                    : image
+                }`}
+                type="video/mp4"
+              />
+            </video>
+          ) : (
+            <Image
+              src={`${INFURA_GATEWAY}/ipfs/${
+                image.includes("ipfs://") ? image.split("ipfs://")[1] : image
+              }`}
+              layout="fill"
+              objectFit="cover"
+              className="rounded-tr-lg rounded-bl-lg w-full h-full flex"
+              draggable={false}
+            />
+          )}
         </div>
       )}
       <div className="relative w-full h-full items-end justify-end flex">
@@ -49,7 +68,7 @@ const ImageUpload: FunctionComponent<ImageUploadProps> = ({
           </div>
           <input
             type="file"
-            accept="image/png"
+            accept="image/png, video/mp4"
             hidden
             required
             id="files"

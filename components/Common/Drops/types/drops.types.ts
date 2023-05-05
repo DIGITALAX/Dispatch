@@ -41,4 +41,5 @@ export interface Drop {
     name: string;
     image: string;
   };
+  fileType: string;
 }

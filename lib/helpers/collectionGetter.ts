@@ -30,11 +30,12 @@ const collectionGetter = async (colls: any, drops: any): Promise<any> => {
 
         return {
           ...collection,
-          uri: json,
+          uri: json.json,
           drop: {
-            name: dropjson?.name,
-            image: dropjson?.image,
+            name: dropjson?.json?.name,
+            image: dropjson?.json?.image,
           },
+          fileType: json.type,
         };
       })
     );

@@ -24,6 +24,7 @@ const AllDrops: FunctionComponent<AllDropsProps> = ({
                 actionImage: "",
                 actionCollectionIds: [],
                 actionDisabled: false,
+                actionFileType: ""
               })
             );
           }}
@@ -57,6 +58,7 @@ const AllDrops: FunctionComponent<AllDropsProps> = ({
                         actionCollectionIds: value.collectionIds,
                         actionDisabled: true,
                         actionId: value.dropId,
+                        actionFileType: value.fileType
                       })
                     );
                     dispatch(setDropSwitcher("add"));
@@ -144,6 +146,7 @@ const AllDrops: FunctionComponent<AllDropsProps> = ({
                                 actionCollectionIds: value.collectionIds,
                                 actionDisabled: true,
                                 actionId: value.dropId,
+                                actionFileType: value.fileType
                               })
                             );
                             dispatch(setDropSwitcher("add"));

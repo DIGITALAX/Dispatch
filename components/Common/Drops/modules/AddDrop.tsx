@@ -78,6 +78,7 @@ const AddDrop: FunctionComponent<AddDropProps> = ({
               setImageLoading={setImageLoading}
               type="drop"
               disabled={dropDetails.disabled}
+              fileType={dropDetails.fileType}
             />
           </div>
           <div className="relative flex flex-col gap-2 w-full h-fit">
@@ -130,6 +131,7 @@ const AddDrop: FunctionComponent<AddDropProps> = ({
                           (val: any) => Number(val) / 10 ** 18
                         ),
                         actionDisabled: true,
+                        actionFileType: value.fileType,
                       })
                     );
                     dispatch(setCollectionSwitcher("add"));
