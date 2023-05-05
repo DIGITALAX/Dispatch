@@ -15,6 +15,9 @@ const Video: FunctionComponent = (): JSX.Element => {
   const videoSync = useSelector(
     (state: RootState) => state.app.videoSyncReducer
   );
+  const reactions = useSelector(
+    (state: RootState) => state.app.reactionCountReducer
+  );
   const {
     formatTime,
     volume,
@@ -32,14 +35,9 @@ const Video: FunctionComponent = (): JSX.Element => {
     wrapperRef,
     progressRef,
     handleSeek,
-    streamRef
+    streamRef,
   } = useControls();
-  const {
-    videos,
-    collectAmount,
-    mirrorAmount,
-    likeAmount,
-  } = useChannels();
+  const { videos } = useChannels();
   return (
     <div className="sticky w-full h-full flex flex-col items-center justify-center bottom-0 z-1">
       <Channels
@@ -50,9 +48,9 @@ const Video: FunctionComponent = (): JSX.Element => {
       />
       <Tunes
         videos={videos}
-        collectAmount={collectAmount}
-        mirrorAmount={mirrorAmount}
-        likeAmount={likeAmount}
+        collectAmount={reactions.collect}
+        mirrorAmount={reactions.mirror}
+        likeAmount={reactions.like}
         streamRef={streamRef}
         formatTime={formatTime}
         volume={volume}

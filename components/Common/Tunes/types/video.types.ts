@@ -85,9 +85,6 @@ export type UseChannelsResults = {
   videos: Publication[];
   tab: number;
   setTab: (e: number) => void;
-  likeAmount: number[];
-  collectAmount: number[];
-  mirrorAmount: number[];
 };
 
 export type ChannelsProps = {

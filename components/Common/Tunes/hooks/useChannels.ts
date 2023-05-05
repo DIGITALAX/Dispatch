@@ -17,6 +17,7 @@ import {
 } from "@/graphql/lens/queries/getVideos";
 import { setReactId } from "@/redux/reducers/reactIdSlice";
 import { setVideoSync } from "@/redux/reducers/videoSyncSlice";
+import { setReactionCount } from "@/redux/reducers/reactionCountSlice";
 
 const useChannels = (): UseChannelsResults => {
   const authStatus = useSelector(
@@ -42,9 +43,6 @@ const useChannels = (): UseChannelsResults => {
   );
   const dispatch = useDispatch();
   const [tab, setTab] = useState<number>(0);
-  const [mirrorAmount, setMirrorAmount] = useState<number[]>([]);
-  const [likeAmount, setLikeAmount] = useState<number[]>([]);
-  const [collectAmount, setCollectAmount] = useState<number[]>([]);
   const [videos, setVideos] = useState<Publication[]>([]);
 
   const getVideos = async (): Promise<void> => {
@@ -84,14 +82,18 @@ const useChannels = (): UseChannelsResults => {
       );
       dispatch(setChannelsRedux(sortedArr));
       setVideos(sortedArr);
-      setMirrorAmount(
-        sortedArr.map((obj: Publication) => obj.stats.totalAmountOfMirrors)
-      );
-      setCollectAmount(
-        sortedArr.map((obj: Publication) => obj.stats.totalAmountOfCollects)
-      );
-      setLikeAmount(
-        sortedArr.map((obj: Publication) => obj.stats.totalUpvotes)
+      dispatch(
+        setReactionCount({
+          actionLike: sortedArr.map(
+            (obj: Publication) => obj.stats.totalUpvotes
+          ),
+          actionMirror: sortedArr.map(
+            (obj: Publication) => obj.stats.totalAmountOfMirrors
+          ),
+          actionCollect: sortedArr.map(
+            (obj: Publication) => obj.stats.totalAmountOfCollects
+          ),
+        })
       );
       if (authStatus && lensProfile) {
         hasReactedArr = await checkPostReactions(
@@ -183,14 +185,18 @@ const useChannels = (): UseChannelsResults => {
           actionVideosLoading: videoSync.videosLoading,
         })
       );
-      setMirrorAmount(
-        sortedArr.map((obj: Publication) => obj.stats.totalAmountOfMirrors)
-      );
-      setCollectAmount(
-        sortedArr.map((obj: Publication) => obj.stats.totalAmountOfCollects)
-      );
-      setLikeAmount(
-        sortedArr.map((obj: Publication) => obj.stats.totalUpvotes)
+      dispatch(
+        setReactionCount({
+          actionLike: sortedArr.map(
+            (obj: Publication) => obj.stats.totalUpvotes
+          ),
+          actionMirror: sortedArr.map(
+            (obj: Publication) => obj.stats.totalAmountOfMirrors
+          ),
+          actionCollect: sortedArr.map(
+            (obj: Publication) => obj.stats.totalAmountOfCollects
+          ),
+        })
       );
       if (reactId === mainVideo.id) {
         const currentIndex = lodash.findIndex(
@@ -230,9 +236,6 @@ const useChannels = (): UseChannelsResults => {
     videos,
     tab,
     setTab,
-    likeAmount,
-    collectAmount,
-    mirrorAmount,
   };
 };
 

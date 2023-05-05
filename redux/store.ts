@@ -22,6 +22,7 @@ import fullScreenVideoReducer from "./reducers/fullScreenVideoSlice";
 import lookAroundReducer from "./reducers/lookAroundSlice";
 import videoSyncReducer from "./reducers/videoSyncSlice";
 import seekSecondReducer from "./reducers/seekSecondSlice";
+import reactionCountReducer from "./reducers/reactionCountSlice";
 
 const reducer = combineReducers({
   lensProfileReducer,
@@ -46,6 +47,7 @@ const reducer = combineReducers({
   lookAroundReducer,
   videoSyncReducer,
   seekSecondReducer,
+  reactionCountReducer,
 });
 
 export const store = configureStore({
