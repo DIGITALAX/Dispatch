@@ -37,6 +37,7 @@ const useAddDrop = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [chosenCollections, setChosenCollections] = useState<string[]>([]);
   const [alreadyInDrop, setAlreadyInDrop] = useState<string[]>([]);
+  const [deleteDropLoading, setDeleteDropLoading] = useState<boolean>(false);
 
   const { config, isSuccess } = usePrepareContractWrite({
     address: CHROMADIN_DROP_CONTRACT,
@@ -84,6 +85,23 @@ const useAddDrop = () => {
     });
 
   const { writeAsync: writeAddAsync } = useContractWrite(addConfig);
+
+  const { config: deleteConfig } = usePrepareContractWrite({
+    address: CHROMADIN_DROP_CONTRACT,
+    abi: [
+      {
+        inputs: [{ internalType: "uint256", name: "_dropId", type: "uint256" }],
+        name: "deleteDrop",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+    ],
+    functionName: "deleteDrop",
+    args: [dropValues?.id as any],
+  });
+
+  const { writeAsync: deleteWriteAsync } = useContractWrite(deleteConfig);
 
   const addDrop = async (): Promise<void> => {
     if (
@@ -147,6 +165,8 @@ const useAddDrop = () => {
           actionCollectionIds: [],
           actionDisabled: false,
           actionFileType: "",
+          actionId: 0,
+          actionType: "",
         })
       );
     } catch (err: any) {
@@ -177,6 +197,8 @@ const useAddDrop = () => {
         actionCollectionIds: dropValues.collectionIds,
         actionDisabled: false,
         actionFileType: dropValues.fileType,
+        actionId: dropValues.id,
+        actionType: dropValues.type,
       })
     );
   };
@@ -282,6 +304,43 @@ const useAddDrop = () => {
     setAddDropLoading(false);
   };
 
+  const deleteDrop = async (): Promise<void> => {
+    setDeleteDropLoading(true);
+    try {
+      const tx = await deleteWriteAsync?.();
+      await tx?.wait();
+      const newDrops = await getAllDrops(address);
+      dispatch(setAllDropsRedux(newDrops.data.dropCreateds));
+      dispatch(
+        setSuccessModal({
+          actionOpen: true,
+          actionMedia: dropValues.image,
+          actionLink: "",
+          actionMessage:
+            "Drop Deleted! Your drop has been deleted and included collections been removed from the market.",
+        })
+      );
+      dispatch(setDropSwitcher("drops"));
+    } catch (err: any) {
+      console.error(err.message);
+      dispatch(
+        setIndexModal({
+          actionValue: true,
+          actionMessage: "Unsuccessful. Please Try Again.",
+        })
+      );
+      setTimeout(() => {
+        dispatch(
+          setIndexModal({
+            actionValue: false,
+            actionMessage: "",
+          })
+        );
+      }, 4000);
+    }
+    setDeleteDropLoading(false);
+  };
+
   useEffect(() => {
     if (isSuccess) {
       addDropWrite();
@@ -313,6 +372,8 @@ const useAddDrop = () => {
     setImageLoading,
     addMore,
     alreadyInDrop,
+    deleteDrop,
+    deleteDropLoading,
   };
 };
 

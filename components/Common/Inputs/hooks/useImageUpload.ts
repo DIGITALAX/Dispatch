@@ -56,6 +56,8 @@ const useImageUpload = () => {
             actionCollectionIds: dropValues.collectionIds,
             actionDisabled: false,
             actionFileType: fileType,
+            actionId: dropValues.id,
+            actionType: dropValues.type,
           })
         );
       } else if (type === "collection") {
@@ -69,6 +71,7 @@ const useImageUpload = () => {
             actionTokenPrices: collectionValues?.tokenPrices,
             actionDisabled: false,
             actionFileType: fileType,
+            actionId: collectionValues?.id,
           })
         );
       }

@@ -36,38 +36,41 @@ const Success: FunctionComponent<SuccessProps> = ({
               </div>
               <div className="relative w-full h-fit flex flex-col items-center justify-center px-4 gap-6">
                 <div className="relative w-3/4 h-fit justify-center items-center text-white font-earl text-sm text-center">
-                  {message} 
+                  {message}
                 </div>
-                <div
-                  className="relative px-2 py-1.5 w-fit h-fit rounded-lg bg-ama text-black border border-white font-earl text-sm cursor-pointer active:scale-95"
-                  onClick={
-                    link
-                      ? () => {
-                          window.open(link, "_blank");
-                          dispatch(
-                            setSuccessModal({
-                              actionOpen: false,
-                              actionMedia: "",
-                              actionLink: "",
-                              actionMessage: "",
-                            })
-                          );
-                        }
-                      : () => {
-                          dispatch(setPage("drops"));
-                          dispatch(
-                            setSuccessModal({
-                              actionOpen: false,
-                              actionMedia: "",
-                              actionLink: "",
-                              actionMessage: "",
-                            })
-                          );
-                        }
-                  }
-                >
-                  {link ? "Go to Drop" : "Add Drop"}
-                </div>
+                {!message.includes("Collection Burned!") &&
+                  !message.includes("Drop Deleted!") && (
+                    <div
+                      className="relative px-2 py-1.5 w-fit h-fit rounded-lg bg-ama text-black border border-white font-earl text-sm cursor-pointer active:scale-95"
+                      onClick={
+                        link
+                          ? () => {
+                              window.open(link, "_blank");
+                              dispatch(
+                                setSuccessModal({
+                                  actionOpen: false,
+                                  actionMedia: "",
+                                  actionLink: "",
+                                  actionMessage: "",
+                                })
+                              );
+                            }
+                          : () => {
+                              dispatch(setPage("drops"));
+                              dispatch(
+                                setSuccessModal({
+                                  actionOpen: false,
+                                  actionMedia: "",
+                                  actionLink: "",
+                                  actionMessage: "",
+                                })
+                              );
+                            }
+                      }
+                    >
+                      {link ? "Go to Drop" : "Add Drop"}
+                    </div>
+                  )}
                 <div
                   className="relative w-36 preG:w-52 md:w-40 xl:w-52 h-36 preG:h-52 md:h-40 xl:h-52 justify-center items-center rounded-lg border border-white"
                   id="staticLoad"

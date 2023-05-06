@@ -22,6 +22,7 @@ const AddCollection: FunctionComponent<AddCollectionProps> = ({
   collectionDetails,
   setPrice,
   price,
+  deleteCollection,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full flex flex-col justify-start items-start text-white gap-4">
@@ -116,11 +117,18 @@ const AddCollection: FunctionComponent<AddCollectionProps> = ({
           </div>
           <div className="relative flex flex-col gap-2 w-fit h-fit justify-start items-center">
             <ButtonAdd
-              text={"Mint Collection"}
+              text={
+                collectionDetails?.type === "add"
+                  ? "Mint Collection"
+                  : "Delete Collection"
+              }
               width={"40"}
-              functionAdd={addCollection}
+              functionAdd={
+                collectionDetails?.type === "add"
+                  ? addCollection
+                  : deleteCollection
+              }
               loader={addCollectionLoading}
-              disabled={collectionDetails?.disabled}
             />
           </div>
         </div>

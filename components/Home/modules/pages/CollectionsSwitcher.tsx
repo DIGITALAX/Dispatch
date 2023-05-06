@@ -31,7 +31,8 @@ const CollectionsSwitcher: FunctionComponent = (): JSX.Element => {
     handleCollectionAmount,
     addCollection,
     price,
-    setPrice
+    setPrice,
+    deleteCollection,
   } = useAddCollection();
 
   switch (collectionSwitcher) {
@@ -51,6 +52,7 @@ const CollectionsSwitcher: FunctionComponent = (): JSX.Element => {
           collectionDetails={collectionDetails}
           setPrice={setPrice}
           price={price}
+          deleteCollection={deleteCollection}
         />
       );
 

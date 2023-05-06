@@ -31,6 +31,8 @@ export type AddDropProps = {
   allCollections: Collection[];
   alreadyInDrop: string[];
   addMore: () => Promise<void>;
+  deleteDrop: () => void
+  deleteDropLoading: boolean
 };
 
 export interface Drop {

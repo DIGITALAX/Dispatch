@@ -7,6 +7,7 @@ export interface DropDetailsState {
   disabled: boolean;
   id?: number;
   fileType: string;
+  type: string;
 }
 
 const initialDropDetailsState: DropDetailsState = {
@@ -16,6 +17,7 @@ const initialDropDetailsState: DropDetailsState = {
   disabled: false,
   id: undefined,
   fileType: "",
+  type: "add",
 };
 
 export const dropDetailsSlice = createSlice({
@@ -32,6 +34,7 @@ export const dropDetailsSlice = createSlice({
           actionDisabled,
           actionId,
           actionFileType,
+          actionType,
         },
       }
     ) => {
@@ -41,6 +44,7 @@ export const dropDetailsSlice = createSlice({
       state.disabled = actionDisabled;
       state.id = actionId;
       state.fileType = actionFileType;
+      state.type = actionType;
     },
   },
 });

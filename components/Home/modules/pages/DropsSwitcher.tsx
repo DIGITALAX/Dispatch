@@ -35,6 +35,8 @@ const DropsSwitcher: FunctionComponent = (): JSX.Element => {
     setImageLoading,
     alreadyInDrop,
     addMore,
+    deleteDropLoading,
+    deleteDrop,
   } = useAddDrop();
   const { allDrops, dropsLoading } = useAllDrops();
 
@@ -58,6 +60,8 @@ const DropsSwitcher: FunctionComponent = (): JSX.Element => {
           alreadyInDrop={alreadyInDrop}
           allCollections={allCollections}
           addMore={addMore}
+          deleteDrop={deleteDrop}
+          deleteDropLoading={deleteDropLoading}
         />
       );
 

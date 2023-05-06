@@ -30,6 +30,8 @@ const AddDrop: FunctionComponent<AddDropProps> = ({
   allCollections,
   alreadyInDrop,
   addMore,
+  deleteDrop,
+  deleteDropLoading,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full flex flex-col justify-start items-start text-white gap-4">
@@ -95,13 +97,25 @@ const AddDrop: FunctionComponent<AddDropProps> = ({
               disabled={dropDetails.disabled}
             />
           </div>
-          <div className="relative flex flex-col gap-2 w-fit h-fit justify-start items-center">
-            <ButtonAdd
-              text={dropDetails.disabled ? "Add More" : "Add Drop"}
-              functionAdd={dropDetails.disabled ? addMore : addDrop}
-              loader={addDropLoading}
-              width={"28"}
-            />
+          <div className="relative flex flex-row gap-2 w-fit h-fit items-center justify-start">
+            <div className="relative flex flex-col gap-2 w-fit h-fit justify-start items-center">
+              <ButtonAdd
+                text={dropDetails.disabled ? "Add More" : "Add Drop"}
+                functionAdd={dropDetails.disabled ? addMore : addDrop}
+                loader={addDropLoading}
+                width={"28"}
+              />
+            </div>
+            <div className="relative flex flex-col gap-2 w-fit h-fit justify-start items-center">
+              {dropDetails.type === "delete" && (
+                <ButtonAdd
+                  text={"Delete Drop"}
+                  functionAdd={deleteDrop as any}
+                  loader={deleteDropLoading}
+                  width={"36"}
+                />
+              )}
+            </div>
           </div>
           {dropDetails.disabled === true && (
             <div className="relative w-fit h-fit flex flex-col text-xs font-earl text-marip">
@@ -132,6 +146,7 @@ const AddDrop: FunctionComponent<AddDropProps> = ({
                         ),
                         actionDisabled: true,
                         actionFileType: value.fileType,
+                        actionId: value.collectionId,
                       })
                     );
                     dispatch(setCollectionSwitcher("add"));

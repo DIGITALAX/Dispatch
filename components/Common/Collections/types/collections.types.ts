@@ -27,6 +27,7 @@ export type AddCollectionProps = {
   handleCollectionPrices: (e: FormEvent, address: string) => void;
   setPrice: (e: { value: number; currency: string }) => void;
   price: { value: number; currency: string } | undefined;
+  deleteCollection: () => Promise<void>
 };
 
 export type CollectionPreviewProps = {

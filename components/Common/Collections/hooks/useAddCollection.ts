@@ -84,6 +84,26 @@ const useAddCollection = () => {
 
   const { writeAsync } = useContractWrite(config);
 
+  const { config: burnConfig } =
+    usePrepareContractWrite({
+      address: CHROMADIN_COLLECTION_CONTRACT,
+      abi: [
+        {
+          inputs: [
+            { internalType: "uint256", name: "_collectionId", type: "uint256" },
+          ],
+          name: "burnCollection",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+      ],
+      functionName: "burnCollection",
+      args: [collectionValues?.id as any],
+    });
+
+  const { writeAsync: burnWriteAsync } = useContractWrite(burnConfig);
+
   const handleCollectionTitle = (e: FormEvent): void => {
     dispatch(
       setCollectionDetails({
@@ -94,7 +114,9 @@ const useAddCollection = () => {
         actionAcceptedTokens: collectionValues?.acceptedTokens,
         actionTokenPrices: collectionValues?.tokenPrices,
         actionDisabled: false,
-        actionFileType: collectionValues.fileType
+        actionFileType: collectionValues.fileType,
+        actionType: collectionValues?.type,
+        actionId: collectionValues.id,
       })
     );
   };
@@ -109,7 +131,9 @@ const useAddCollection = () => {
         actionAcceptedTokens: collectionValues?.acceptedTokens,
         actionTokenPrices: collectionValues?.tokenPrices,
         actionDisabled: false,
-        actionFileType: collectionValues.fileType
+        actionFileType: collectionValues.fileType,
+        actionType: collectionValues?.type,
+        actionId: collectionValues.id,
       })
     );
   };
@@ -124,7 +148,9 @@ const useAddCollection = () => {
         actionAcceptedTokens: collectionValues?.acceptedTokens,
         actionTokenPrices: collectionValues?.tokenPrices,
         actionDisabled: false,
-        actionFileType: collectionValues.fileType
+        actionFileType: collectionValues.fileType,
+        actionType: collectionValues?.type,
+        actionId: collectionValues.id,
       })
     );
   };
@@ -166,7 +192,9 @@ const useAddCollection = () => {
         actionAcceptedTokens: acceptedTokens,
         actionTokenPrices: tokenPrices,
         actionDisabled: false,
-        actionFileType: collectionValues.fileType
+        actionFileType: collectionValues.fileType,
+        actionType: collectionValues?.type,
+        actionId: collectionValues.id,
       })
     );
   };
@@ -257,7 +285,7 @@ const useAddCollection = () => {
             "Collection Minted! Before your collection is live on the Market, you need to add it to a drop.",
         })
       );
-      dispatch(setCollectionSwitcher("collections"))
+      dispatch(setCollectionSwitcher("collections"));
       dispatch(
         setCollectionDetails({
           actionTitle: "",
@@ -267,7 +295,9 @@ const useAddCollection = () => {
           actionAcceptedTokens: [],
           actionTokenPrices: [],
           actionDisabled: false,
-          actionFileType: ""
+          actionFileType: "",
+          actionType: "",
+          actionId: 0,
         })
       );
     } catch (err: any) {
@@ -287,6 +317,67 @@ const useAddCollection = () => {
         );
       }, 4000);
     }
+    setAddCollectionLoading(false);
+  };
+
+  const deleteCollection = async (): Promise<void> => {
+    setAddCollectionLoading(true);
+    try {
+      dispatch(
+        setIndexModal({
+          actionValue: true,
+          actionMessage: "Deleting Collection",
+        })
+      );
+      const tx = await burnWriteAsync?.();
+      await tx?.wait();
+      dispatch(
+        setIndexModal({
+          actionValue: false,
+          actionMessage: "",
+        })
+      );
+      dispatch(
+        setSuccessModal({
+          actionOpen: true,
+          actionMedia: collectionValues.image,
+          actionLink: "",
+          actionMessage: "Collection Burned! Your Collection has been burned.",
+        })
+      );
+      dispatch(setCollectionSwitcher("collections"));
+      dispatch(
+        setCollectionDetails({
+          actionTitle: "",
+          actionDescription: "",
+          actionImage: "",
+          actionAmount: 1,
+          actionAcceptedTokens: [],
+          actionTokenPrices: [],
+          actionDisabled: false,
+          actionFileType: "",
+          actionType: "",
+          actionId: 0,
+        })
+      );
+    } catch (err: any) {
+      console.error(err.message);
+      dispatch(
+        setIndexModal({
+          actionValue: true,
+          actionMessage: "Unsuccessful. Please Try Again.",
+        })
+      );
+      setTimeout(() => {
+        dispatch(
+          setIndexModal({
+            actionValue: false,
+            actionMessage: "",
+          })
+        );
+      }, 4000);
+    }
+
     setAddCollectionLoading(false);
   };
 
@@ -345,6 +436,7 @@ const useAddCollection = () => {
     handleCollectionPrices,
     price,
     setPrice,
+    deleteCollection,
   };
 };
 

@@ -9,6 +9,8 @@ export interface CollectionDetailsState {
   tokenPrices: number[];
   disabled: boolean;
   fileType: string;
+  type: string;
+  id: number;
 }
 
 const initialCollectionDetailsState: CollectionDetailsState = {
@@ -20,6 +22,8 @@ const initialCollectionDetailsState: CollectionDetailsState = {
   tokenPrices: [],
   disabled: false,
   fileType: "",
+  type: "add",
+  id: 0,
 };
 
 export const collectionDetailsSlice = createSlice({
@@ -38,6 +42,8 @@ export const collectionDetailsSlice = createSlice({
           actionTokenPrices,
           actionDisabled,
           actionFileType,
+          actionType,
+          actionId,
         },
       }
     ) => {
@@ -49,6 +55,8 @@ export const collectionDetailsSlice = createSlice({
       state.tokenPrices = actionTokenPrices;
       state.disabled = actionDisabled;
       state.fileType = actionFileType;
+      state.type = actionType;
+      state.id = actionId;
     },
   },
 });
