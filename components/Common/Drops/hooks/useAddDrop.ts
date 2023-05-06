@@ -139,13 +139,14 @@ const useAddDrop = () => {
           actionMessage: "Drop Live! You can view your live drop here",
         })
       );
+      dispatch(setDropSwitcher("drops"));
       dispatch(
         setDropDetails({
           actionTitle: "",
           actionImage: "",
           actionCollectionIds: [],
           actionDisabled: false,
-          actionFileType: ""
+          actionFileType: "",
         })
       );
     } catch (err: any) {
@@ -175,7 +176,7 @@ const useAddDrop = () => {
         actionImage: dropValues.image,
         actionCollectionIds: dropValues.collectionIds,
         actionDisabled: false,
-        actionFileType: dropValues.fileType
+        actionFileType: dropValues.fileType,
       })
     );
   };

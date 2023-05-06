@@ -3,6 +3,7 @@ import {
   MUMBAI_COLLECTION,
 } from "@/lib/constants";
 import { setCollectionDetails } from "@/redux/reducers/collectionDetailsSlice";
+import { setCollectionSwitcher } from "@/redux/reducers/collectionSwitcherSlice";
 import { setIndexModal } from "@/redux/reducers/indexModalSlice";
 import { setModal } from "@/redux/reducers/modalSlice";
 import { setSuccessModal } from "@/redux/reducers/successModalSlice";
@@ -256,6 +257,7 @@ const useAddCollection = () => {
             "Collection Minted! Before your collection is live on the Market, you need to add it to a drop.",
         })
       );
+      dispatch(setCollectionSwitcher("collections"))
       dispatch(
         setCollectionDetails({
           actionTitle: "",
