@@ -117,17 +117,9 @@ const AddCollection: FunctionComponent<AddCollectionProps> = ({
           </div>
           <div className="relative flex flex-col gap-2 w-fit h-fit justify-start items-center">
             <ButtonAdd
-              text={
-                collectionDetails?.type === "add"
-                  ? "Mint Collection"
-                  : "Delete Collection"
-              }
+              text={"Mint Collection"}
               width={"40"}
-              functionAdd={
-                collectionDetails?.type === "add"
-                  ? addCollection
-                  : deleteCollection
-              }
+              functionAdd={addCollection}
               loader={addCollectionLoading}
             />
           </div>
