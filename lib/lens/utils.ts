@@ -1,6 +1,6 @@
 import refresh from "../../graphql/lens/mutations/refresh";
 
-const AUTH_STORAGE_KEY = "LH_STORAGE_KEY";
+const AUTH_STORAGE_KEY = "LH_STORAGE_KEY_DISPATCH";
 
 interface authToken {
   token: {
