@@ -15,6 +15,8 @@ module.exports = {
         economicaB: "Economica B",
         digi: "DS DIGITAL",
         chill: "Chillax B",
+        dosis: "Dosis Regular",
+        clash: "Clash Display",
       },
       colors: {
         verde: "#25EC68",
@@ -40,6 +42,8 @@ module.exports = {
         lunar: "#C86FFF",
         lily: "#F0BBF4",
         pos: "#5433FD",
+        shame: "#F6F5F0",
+        offWhite: "#F2F2F2",
       },
       height: {
         100: "27rem",
@@ -50,6 +54,7 @@ module.exports = {
       zIndex: {
         1: "1",
         2: "2",
+        60: "60",
       },
       backgroundImage: {
         chroma:

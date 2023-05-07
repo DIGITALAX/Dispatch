@@ -5,7 +5,6 @@ import authStatusReducer from "./reducers/authStatusSlice";
 import isCreatorReducer from "./reducers/isCreatorSlice";
 import pageReducer from "./reducers/pageSlice";
 import dropSwitcherReducer from "./reducers/dropSwitcherSlice";
-import tokenGatedSwitcherReducer from "./reducers/tokenGatedSwitcherSlice";
 import mainVideoReducer from "./reducers/mainVideoSlice";
 import channelsReducer from "./reducers/channelsSlice";
 import reactIdReducer from "./reducers/reactIdSlice";
@@ -23,6 +22,18 @@ import lookAroundReducer from "./reducers/lookAroundSlice";
 import videoSyncReducer from "./reducers/videoSyncSlice";
 import seekSecondReducer from "./reducers/seekSecondSlice";
 import reactionCountReducer from "./reducers/reactionCountSlice";
+import imageViewerReducer from "./reducers/imageViewerSlice";
+import commentShowReducer from "./reducers/commentShowSlice";
+import reactionStateReducer from "./reducers/reactionStateSlice";
+import feedReducer from "./reducers/feedSlice";
+import followerOnlyReducer from "./reducers/followerOnlySlice";
+import purchaseReducer from "./reducers/purchaseSlice";
+import postCollectReducer from "./reducers/postCollectSlice";
+import approvalArgsReducer from "./reducers/approvalArgsSlice";
+import reactionFeedCountReducer from "./reducers/reactionFeedCountSlice";
+import timelineReducer from "./reducers/timelineSlice";
+import reactionTimelineCountReducer from "./reducers/reactionTimelineCountSlice";
+import lastFeedIndexReducer from "./reducers/lastFeedIndexSlice";
 
 const reducer = combineReducers({
   lensProfileReducer,
@@ -30,7 +41,6 @@ const reducer = combineReducers({
   isCreatorReducer,
   pageReducer,
   dropSwitcherReducer,
-  tokenGatedSwitcherReducer,
   mainVideoReducer,
   channelsReducer,
   reactIdReducer,
@@ -48,6 +58,18 @@ const reducer = combineReducers({
   videoSyncReducer,
   seekSecondReducer,
   reactionCountReducer,
+  imageViewerReducer,
+  commentShowReducer,
+  reactionStateReducer,
+  feedReducer,
+  followerOnlyReducer,
+  purchaseReducer,
+  postCollectReducer,
+  approvalArgsReducer,
+  reactionFeedCountReducer,
+  timelineReducer,
+  reactionTimelineCountReducer,
+  lastFeedIndexReducer,
 });
 
 export const store = configureStore({

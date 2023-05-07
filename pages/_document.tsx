@@ -76,6 +76,20 @@ export default function Document() {
         />
         <link
           rel="preload"
+          href="/fonts/DosisRegular.ttf"
+          as="font"
+          crossOrigin="anonymous"
+          type="font/ttf"
+        />
+        <link
+          rel="preload"
+          href="/fonts/ClashDisplay.ttf"
+          as="font"
+          crossOrigin="anonymous"
+          type="font/ttf"
+        />
+        <link
+          rel="preload"
           href="/fonts/ChillaxBold.otf"
           as="font"
           crossOrigin="anonymous"
@@ -124,6 +138,18 @@ export default function Document() {
                 font-family: "Chillax B";
                 font-weight: 400;
                 src: url("./fonts/ChillaxBold.otf");
+              }
+
+              @font-face {
+                font-family: "Dosis Regular";
+                font-weight: 400;
+                src: url("./fonts/DosisRegular.ttf");
+              }
+
+              @font-face {
+                font-family: "Clash Display";
+                font-weight: 400;
+                src: url("./fonts/ClashDisplay.ttf");
               }
               
             `,

@@ -6,6 +6,8 @@ import Indexing from "./Indexing";
 import FullScreenVideo from "./FullScreenVideo";
 import useControls from "../../Tunes/hooks/useControls";
 import { useRef } from "react";
+import ImageViewerModal from "./ImageViewer";
+import Purchase from "./Purchase";
 
 const Modals = () => {
   const dispatch = useDispatch();
@@ -29,9 +31,46 @@ const Modals = () => {
   const dispatchVideos = useSelector(
     (state: RootState) => state.app.channelsReducer.value
   );
+  const imageViewer = useSelector(
+    (state: RootState) => state.app.imageViewerReducer
+  );
+  const reaction = useSelector(
+    (state: RootState) => state.app.reactionStateReducer
+  );
   const { fullVideoRef, wrapperRef } = useControls();
   return (
     <>
+      {/* {reaction.open && reaction.type === "heart" && (
+        <Heart
+          reacters={reacters}
+          getMorePostReactions={getMorePostReactions}
+          reactionPost={reactionPost}
+          reactionLoading={reactionLoading}
+          reactionInfoLoading={reactionInfoLoading}
+        />
+      )} */}
+      {reaction.open && reaction.type === "collect" && (
+        <Purchase
+          collectInfoLoading={collectInfoLoading}
+          approvalLoading={approvalLoading}
+          address={address}
+          collectModuleValues={collectModuleValues}
+          lensProfile={lensProfile}
+          collectComment={collectVideo}
+          collectLoading={collectLoading[purchaseModal?.index!]}
+          approveCurrency={approveCurrency}
+          handleLensSignIn={handleLensSignIn}
+          commentId={purchaseModal?.id}
+        />
+      )}
+      {/* {reaction.open && reaction.type === "mirror" && (
+        <Mirror
+         
+        />
+      )}
+      {
+        <Collect />
+      } */}
       {fullScreenVideo.value && (
         <FullScreenVideo
           dispatch={dispatch}
@@ -56,6 +95,13 @@ const Modals = () => {
         />
       )}
       {indexingModal?.value && <Indexing message={indexingModal.message} />}
+      {imageViewer?.open && (
+        <ImageViewerModal
+          image={imageViewer.image}
+          type={imageViewer.type}
+          dispatch={dispatch}
+        />
+      )}
     </>
   );
 };

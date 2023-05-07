@@ -44,6 +44,18 @@
   src: url("/fonts/EconomicaBold.ttf");
 }
 
+@font-face {
+  font-family: "Clash Display";
+  font-weight: 400;
+  src: url("/fonts/ClashDisplay.ttf");
+}
+
+@font-face {
+  font-family: "Dosis Regular";
+  font-weight: 400;
+  src: url("/fonts/DosisRegular.ttf");
+}
+
 html {
   background-color: #000000;
 }
@@ -184,7 +196,7 @@ input[type="range"]::-moz-range-thumb {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  -webkit-text-stroke: 1px #FFFC80;
+  -webkit-text-stroke: 1px #fffc80;
   color: transparent;
 }
 
@@ -192,14 +204,31 @@ input[type="range"]::-moz-range-thumb {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  -webkit-text-stroke: 1px #FC9CF3;
-  color: transparent; 
+  -webkit-text-stroke: 1px #fc9cf3;
+  color: transparent;
 }
 
 #itemBack {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  -webkit-text-stroke: 0.8px #FFFC80;
+  -webkit-text-stroke: 0.8px #fffc80;
   color: transparent;
+}
+
+#username {
+  background: linear-gradient(
+    -86deg,
+    #000000,
+    #8dc6f9,
+    #7b7fe7,
+    #2a42fc,
+    #000000
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+#sideProfile {
+  background: linear-gradient(to right, transparent, white, #44afd3);
 }
