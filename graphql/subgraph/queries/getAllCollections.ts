@@ -13,7 +13,7 @@ const COLLECTIONS = `
       soldTokens
       tokenIds
     }
-    chromadinCollectionNewCollectionMinteds {
+    chromadinCollectionNewCollectionMinteds(where: {owner: $owner}, orderDirection: desc) {
       basePrices
       uri
       collectionId
