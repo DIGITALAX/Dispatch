@@ -2,7 +2,7 @@ export const INFURA_GATEWAY: string = "https://chromadin.infura-ipfs.io";
 export const BASE_URL: string = "https://api.lens.dev";
 
 export const CHROMADIN_COLLECTION_CONTRACT: `0x${string}` =
-  "0x824eABbE8c32aA045e2d81d4a253ACa936e2e934";
+  "0x824eabbe8c32aa045e2d81d4a253aca936e2e934";
 export const CHROMADIN_ESCROW_CONTRACT: `0x${string}` =
   "0x91e9ae053E5Afc0192D338bBAB83e718BEe8F03A";
 export const CHROMADIN_NFT_CONTRACT: `0x${string}` =
@@ -15,9 +15,16 @@ export const SAMPLER_CONTRACT: `0x${string}` =
   "0x948ed9CD14Ce2B60Cee4bca0BCe1a65B95BD34d2";
 export const CHROMADIN_ACCESS_CONTROLS: `0x${string}` =
   "0xa376FdE1e0033a2624d95E3D4345aAd32d5fE1cD";
-export const MUMBAI_ACCESS_CONTROLS: `0x${string}` = "0x90133B9fE1E2a72F8e3F8D19656c93644c9A6B55"
-export const MUMBAI_COLLECTION : `0x${string}` = "0xA2f8D55Ae9b9652a82Fd750B3781a1802Cc5241c"
-export const MUMBAI_DROP : `0x${string}` = "0x66f5320fDA50b9090C8508B81C678F477b77ec4c"
+export const MUMBAI_ACCESS_CONTROLS: `0x${string}` =
+  "0x90133B9fE1E2a72F8e3F8D19656c93644c9A6B55";
+export const MUMBAI_COLLECTION: `0x${string}` =
+  "0xA2f8D55Ae9b9652a82Fd750B3781a1802Cc5241c";
+export const MUMBAI_DROP: `0x${string}` =
+  "0x66f5320fDA50b9090C8508B81C678F477b77ec4c";
+export const CHROMADIN_COLLECTION_CONTRACT_NEW: `0x${string}` =
+  "0xA3C2F7ba49513Ae46d44D074679f52cAEF7E721B";
+export const CHROMADIN_DROP_CONTRACT_NEW: `0x${string}` =
+  "0xd68E8FD1dffC8F09b27b2973d06027D9E96e9d20";
 
 export const LENS_HUB_PROXY_ADDRESS_MUMBAI: `0x${string}` =
   "0x60Ae865ee4C725cd04353b5AAb364553f56ceF82";

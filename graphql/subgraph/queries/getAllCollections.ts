@@ -13,6 +13,18 @@ const COLLECTIONS = `
       soldTokens
       tokenIds
     }
+    chromadinCollectionNewCollectionMinteds {
+      basePrices
+      uri
+      collectionId
+      amount
+      acceptedTokens
+      name
+      owner
+      blockTimestamp
+      tokenIds
+      soldTokens
+    }
   }
 `;
 

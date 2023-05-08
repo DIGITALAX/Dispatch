@@ -1,6 +1,10 @@
 import getAllCollections from "@/graphql/subgraph/queries/getAllCollections";
 import getAllDrops from "@/graphql/subgraph/queries/getAllDrops";
-import { CHROMADIN_DROP_CONTRACT, MUMBAI_DROP } from "@/lib/constants";
+import {
+  CHROMADIN_DROP_CONTRACT,
+  CHROMADIN_DROP_CONTRACT_NEW,
+  MUMBAI_DROP,
+} from "@/lib/constants";
 import { setAllDropsRedux } from "@/redux/reducers/allDropsSlice";
 import { setDropDetails } from "@/redux/reducers/dropDetailsSlice";
 import { setDropSwitcher } from "@/redux/reducers/dropSwitcherSlice";
@@ -40,7 +44,10 @@ const useAddDrop = () => {
   const [deleteDropLoading, setDeleteDropLoading] = useState<boolean>(false);
 
   const { config, isSuccess } = usePrepareContractWrite({
-    address: CHROMADIN_DROP_CONTRACT,
+    address:
+      dropValues?.contractType === "primary"
+        ? CHROMADIN_DROP_CONTRACT
+        : CHROMADIN_DROP_CONTRACT_NEW,
     abi: [
       {
         inputs: [
@@ -66,7 +73,10 @@ const useAddDrop = () => {
 
   const { config: addConfig, isSuccess: addIsSuccess } =
     usePrepareContractWrite({
-      address: CHROMADIN_DROP_CONTRACT,
+      address:
+        dropValues?.contractType === "primary"
+          ? CHROMADIN_DROP_CONTRACT
+          : CHROMADIN_DROP_CONTRACT_NEW,
       abi: [
         {
           inputs: [
@@ -87,7 +97,9 @@ const useAddDrop = () => {
   const { writeAsync: writeAddAsync } = useContractWrite(addConfig);
 
   const { config: deleteConfig } = usePrepareContractWrite({
-    address: CHROMADIN_DROP_CONTRACT,
+    address: dropValues?.contractType === "primary"
+    ? CHROMADIN_DROP_CONTRACT
+    : CHROMADIN_DROP_CONTRACT_NEW,
     abi: [
       {
         inputs: [{ internalType: "uint256", name: "_dropId", type: "uint256" }],
@@ -167,6 +179,7 @@ const useAddDrop = () => {
           actionFileType: "",
           actionId: 0,
           actionType: "",
+          actionContractType: "secondary",
         })
       );
     } catch (err: any) {
@@ -199,6 +212,7 @@ const useAddDrop = () => {
         actionFileType: dropValues.fileType,
         actionId: dropValues.id,
         actionType: dropValues.type,
+        actionContractType: dropValues.contractType,
       })
     );
   };
@@ -208,11 +222,15 @@ const useAddDrop = () => {
       const drops = await getAllDrops(address);
       const colls = await getAllCollections(address);
 
-      const dropIds = drops.data.dropCreateds.flatMap(
-        (d: any) => d.collectionIds
-      );
+      const dropIds = [
+        ...drops.data.dropCreateds,
+        ...drops.data.chromadinDropNewDropCreateds,
+      ].flatMap((d: any) => d.collectionIds);
       setAvailableCollectionIds(
-        colls?.data?.collectionMinteds
+        [
+          ...colls?.data?.collectionMinteds,
+          ...colls?.data?.chromadinCollectionNewCollectionMinteds,
+        ]
           .filter((c: any) => !dropIds.includes(c.collectionId))
           .map((c: any) => c.name)
       );
@@ -274,7 +292,12 @@ const useAddDrop = () => {
       const tx = await writeAddAsync?.();
       await tx?.wait();
       const newDrops = await getAllDrops(address);
-      dispatch(setAllDropsRedux(newDrops.data.dropCreateds));
+      dispatch(
+        setAllDropsRedux([
+          ...newDrops.data.dropCreateds,
+          ...newDrops.data.chromadinDropNewDropCreateds,
+        ])
+      );
       dispatch(
         setSuccessModal({
           actionOpen: true,
@@ -310,7 +333,18 @@ const useAddDrop = () => {
       const tx = await deleteWriteAsync?.();
       await tx?.wait();
       const newDrops = await getAllDrops(address);
-      dispatch(setAllDropsRedux(newDrops.data.dropCreateds));
+      dispatch(
+        setAllDropsRedux([
+          ...newDrops.data.dropCreateds.map((drop: any) => ({
+            ...drop,
+            contractType: "primary",
+          })),
+          ...newDrops.data.chromadinDropNewDropCreateds.map((drop: any) => ({
+            ...drop,
+            contractType: "secondary",
+          })),
+        ])
+      );
       dispatch(
         setSuccessModal({
           actionOpen: true,

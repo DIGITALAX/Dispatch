@@ -27,7 +27,7 @@ export type AddCollectionProps = {
   handleCollectionPrices: (e: FormEvent, address: string) => void;
   setPrice: (e: { value: number; currency: string }) => void;
   price: { value: number; currency: string } | undefined;
-  deleteCollection: () => Promise<void>
+  deleteCollection: () => Promise<void>;
 };
 
 export type CollectionPreviewProps = {
@@ -63,4 +63,5 @@ export interface Collection {
   tokenIds: string[];
   soldTokens: string[] | null;
   fileType: string;
+  contractType: string;
 }

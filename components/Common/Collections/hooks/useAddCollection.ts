@@ -1,5 +1,6 @@
 import {
   CHROMADIN_COLLECTION_CONTRACT,
+  CHROMADIN_COLLECTION_CONTRACT_NEW,
   MUMBAI_COLLECTION,
 } from "@/lib/constants";
 import { setCollectionDetails } from "@/redux/reducers/collectionDetailsSlice";
@@ -41,7 +42,7 @@ const useAddCollection = () => {
   >();
 
   const { config, isSuccess } = usePrepareContractWrite({
-    address: CHROMADIN_COLLECTION_CONTRACT,
+    address: CHROMADIN_COLLECTION_CONTRACT_NEW,
     abi: [
       {
         inputs: [
@@ -84,23 +85,25 @@ const useAddCollection = () => {
 
   const { writeAsync } = useContractWrite(config);
 
-  const { config: burnConfig } =
-    usePrepareContractWrite({
-      address: CHROMADIN_COLLECTION_CONTRACT,
-      abi: [
-        {
-          inputs: [
-            { internalType: "uint256", name: "_collectionId", type: "uint256" },
-          ],
-          name: "burnCollection",
-          outputs: [],
-          stateMutability: "nonpayable",
-          type: "function",
-        },
-      ],
-      functionName: "burnCollection",
-      args: [collectionValues?.id as any],
-    });
+  const { config: burnConfig } = usePrepareContractWrite({
+    address:
+      collectionValues?.contractType === "primary"
+        ? CHROMADIN_COLLECTION_CONTRACT
+        : CHROMADIN_COLLECTION_CONTRACT_NEW,
+    abi: [
+      {
+        inputs: [
+          { internalType: "uint256", name: "_collectionId", type: "uint256" },
+        ],
+        name: "burnCollection",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+    ],
+    functionName: "burnCollection",
+    args: [collectionValues?.id as any],
+  });
 
   const { writeAsync: burnWriteAsync } = useContractWrite(burnConfig);
 
@@ -117,6 +120,7 @@ const useAddCollection = () => {
         actionFileType: collectionValues.fileType,
         actionType: collectionValues?.type,
         actionId: collectionValues.id,
+        actionContractType: collectionValues.contractType,
       })
     );
   };
@@ -134,6 +138,7 @@ const useAddCollection = () => {
         actionFileType: collectionValues.fileType,
         actionType: collectionValues?.type,
         actionId: collectionValues.id,
+        actionContractType: collectionValues.contractType,
       })
     );
   };
@@ -151,6 +156,7 @@ const useAddCollection = () => {
         actionFileType: collectionValues.fileType,
         actionType: collectionValues?.type,
         actionId: collectionValues.id,
+        actionContractType: collectionValues.contractType,
       })
     );
   };
@@ -195,6 +201,7 @@ const useAddCollection = () => {
         actionFileType: collectionValues.fileType,
         actionType: collectionValues?.type,
         actionId: collectionValues.id,
+        actionContractType: collectionValues.contractType,
       })
     );
   };
@@ -298,6 +305,7 @@ const useAddCollection = () => {
           actionFileType: "",
           actionType: "",
           actionId: 0,
+          actionContractType: "secondary",
         })
       );
     } catch (err: any) {
@@ -358,6 +366,7 @@ const useAddCollection = () => {
           actionFileType: "",
           actionType: "",
           actionId: 0,
+          actionContractType: "secondary",
         })
       );
     } catch (err: any) {

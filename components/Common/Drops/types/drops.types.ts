@@ -31,8 +31,8 @@ export type AddDropProps = {
   allCollections: Collection[];
   alreadyInDrop: string[];
   addMore: () => Promise<void>;
-  deleteDrop: () => void
-  deleteDropLoading: boolean
+  deleteDrop: () => void;
+  deleteDropLoading: boolean;
 };
 
 export interface Drop {
@@ -44,4 +44,5 @@ export interface Drop {
     image: string;
   };
   fileType: string;
+  contractType: string;
 }

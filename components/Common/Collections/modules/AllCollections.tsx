@@ -31,6 +31,7 @@ const AllCollections: FunctionComponent<AllCollectionsProps> = ({
                 actionFileType: "",
                 actionType: "add",
                 actionId: 0,
+                actionContractType: "secondary"
               })
             );
             dispatch(setCollectionSwitcher("add"));
@@ -74,6 +75,7 @@ const AllCollections: FunctionComponent<AllCollectionsProps> = ({
                       actionFileType: value.fileType,
                       actionType: "delete",
                       actionId: value.collectionId,
+                      actionContractType: value.contractType
                     })
                   );
                   dispatch(setCollectionSwitcher("add"));
