@@ -18,7 +18,7 @@ const Collect: FunctionComponent<CollectModalProps> = ({
             <div className="relative w-full h-full col-start-1 rounded-xl place-self-center">
               <div className="relative w-full h-full grid grid-flow-row auto-rows-auto gap-10 pb-8">
                 <div className="relative w-fit h-fit row-start-1 self-center justify-self-end pr-3 pt-3 cursor-pointer">
-                  <ImCross
+                  {/* <ImCross
                     color="white"
                     size={15}
                     onClick={() =>
@@ -29,7 +29,7 @@ const Collect: FunctionComponent<CollectModalProps> = ({
                         })
                       )
                     }
-                  />
+                  /> */}
                 </div>
                 <div className="relative w-full h-fit row-start-2 grid grid-flow-col auto-cols-auto px-4">
                   <div className="relative w-fit h-fit font-earl text-white text-xl place-self-center text-center">

@@ -49,7 +49,7 @@ const Modals = () => {
           reactionInfoLoading={reactionInfoLoading}
         />
       )} */}
-      {reaction.open && reaction.type === "collect" && (
+      {/* {reaction.open && reaction.type === "collect" && (
         <Purchase
           collectInfoLoading={collectInfoLoading}
           approvalLoading={approvalLoading}
@@ -62,7 +62,7 @@ const Modals = () => {
           handleLensSignIn={handleLensSignIn}
           commentId={purchaseModal?.id}
         />
-      )}
+      )} */}
       {/* {reaction.open && reaction.type === "mirror" && (
         <Mirror
          
