@@ -23,6 +23,7 @@
     "ipfs-http-client": "^60.0.0",
     "lit-js-sdk": "^1.1.250",
     "lodash": "^4.17.21",
+    "moment": "^2.29.4",
     "next": "13.3.2",
     "next-auth": "^4.22.1",
     "next-connect": "^0.13.0",
