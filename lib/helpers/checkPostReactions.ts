@@ -9,7 +9,7 @@ const checkPostReactions = async (
     const hasReacted = await hasReactedPost(publicationObject, {
       profileId: lensProfile,
     });
-    for (let i = hasReacted.data.publications?.items?.length - 1; i >= 0; i--) {
+    for (let i = 0; i < hasReacted.data.publications.items.length; i++) {
       if (hasReacted.data.publications.items[i].reaction === "UPVOTE") {
         hasReactedArr.push(true);
       } else {
