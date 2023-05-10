@@ -5,12 +5,8 @@ import Error from "./Error";
 import Indexing from "./Indexing";
 import FullScreenVideo from "./FullScreenVideo";
 import useControls from "../../Tunes/hooks/useControls";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import ImageViewerModal from "./ImageViewer";
-import useUpgrade from "../hooks/useUpgrade";
-import Upgrade from "./Upgrade";
-import { useAccount } from "wagmi";
-import { setUpgrade } from "@/redux/reducers/upgradeSlice";
 
 const Modals = () => {
   const dispatch = useDispatch();
@@ -39,32 +35,6 @@ const Modals = () => {
   );
   const reaction = useSelector(
     (state: RootState) => state.app.reactionStateReducer
-  );
-  const {
-    upgradeFirst,
-    upgradeSecond,
-    upgradeFourth,
-    upgradeThird,
-   
-    tokensLoading,
-  } = useUpgrade();
-  const { address } = useAccount();
-  const option = useSelector((state: RootState) => state.app.pageReducer.value);
-  useEffect(() => {
-    if (
-      address?.toLowerCase() ===
-      "0x8E27b7192F520A3454A95C7C6c3a073344129030".toLowerCase()
-    ) {
-      dispatch(
-        setUpgrade({
-          actionOpen: true,
-        })
-      );
-    }
-  }, [address, option]);
-
-  const upgrade = useSelector(
-    (state: RootState) => state.app.upgradeReducer.open
   );
   const { fullVideoRef, wrapperRef } = useControls();
   return (
@@ -100,17 +70,6 @@ const Modals = () => {
       {
         <Collect />
       } */}
-      {upgrade && option === "collections" && (
-        <Upgrade
-          dispatch={dispatch}
-          tokensLoading={tokensLoading}
-          upgradeFirst={upgradeFirst}
-          upgradeFourth={upgradeFourth}
-          upgradeSecond={upgradeSecond}
-          upgradeThird={upgradeThird}
-          type={"coll"}
-        />
-      )}
       {fullScreenVideo.value && (
         <FullScreenVideo
           dispatch={dispatch}
