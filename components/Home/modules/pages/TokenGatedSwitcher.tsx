@@ -3,6 +3,7 @@ import Wallet from "@/components/Common/Connect/modules/Wallet";
 import useAllPost from "@/components/Common/TokenGated/hooks/useAllPosts";
 import useReactions from "@/components/Common/TokenGated/hooks/useReactions";
 import AllPosts from "@/components/Common/TokenGated/modules/AllPosts";
+import { setFeedSwitchRedux } from "@/redux/reducers/feedSwitchSlice";
 import { RootState } from "@/redux/store";
 import { useRouter } from "next/router";
 import { FunctionComponent } from "react";
@@ -30,25 +31,20 @@ const TokenGatedSwitcher: FunctionComponent = (): JSX.Element => {
   const reactionTimelineAmounts = useSelector(
     (state: RootState) => state.app.reactionTimelineCountReducer
   );
+  const feedSwitch = useSelector(
+    (state: RootState) => state.app.feedSwitchReducer.value
+  );
   const dispatch = useDispatch();
   const { handleLensSignIn } = useConnect();
   const {
     feed,
-    hasMirrored,
-    hasReacted,
     followerOnly,
     postsLoading,
     hasMore,
     fetchMore,
-    hasCollected,
-    feedSwitch,
-    setFeedSwitch,
     timeline,
     fetchMoreTimeline,
     hasMoreTimeline,
-    hasCollectedTimeline,
-    hasMirroredTimeline,
-    hasReactedTimeline,
     followerOnlyTimeline,
   } = useAllPost();
 
@@ -67,13 +63,11 @@ const TokenGatedSwitcher: FunctionComponent = (): JSX.Element => {
   } = useReactions();
 
   switch (auth) {
-    case auth:
+    case true:
       return (
         <AllPosts
           feed={feed}
           dispatch={dispatch}
-          hasMirrored={hasMirrored}
-          hasReacted={hasReacted}
           feedDispatch={feedDispatch}
           postsLoading={postsLoading}
           followerOnly={followerOnly}
@@ -89,16 +83,12 @@ const TokenGatedSwitcher: FunctionComponent = (): JSX.Element => {
           reactLoading={reactFeedLoading}
           collectLoading={collectFeedLoading}
           mirrorLoading={mirrorFeedLoading}
-          hasCollected={hasCollected}
           reactionAmounts={reactionAmounts}
           feedSwitch={feedSwitch}
-          setFeedSwitch={setFeedSwitch}
+          setFeedSwitch={setFeedSwitchRedux}
           timeline={timeline}
           timelineDispatch={timelineDispatch}
           timelineFollowerOnly={followerOnlyTimeline}
-          hasTimelineCollected={hasCollectedTimeline}
-          hasTimelineMirrored={hasMirroredTimeline}
-          hasTimelineReacted={hasReactedTimeline}
           reactTimelineLoading={reactTimelineLoading}
           mirrorTimelineLoading={mirrorTimelineLoading}
           collectTimelineLoading={collectTimelineLoading}

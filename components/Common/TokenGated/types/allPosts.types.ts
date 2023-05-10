@@ -104,9 +104,6 @@ export type ReactionProps = {
 
 export type AllPostsProps = {
   feed: Publication[];
-  hasMirrored: boolean[];
-  hasReacted: boolean[];
-  hasCollected: boolean[];
   dispatch: Dispatch<AnyAction>;
   followerOnly: boolean[];
   feedDispatch: Publication[];
@@ -125,10 +122,10 @@ export type AllPostsProps = {
   collectLoading: boolean[];
   reactionAmounts: ReactionFeedCountState;
   feedSwitch: boolean;
-  setFeedSwitch: (e: boolean) => void;
-  hasTimelineCollected: boolean[];
-  hasTimelineMirrored: boolean[];
-  hasTimelineReacted: boolean[];
+  setFeedSwitch: ActionCreatorWithPayload<
+    boolean,
+    "feedSwitch/setFeedSwitchRedux"
+  >;
   timelineFollowerOnly: boolean[];
   timelineDispatch: Publication[];
   timeline: Publication[];

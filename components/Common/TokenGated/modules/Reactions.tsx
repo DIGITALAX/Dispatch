@@ -63,7 +63,7 @@ const Reactions: FunctionComponent<ReactionProps> = ({
           )}
         </div>
         <div
-          className={`relative w-fit h-fit col-start-2 text-${textColor} font-dosis text-xs place-self-center`}
+          className={`relative w-fit h-fit col-start-2 text-${textColor} font-dosis text-xs place-self-center cursor-pointer`}
           onClick={() =>
             dispatch(
               setReactionState({
@@ -90,7 +90,7 @@ const Reactions: FunctionComponent<ReactionProps> = ({
           <FaRegCommentDots color={commentColor} size={15} />
         </div>
         <div
-          className={`relative w-fit h-fit col-start-2 text-${textColor} font-dosis text-xs place-self-center`}
+          className={`relative w-fit h-fit col-start-2 text-${textColor} font-dosis text-xs place-self-center cursor-pointer`}
           onClick={() =>
             dispatch(
               setReactionState({
@@ -123,7 +123,7 @@ const Reactions: FunctionComponent<ReactionProps> = ({
           )}
         </div>
         <div
-          className={`relative w-fit h-fit col-start-2 text-${textColor} font-dosis text-xs place-self-center`}
+          className={`relative w-fit h-fit col-start-2 text-${textColor} font-dosis text-xs place-self-center cursor-pointer`}
           onClick={() =>
             dispatch(
               setReactionState({
@@ -194,7 +194,7 @@ const Reactions: FunctionComponent<ReactionProps> = ({
                 })
               )
             }
-            className={`relative w-fit h-fit col-start-2 text-${textColor} font-dosis text-xs place-self-center`}
+            className={`relative w-fit h-fit col-start-2 text-${textColor} font-dosis text-xs place-self-center cursor-pointer`}
           >
             {collectAmount}
           </div>

@@ -5,6 +5,9 @@ export interface ReactionFeedCountState {
   mirror: number[];
   collect: number[];
   comment: number[];
+  hasLiked: boolean[];
+  hasMirrored: boolean[];
+  hasCollected: boolean[];
 }
 
 const initialReactionFeedCountState: ReactionFeedCountState = {
@@ -12,6 +15,9 @@ const initialReactionFeedCountState: ReactionFeedCountState = {
   mirror: [],
   collect: [],
   comment: [],
+  hasLiked: [],
+  hasMirrored: [],
+  hasCollected: [],
 };
 
 export const reactionFeedCountSlice = createSlice({
@@ -20,12 +26,25 @@ export const reactionFeedCountSlice = createSlice({
   reducers: {
     setReactionFeedCount: (
       state: ReactionFeedCountState,
-      { payload: { actionLike, actionMirror, actionCollect, actionComment } }
+      {
+        payload: {
+          actionLike,
+          actionMirror,
+          actionCollect,
+          actionComment,
+          actionHasLiked,
+          actionHasCollected,
+          actionHasMirrored,
+        },
+      }
     ) => {
       state.like = actionLike;
       state.mirror = actionMirror;
       state.collect = actionCollect;
       state.comment = actionComment;
+      state.hasLiked = actionHasLiked;
+      state.hasMirrored = actionHasMirrored;
+      state.hasCollected = actionHasCollected;
     },
   },
 });

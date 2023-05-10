@@ -34,6 +34,9 @@ import reactionFeedCountReducer from "./reducers/reactionFeedCountSlice";
 import timelineReducer from "./reducers/timelineSlice";
 import reactionTimelineCountReducer from "./reducers/reactionTimelineCountSlice";
 import lastFeedIndexReducer from "./reducers/lastFeedIndexSlice";
+import feedSwitchReducer from "./reducers/feedSwitchSlice";
+import feedReactIdReducer from "./reducers/feedReactIdSlice";
+import salesReducer from "./reducers/salesSlice";
 
 const reducer = combineReducers({
   lensProfileReducer,
@@ -70,6 +73,9 @@ const reducer = combineReducers({
   timelineReducer,
   reactionTimelineCountReducer,
   lastFeedIndexReducer,
+  feedSwitchReducer,
+  feedReactIdReducer,
+  salesReducer,
 });
 
 export const store = configureStore({

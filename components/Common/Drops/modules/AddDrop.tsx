@@ -142,12 +142,18 @@ const AddDrop: FunctionComponent<AddDropProps> = ({
                         actionAmount: value.amount,
                         actionAcceptedTokens: value.acceptedTokens,
                         actionTokenPrices: value.basePrices.map(
-                          (val: any) => Number(val) / 10 ** 18
+                          (val: any, i: number) =>
+                            Number(val) /
+                            (value.acceptedTokens.indexOf(
+                              "0xc2132d05d31c914a87c6611c10748aeb04b58e8f"
+                            ) === i
+                              ? 10 ** 6
+                              : 10 ** 18)
                         ),
                         actionDisabled: true,
                         actionFileType: value.fileType,
                         actionId: value.collectionId,
-                        actionContractType: value.contractType
+                        actionContractType: value.contractType,
                       })
                     );
                     dispatch(setCollectionSwitcher("add"));

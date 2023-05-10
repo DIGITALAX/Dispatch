@@ -243,8 +243,13 @@ const useAddCollection = () => {
         Math.ceil(collectionValues?.amount) as any,
         collectionValues?.title,
         collectionValues?.acceptedTokens as any,
-        collectionValues?.tokenPrices.map((price) => {
-          if (Number.isInteger(price)) {
+        collectionValues?.tokenPrices.map((price, i: number) => {
+          if (
+            i === collectionValues.acceptedTokens.indexOf(availableTokens[2][1])
+          ) {
+            // If the current index is the index of USDT, multiply by 10 ** 6
+            return (BigInt(price) * BigInt(10 ** 6)).toString();
+          } else if (Number.isInteger(price)) {
             // If price is an integer, convert it to BigInt as before
             return (BigInt(price) * BigInt(10 ** 18)).toString();
           } else {

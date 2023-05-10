@@ -31,6 +31,7 @@ import { setPurchase } from "@/redux/reducers/purchaseSlice";
 import { setModal } from "@/redux/reducers/modalSlice";
 import { waitForTransaction } from "@wagmi/core";
 import pollUntilIndexed from "@/graphql/lens/queries/checkIndexed";
+import { setFeedReactId } from "@/redux/reducers/feedReactIdSlice";
 
 const useReactions = () => {
   const dispatcher = useSelector(
@@ -45,33 +46,39 @@ const useReactions = () => {
   const feedDispatch = useSelector(
     (state: RootState) => state.app.feedReducer.value
   );
+  const timelineDispatch = useSelector(
+    (state: RootState) => state.app.timelineReducer.value
+  );
   const approvalArgs = useSelector(
     (state: RootState) => state.app.approvalArgsReducer.args
   );
   const purchase = useSelector((state: RootState) => state.app.purchaseReducer);
+  const feedSwitch = useSelector(
+    (state: RootState) => state.app.feedSwitchReducer.value
+  );
 
   const [mirrorArgs, setMirrorArgs] = useState<any>();
   const [collectArgs, setCollectArgs] = useState<any>();
   const [approvalLoading, setApprovalLoading] = useState<boolean>(false);
   const [collectInfoLoading, setCollectInfoLoading] = useState<boolean>(false);
   const [mirrorFeedLoading, setMirrorFeedLoading] = useState<boolean[]>(
-    Array.from({ length: feedDispatch?.length }, () => false)
+    Array.from({ length: feedDispatch.length }, () => false)
   );
   const [reactFeedLoading, setReactFeedLoading] = useState<boolean[]>(
-    Array.from({ length: feedDispatch?.length }, () => false)
+    Array.from({ length: feedDispatch.length }, () => false)
   );
   const [collectFeedLoading, setCollectFeedLoading] = useState<boolean[]>(
-    Array.from({ length: feedDispatch?.length }, () => false)
+    Array.from({ length: feedDispatch.length }, () => false)
   );
   const [mirrorTimelineLoading, setMirrorTimelineLoading] = useState<boolean[]>(
-    Array.from({ length: feedDispatch?.length }, () => false)
+    Array.from({ length: timelineDispatch.length }, () => false)
   );
   const [reactTimelineLoading, setReactTimelineLoading] = useState<boolean[]>(
-    Array.from({ length: feedDispatch?.length }, () => false)
+    Array.from({ length: timelineDispatch.length }, () => false)
   );
   const [collectTimelineLoading, setCollectTimelineLoading] = useState<
     boolean[]
-  >(Array.from({ length: feedDispatch?.length }, () => false));
+  >(Array.from({ length: timelineDispatch.length }, () => false));
   const [mirrorIndex, setMirrorIndex] = useState<number>();
   const [collectIndex, setCollectIndex] = useState<number>();
   const dispatch = useDispatch();
@@ -99,9 +106,11 @@ const useReactions = () => {
   const { writeAsync: collectWriteAsync } = useContractWrite(collectConfig);
 
   const reactPost = async (id: string): Promise<void> => {
-    const index = feedDispatch?.findIndex((feed) => feed.id === id);
+    const index = (feedSwitch ? feedDispatch : timelineDispatch)?.findIndex(
+      (feed) => feed.id === id
+    );
 
-    setReactFeedLoading((prev) => {
+    (feedSwitch ? setReactFeedLoading : setReactTimelineLoading)((prev) => {
       const updatedArray = [...prev];
       updatedArray[index] = true;
       return updatedArray;
@@ -111,12 +120,18 @@ const useReactions = () => {
       await addReaction({
         profileId: profileId,
         reaction: "UPVOTE",
-        publicationId: feedDispatch[index].id,
+        publicationId: id,
       });
+      dispatch(
+        setFeedReactId({
+          actionValue: id,
+          actionType: 0,
+        })
+      );
     } catch (err: any) {
       console.error(err.message);
     }
-    setReactFeedLoading((prev) => {
+    (feedSwitch ? setReactFeedLoading : setReactTimelineLoading)((prev) => {
       const updatedArray = [...prev];
       updatedArray[index] = false;
       return updatedArray;
@@ -139,10 +154,12 @@ const useReactions = () => {
   };
 
   const mirrorPost = async (id: string): Promise<void> => {
-    const index = feedDispatch.findIndex((feed) => feed.id === id);
+    const index = (feedSwitch ? feedDispatch : timelineDispatch).findIndex(
+      (feed) => feed.id === id
+    );
     setMirrorIndex(index);
 
-    setMirrorFeedLoading((prev) => {
+    (feedSwitch ? setMirrorFeedLoading : setMirrorTimelineLoading)((prev) => {
       const updatedArray = [...prev];
       updatedArray[index] = true;
       return updatedArray;
@@ -153,7 +170,7 @@ const useReactions = () => {
       if (dispatcher) {
         mirrorPost = await mirrorDispatcher({
           profileId: profileId,
-          publicationId: feedDispatch[index].id,
+          publicationId: id,
           referenceModule: {
             followerOnlyReferenceModule: false,
           },
@@ -174,7 +191,7 @@ const useReactions = () => {
       } else {
         mirrorPost = await mirror({
           profileId: profileId,
-          publicationId: feedDispatch[index].id,
+          publicationId: id,
           referenceModule: {
             followerOnlyReferenceModule: false,
           },
@@ -210,7 +227,19 @@ const useReactions = () => {
             },
           };
           setMirrorArgs(mirrorArgs);
+          dispatch(
+            setFeedReactId({
+              actionValue: id,
+              actionType: 1,
+            })
+          );
         } else {
+          dispatch(
+            setFeedReactId({
+              actionValue: id,
+              actionType: 1,
+            })
+          );
           dispatch(
             setIndexModal({
               actionValue: true,
@@ -229,7 +258,7 @@ const useReactions = () => {
     } catch (err: any) {
       console.error(err.message);
     }
-    setMirrorFeedLoading((prev) => {
+    (feedSwitch ? setMirrorFeedLoading : setMirrorTimelineLoading)((prev) => {
       const updatedArray = [...prev];
       updatedArray[index] = false;
       return updatedArray;
@@ -237,7 +266,7 @@ const useReactions = () => {
   };
 
   const mirrorWrite = async (): Promise<void> => {
-    setMirrorFeedLoading((prev) => {
+    (feedSwitch ? setMirrorFeedLoading : setMirrorTimelineLoading)((prev) => {
       const updatedArray = [...prev];
       updatedArray[mirrorIndex!] = true;
       return updatedArray;
@@ -257,7 +286,7 @@ const useReactions = () => {
     } catch (err: any) {
       console.error(err.message);
     }
-    setMirrorFeedLoading((prev) => {
+    (feedSwitch ? setMirrorFeedLoading : setMirrorTimelineLoading)((prev) => {
       const updatedArray = [...prev];
       updatedArray[mirrorIndex!] = false;
       return updatedArray;
@@ -265,9 +294,11 @@ const useReactions = () => {
   };
 
   const collectPost = async (id: string): Promise<void> => {
-    const index = feedDispatch.findIndex((feed) => feed.id === id);
+    const index = (feedSwitch ? feedDispatch : timelineDispatch).findIndex(
+      (feed) => feed.id === id
+    );
     setCollectIndex(index);
-    setCollectFeedLoading((prev) => {
+    (feedSwitch ? setCollectFeedLoading : setCollectTimelineLoading)((prev) => {
       const updatedArray = [...prev];
       updatedArray[index] = true;
       return updatedArray;
@@ -275,7 +306,7 @@ const useReactions = () => {
 
     try {
       const collectPost = await collect({
-        publicationId: feedDispatch[index].id,
+        publicationId: id,
       });
       const typedData: any = collectPost.data.createCollectTypedData.typedData;
       const signature: any = await signTypedDataAsync({
@@ -304,7 +335,19 @@ const useReactions = () => {
           },
         };
         setCollectArgs(collectArgs);
+        dispatch(
+          setFeedReactId({
+            actionValue: id,
+            actionType: 2,
+          })
+        );
       } else {
+        dispatch(
+          setFeedReactId({
+            actionValue: id,
+            actionType: 2,
+          })
+        );
         dispatch(
           setIndexModal({
             actionValue: true,
@@ -331,7 +374,7 @@ const useReactions = () => {
       console.error(err.message);
     }
 
-    setCollectFeedLoading((prev) => {
+    (feedSwitch ? setCollectFeedLoading : setCollectTimelineLoading)((prev) => {
       const updatedArray = [...prev];
       updatedArray[index] = false;
       return updatedArray;
@@ -339,7 +382,7 @@ const useReactions = () => {
   };
 
   const collectWrite = async (): Promise<void> => {
-    setCollectFeedLoading((prev) => {
+    (feedSwitch ? setCollectFeedLoading : setCollectTimelineLoading)((prev) => {
       const updatedArray = [...prev];
       updatedArray[collectIndex!] = true;
       return updatedArray;
@@ -374,7 +417,7 @@ const useReactions = () => {
         );
       }
     }
-    setCollectFeedLoading((prev) => {
+    (feedSwitch ? setCollectFeedLoading : setCollectTimelineLoading)((prev) => {
       const updatedArray = [...prev];
       updatedArray[collectIndex!] = false;
       return updatedArray;

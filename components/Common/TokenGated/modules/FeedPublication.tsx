@@ -7,9 +7,9 @@ import getLinkPreview from "@/lib/helpers/getLinkPreview";
 import { FunctionComponent } from "react";
 import { FeedPublicationProps } from "../types/allPosts.types";
 import { setImageViewer } from "@/redux/reducers/imageViewerSlice";
-import descriptionRegex from "@/redux/reducers/descriptionRegex";
 import { setReactionState } from "@/redux/reducers/reactionStateSlice";
 import { setCommentShow } from "@/redux/reducers/commentShowSlice";
+import descriptionRegex from "@/lib/helpers/descriptionRegex";
 
 const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
   publication,
@@ -38,11 +38,7 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
 }): JSX.Element => {
   const link = getLinkPreview(
     publication?.__typename !== "Mirror"
-      ? publication?.metadata?.description
-        ? publication?.metadata?.description
-        : publication?.metadata?.content
-      : publication?.mirrorOf?.metadata?.description
-      ? publication?.mirrorOf?.metadata?.description
+      ? publication?.metadata?.content
       : publication?.mirrorOf?.metadata?.content
   );
   const tags = document.querySelectorAll("em");
@@ -116,21 +112,17 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
           } relative w-full h-fit text-left font-dosis grid grid-flow-row auto-rows-auto gap-6`}
         >
           <div
-            className={`relative w-full h-fit row-start-1 relative w-fit h-fit text-white font-dosis self-center justify-self-start `}
+            className={`relative w-full h-fit row-start-1 relative w-fit h-fit text-white font-dosis self-center justify-self-start`}
           >
             <div
               dangerouslySetInnerHTML={{
                 __html: descriptionRegex(
                   publication?.__typename !== "Mirror"
-                    ? publication?.metadata?.description
-                      ? publication?.metadata?.description
-                      : publication?.metadata?.content
-                    : publication?.mirrorOf?.metadata?.description
-                    ? publication?.mirrorOf?.metadata?.description
+                    ? publication?.metadata?.content
                     : publication?.mirrorOf?.metadata?.content
                 ),
               }}
-              className="relative grid grid-flow-col auto-cols-auto place-self-center"
+              className="relative place-self-center whitespace-preline"
             ></div>
           </div>
         </div>

@@ -1,4 +1,4 @@
-import { authClient } from "@/lib/lens/client";
+import { apolloClient, authClient } from "@/lib/lens/client";
 import { gql } from "@apollo/client";
 
 const HAS_REACTED = `
@@ -25,7 +25,31 @@ query Publications($publicationsRequest: PublicationsQueryRequest!, $reactionReq
 }
 `;
 
-const hasReactedPost = (publicationsRequest: any, reactionRequest: any) => {
+const HAS_REACTED_FEED = `query Feed($feedRequest: FeedRequest!, $reactionRequest: ReactionFieldResolverRequest) {
+  feed(request: $feedRequest) {
+    items {
+      root {
+        ... on Post {
+          reaction(request: $reactionRequest)
+        }
+        ... on Comment {
+          reaction(request: $reactionRequest)
+        }
+      }
+    }
+    pageInfo {
+      prev
+      next
+      totalCount
+    }
+  }
+}
+`;
+
+export const hasReactedPost = (
+  publicationsRequest: any,
+  reactionRequest: any
+) => {
   return authClient.query({
     query: gql(HAS_REACTED),
     variables: {
@@ -37,4 +61,14 @@ const hasReactedPost = (publicationsRequest: any, reactionRequest: any) => {
   });
 };
 
-export default hasReactedPost;
+export const hasReactedFeed = (feedRequest: any, reactionRequest: any) => {
+  return apolloClient.query({
+    query: gql(HAS_REACTED_FEED),
+    variables: {
+      feedRequest,
+      reactionRequest,
+    },
+    fetchPolicy: "no-cache",
+    errorPolicy: "all",
+  });
+};

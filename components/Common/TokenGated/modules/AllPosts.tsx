@@ -9,8 +9,6 @@ import { Publication } from "@/components/Home/types/lens.types";
 
 const AllPosts: FunctionComponent<AllPostsProps> = ({
   feed,
-  hasMirrored,
-  hasReacted,
   dispatch,
   followerOnly,
   feedDispatch,
@@ -28,12 +26,8 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
   collectLoading,
   reactLoading,
   reactionAmounts,
-  hasCollected,
   feedSwitch,
   setFeedSwitch,
-  hasTimelineCollected,
-  hasTimelineMirrored,
-  hasTimelineReacted,
   timelineFollowerOnly,
   timelineDispatch,
   timeline,
@@ -52,7 +46,7 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
         </div>
         <div
           className="relative w-fit h-fit cursor-pointer active:scale-95"
-          onClick={() => setFeedSwitch(!feedSwitch)}
+          onClick={() => dispatch(setFeedSwitch(!feedSwitch))}
         >
           {feedSwitch ? (
             <BsToggle2On size={30} color="white" />
@@ -103,16 +97,18 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
                     type={publication.__typename}
                     hasMirrored={
                       feedSwitch
-                        ? hasMirrored[index]
-                        : hasTimelineMirrored[index]
+                        ? reactionAmounts.hasMirrored[index]
+                        : reactionTimelineAmounts.hasMirrored[index]
                     }
                     hasReacted={
-                      feedSwitch ? hasReacted[index] : hasTimelineReacted[index]
+                      feedSwitch
+                        ? reactionAmounts.hasLiked?.[index]
+                        : reactionTimelineAmounts.hasLiked?.[index]
                     }
                     hasCollected={
                       feedSwitch
-                        ? hasCollected[index]
-                        : hasTimelineCollected[index]
+                        ? reactionAmounts.hasCollected[index]
+                        : reactionTimelineAmounts.hasCollected[index]
                     }
                     followerOnly={
                       feedSwitch

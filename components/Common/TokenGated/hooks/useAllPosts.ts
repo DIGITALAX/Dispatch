@@ -24,18 +24,23 @@ const useAllPost = () => {
   const indexer = useSelector(
     (state: RootState) => state.app.indexModalReducer
   );
+  const feedId = useSelector(
+    (state: RootState) => state.app.feedReactIdReducer
+  );
   const reactionFeedCount = useSelector(
     (state: RootState) => state.app.reactionFeedCountReducer
   );
   const reactionTimelineCount = useSelector(
     (state: RootState) => state.app.reactionTimelineCountReducer
   );
+  const auth = useSelector(
+    (state: RootState) => state.app.authStatusReducer.value
+  );
+  const feedSwitch = useSelector(
+    (state: RootState) => state.app.feedSwitchReducer.value
+  );
   const dispatch = useDispatch();
-  const [feedSwitch, setFeedSwitch] = useState<boolean>(true);
   const [paginated, setPaginated] = useState<any>();
-  const [hasMirrored, setHasMirrored] = useState<boolean[]>([]);
-  const [hasReacted, setHasReacted] = useState<boolean[]>([]);
-  const [hasCollected, setHasCollected] = useState<boolean[]>([]);
   const [feed, setFeed] = useState<any[]>([]);
   const [timeline, setTimeline] = useState<any[]>([]);
   const [followerOnly, setFollowerOnly] = useState<boolean[]>([]);
@@ -46,11 +51,6 @@ const useAllPost = () => {
   const [followerOnlyTimeline, setFollowerOnlyTimeline] = useState<boolean[]>(
     []
   );
-  const [hasMirroredTimeline, setHasMirroredTimeline] = useState<boolean[]>([]);
-  const [hasReactedTimeline, setHasReactedTimeline] = useState<boolean[]>([]);
-  const [hasCollectedTimeline, setHasCollectedTimeline] = useState<boolean[]>(
-    []
-  );
 
   const getFeed = async (): Promise<void> => {
     setPostsLoading(true);
@@ -58,7 +58,7 @@ const useAllPost = () => {
       const data = await profilePublicationsAuth({
         profileId: lensProfile,
         publicationTypes: ["POST", "COMMENT", "MIRROR"],
-        limit: 30,
+        limit: 20,
       });
       if (!data || !data?.data || !data?.data?.publications) {
         setPostsLoading(false);
@@ -68,7 +68,7 @@ const useAllPost = () => {
       const sortedArr = arr.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );
-      if (sortedArr?.length < 30) {
+      if (sortedArr?.length < 20) {
         setHasMore(false);
       } else {
         setHasMore(true);
@@ -78,7 +78,7 @@ const useAllPost = () => {
         {
           profileId: lensProfile,
           publicationTypes: ["POST", "COMMENT", "MIRROR"],
-          limit: 30,
+          limit: 20,
         },
         lensProfile
       );
@@ -88,9 +88,6 @@ const useAllPost = () => {
           ? obj.mirrorOf.hasCollectedByMe
           : obj.hasCollectedByMe
       );
-      setHasReacted(hasReactedArr);
-      setHasMirrored(hasMirroredArr);
-      setHasCollected(hasCollectedArr);
       setFollowerOnly(
         sortedArr.map((obj: Publication) =>
           obj.__typename === "Mirror"
@@ -127,6 +124,9 @@ const useAllPost = () => {
               ? obj.mirrorOf.stats.totalAmountOfComments
               : obj.stats.totalAmountOfComments
           ),
+          actionHasLiked: hasReactedArr,
+          actionHasMirrored: hasMirroredArr,
+          actionHasCollected: hasCollectedArr,
         })
       );
     } catch (err: any) {
@@ -145,7 +145,7 @@ const useAllPost = () => {
       const data = await profilePublicationsAuth({
         profileId: lensProfile,
         publicationTypes: ["POST", "COMMENT", "MIRROR"],
-        limit: 30,
+        limit: 20,
         cursor: paginated?.next,
       });
 
@@ -153,29 +153,26 @@ const useAllPost = () => {
       const sortedArr = arr.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );
-      if (sortedArr?.length < 30) {
+      if (sortedArr?.length < 20) {
         setHasMore(false);
       }
       setFeed([...feed, ...sortedArr]);
       dispatch(setFeedsRedux([...feed, ...sortedArr]));
       setPaginated(data?.data?.publications?.pageInfo);
       const hasMirroredArr = await checkIfMirrored(sortedArr, lensProfile);
-      setHasMirrored([...hasMirrored, ...hasMirroredArr]);
       const hasReactedArr = await checkPostReactions(
         {
           profileId: lensProfile,
           publicationTypes: ["POST", "COMMENT", "MIRROR"],
-          limit: 30,
+          limit: 20,
         },
         lensProfile
       );
-      setHasReacted([...hasReacted, ...hasReactedArr]);
       const hasCollectedArr = sortedArr.map((obj: Publication) =>
         obj.__typename === "Mirror"
           ? obj.mirrorOf.hasCollectedByMe
           : obj.hasCollectedByMe
       );
-      setHasCollected([...hasCollected, ...hasCollectedArr]);
       dispatch(
         setReactionFeedCount({
           actionLike: [
@@ -210,6 +207,15 @@ const useAllPost = () => {
                 : obj.stats.totalAmountOfComments
             ),
           ],
+          actionHasLiked: [...reactionFeedCount.hasLiked, ...hasReactedArr],
+          actionHasMirrored: [
+            ...reactionFeedCount.hasMirrored,
+            ...hasMirroredArr,
+          ],
+          actionHasCollected: [
+            ...reactionFeedCount.hasCollected,
+            ...hasCollectedArr,
+          ],
         })
       );
     } catch (err: any) {
@@ -224,6 +230,7 @@ const useAllPost = () => {
         profileId: lensProfile,
         limit: 30,
       });
+      console.log({data})
       if (!data || !data?.data || !data?.data?.feed) {
         setPostsLoading(false);
         return;
@@ -235,7 +242,8 @@ const useAllPost = () => {
       const sortedArr = newArray.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );
-      if (sortedArr?.length < 30) {
+
+      if (sortedArr?.length < 20) {
         setHasMoreTimeline(false);
       } else {
         setHasMoreTimeline(true);
@@ -244,9 +252,10 @@ const useAllPost = () => {
       const hasReactedArr = await checkPostReactions(
         {
           profileId: lensProfile,
-          limit: 30,
+          limit: 20,
         },
-        lensProfile
+        lensProfile,
+        true
       );
       const hasMirroredArr = await checkIfMirrored(sortedArr, lensProfile);
       const hasCollectedArr = sortedArr.map((obj: Publication) =>
@@ -254,9 +263,6 @@ const useAllPost = () => {
           ? obj.mirrorOf.hasCollectedByMe
           : obj.hasCollectedByMe
       );
-      setHasReactedTimeline(hasReactedArr);
-      setHasMirroredTimeline(hasMirroredArr);
-      setHasCollectedTimeline(hasCollectedArr);
       setFollowerOnlyTimeline(
         sortedArr.map((obj: Publication) =>
           obj.__typename === "Mirror"
@@ -293,6 +299,9 @@ const useAllPost = () => {
               ? obj.mirrorOf.stats.totalAmountOfComments
               : obj.stats.totalAmountOfComments
           ),
+          actionHasLiked: hasReactedArr,
+          actionHasMirrored: hasMirroredArr,
+          actionHasCollected: hasCollectedArr,
         })
       );
     } catch (err: any) {
@@ -310,7 +319,7 @@ const useAllPost = () => {
       }
       const data = await feedTimeline({
         profileId: lensProfile,
-        limit: 30,
+        limit: 20,
         cursor: paginatedTimeline?.next,
       });
 
@@ -321,29 +330,26 @@ const useAllPost = () => {
       const sortedArr = newArray.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );
-      if (sortedArr?.length < 30) {
+      if (sortedArr?.length < 20) {
         setHasMoreTimeline(false);
       }
       setTimeline([...timeline, ...sortedArr]);
       dispatch(setTimelinesRedux([...timeline, ...sortedArr]));
       setPaginatedTimeline(data?.data?.feed?.pageInfo);
       const hasMirroredArr = await checkIfMirrored(sortedArr, lensProfile);
-      setHasMirroredTimeline([...hasMirroredTimeline, ...hasMirroredArr]);
       const hasReactedArr = await checkPostReactions(
         {
           profileId: lensProfile,
-          publicationTypes: ["POST", "COMMENT", "MIRROR"],
-          limit: 30,
+          limit: 20,
         },
-        lensProfile
+        lensProfile,
+        true
       );
-      setHasReactedTimeline([...hasReactedTimeline, ...hasReactedArr]);
       const hasCollectedArr = sortedArr.map((obj: Publication) =>
         obj.__typename === "Mirror"
           ? obj.mirrorOf.hasCollectedByMe
           : obj.hasCollectedByMe
       );
-      setHasCollectedTimeline([...hasCollectedTimeline, ...hasCollectedArr]);
       dispatch(
         setReactionTimelineCount({
           actionLike: [
@@ -378,6 +384,15 @@ const useAllPost = () => {
                 : obj.stats.totalAmountOfComments
             ),
           ],
+          actionHasLiked: [...reactionTimelineCount.hasLiked, ...hasReactedArr],
+          actionHasMirrored: [
+            ...reactionTimelineCount.hasMirrored,
+            ...hasMirroredArr,
+          ],
+          actionHasCollected: [
+            ...reactionTimelineCount.hasCollected,
+            ...hasCollectedArr,
+          ],
         })
       );
     } catch (err: any) {
@@ -387,88 +402,114 @@ const useAllPost = () => {
 
   const refetchInteractions = async () => {
     try {
-      const data = await profilePublicationsAuth({
-        profileId: lensProfile,
-        publicationTypes: ["POST", "COMMENT", "MIRROR"],
-        limit: 30,
-      });
-
-      const arr: any[] = [...data?.data?.publications?.items];
-      let sortedArr = arr.sort(
-        (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
+      const index = (feedSwitch ? feedDispatch : timelineDispatch)?.findIndex(
+        (feed) => feed.id === feedId.value
       );
-      let paginated = data?.data?.publications?.pageInfo;
-
-      const hasReacted = await checkPostReactions(
-        {
-          profileId: lensProfile,
-          publicationTypes: ["POST", "COMMENT", "MIRROR"],
-          limit: 30,
-        },
-        lensProfile
-      );
-
-      let hasReactedArray: boolean[] = hasReacted;
-      let finalArr: any[] = [];
-      while (sortedArr.length === 30) {
-        const data = await profilePublicationsAuth({
-          profileId: lensProfile,
-          publicationTypes: ["POST", "COMMENT", "MIRROR"],
-          limit: 30,
-          cursor: paginated?.next,
-        });
-        const hasReacted = await checkPostReactions(
-          {
-            profileId: lensProfile,
-            publicationTypes: ["POST", "COMMENT", "MIRROR"],
-            limit: 30,
-            cursor: paginated?.next,
-          },
-          lensProfile
+      if (feedSwitch) {
+        dispatch(
+          setReactionFeedCount({
+            actionLike:
+              feedId.type === 0
+                ? reactionFeedCount.like.map((obj: number, number: number) =>
+                    number === index ? obj + 1 : obj
+                  )
+                : reactionFeedCount.like,
+            actionMirror:
+              feedId.type === 1
+                ? reactionFeedCount.mirror.map((obj: number, number: number) =>
+                    number === index ? obj + 1 : obj
+                  )
+                : reactionFeedCount.mirror,
+            actionCollect:
+              feedId.type === 2
+                ? reactionFeedCount.collect.map((obj: number, number: number) =>
+                    number === index ? obj + 1 : obj
+                  )
+                : reactionFeedCount.collect,
+            actionComment:
+              feedId.type === 3
+                ? reactionFeedCount.comment.map((obj: number, number: number) =>
+                    number === index ? obj + 1 : obj
+                  )
+                : reactionFeedCount.comment,
+            actionHasLiked:
+              feedId.type === 0
+                ? reactionFeedCount.hasLiked.map(
+                    (obj: boolean, number: number) =>
+                      number === index ? true : obj
+                  )
+                : reactionFeedCount.hasLiked,
+            actionHasMirrored:
+              feedId.type === 1
+                ? reactionFeedCount.hasMirrored.map(
+                    (obj: boolean, number: number) =>
+                      number === index ? true : obj
+                  )
+                : reactionFeedCount.mirror,
+            actionHasCollected:
+              feedId.type === 2
+                ? reactionFeedCount.hasCollected.map(
+                    (obj: boolean, number: number) =>
+                      number === index ? true : obj
+                  )
+                : reactionFeedCount.collect,
+          })
         );
-
-        sortedArr = [...data?.data?.publications?.items].sort(
-          (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
+      } else {
+        dispatch(
+          setReactionTimelineCount({
+            actionLike:
+              feedId.type === 0
+                ? reactionTimelineCount.like.map(
+                    (obj: number, number: number) =>
+                      number === index ? obj + 1 : obj
+                  )
+                : reactionTimelineCount.like,
+            actionMirror:
+              feedId.type === 1
+                ? reactionTimelineCount.mirror.map(
+                    (obj: number, number: number) =>
+                      number === index ? obj + 1 : obj
+                  )
+                : reactionTimelineCount.mirror,
+            actionCollect:
+              feedId.type === 2
+                ? reactionTimelineCount.collect.map(
+                    (obj: number, number: number) =>
+                      number === index ? obj + 1 : obj
+                  )
+                : reactionTimelineCount.collect,
+            actionComment:
+              feedId.type === 3
+                ? reactionTimelineCount.comment.map(
+                    (obj: number, number: number) =>
+                      number === index ? obj + 1 : obj
+                  )
+                : reactionTimelineCount.comment,
+            actionHasLiked:
+              feedId.type === 0
+                ? reactionTimelineCount.hasLiked.map(
+                    (obj: boolean, number: number) =>
+                      number === index ? true : obj
+                  )
+                : reactionTimelineCount.hasLiked,
+            actionHasMirrored:
+              feedId.type === 1
+                ? reactionTimelineCount.hasMirrored.map(
+                    (obj: boolean, number: number) =>
+                      number === index ? true : obj
+                  )
+                : reactionTimelineCount.mirror,
+            actionHasCollected:
+              feedId.type === 2
+                ? reactionTimelineCount.hasCollected.map(
+                    (obj: boolean, number: number) =>
+                      number === index ? true : obj
+                  )
+                : reactionTimelineCount.collect,
+          })
         );
-        paginated = data?.data?.publications?.pageInfo;
-        hasReactedArray = [...hasReactedArray, ...hasReacted];
-
-        finalArr = [...finalArr, ...sortedArr];
       }
-
-      const hasMirrored = await checkIfMirrored(finalArr, lensProfile);
-      const hasCollected = finalArr.map((obj: Publication) =>
-        obj.__typename === "Mirror"
-          ? obj.mirrorOf.hasCollectedByMe
-          : obj.hasCollectedByMe
-      );
-      setHasReacted(hasReactedArray);
-      setHasMirrored(hasMirrored);
-      setHasCollected(hasCollected);
-      dispatch(
-        setReactionFeedCount({
-          actionLike: finalArr.map((obj: Publication) =>
-            obj.__typename === "Mirror"
-              ? obj.mirrorOf.stats.totalUpvotes
-              : obj.stats.totalUpvotes
-          ),
-          actionMirror: finalArr.map((obj: Publication) =>
-            obj.__typename === "Mirror"
-              ? obj.mirrorOf.stats.totalAmountOfMirrors
-              : obj.stats.totalAmountOfMirrors
-          ),
-          actionCollect: finalArr.map((obj: Publication) =>
-            obj.__typename === "Mirror"
-              ? obj.mirrorOf.stats.totalAmountOfCollects
-              : obj.stats.totalAmountOfCollects
-          ),
-          actionComment: finalArr.map((obj: Publication) =>
-            obj.__typename === "Mirror"
-              ? obj.mirrorOf.stats.totalAmountOfComments
-              : obj.stats.totalAmountOfComments
-          ),
-        })
-      );
     } catch (err: any) {
       console.error(err.message);
     }
@@ -481,34 +522,28 @@ const useAllPost = () => {
   }, [indexer.message]);
 
   useEffect(() => {
-    if (feedSwitch) {
-      if (!feedDispatch || feedDispatch.length < 1) {
-        getFeed();
-      }
-    } else {
-      if (!timelineDispatch || timelineDispatch.length < 1) {
-        getTimeline();
+    if (auth) {
+      if (feedSwitch) {
+        if (!feedDispatch || feedDispatch.length < 1) {
+          getFeed();
+        }
+      } else {
+        if (!timelineDispatch || timelineDispatch.length < 1) {
+          getTimeline();
+        }
       }
     }
-  }, [feedSwitch]);
+  }, [feedSwitch, auth]);
 
   return {
     feed,
-    hasMirrored,
-    hasReacted,
-    hasCollected,
     followerOnly,
     postsLoading,
     fetchMore,
     hasMore,
-    setFeedSwitch,
-    feedSwitch,
     timeline,
     fetchMoreTimeline,
     hasMoreTimeline,
-    hasCollectedTimeline,
-    hasMirroredTimeline,
-    hasReactedTimeline,
     followerOnlyTimeline,
   };
 };

@@ -5,6 +5,9 @@ export interface ReactionTimelineCountState {
   mirror: number[];
   collect: number[];
   comment: number[];
+  hasLiked: boolean[];
+  hasMirrored: boolean[];
+  hasCollected: boolean[];
 }
 
 const initialReactionTimelineCountState: ReactionTimelineCountState = {
@@ -12,6 +15,9 @@ const initialReactionTimelineCountState: ReactionTimelineCountState = {
   mirror: [],
   collect: [],
   comment: [],
+  hasLiked: [],
+  hasMirrored: [],
+  hasCollected: [],
 };
 
 export const reactionTimelineCountSlice = createSlice({
@@ -20,12 +26,25 @@ export const reactionTimelineCountSlice = createSlice({
   reducers: {
     setReactionTimelineCount: (
       state: ReactionTimelineCountState,
-      { payload: { actionLike, actionMirror, actionCollect, actionComment } }
+      {
+        payload: {
+          actionLike,
+          actionMirror,
+          actionCollect,
+          actionComment,
+          actionHasLiked,
+          actionHasCollected,
+          actionHasMirrored,
+        },
+      }
     ) => {
       state.like = actionLike;
       state.mirror = actionMirror;
       state.collect = actionCollect;
       state.comment = actionComment;
+      state.hasLiked = actionHasLiked;
+      state.hasMirrored = actionHasMirrored;
+      state.hasCollected = actionHasCollected;
     },
   },
 });
