@@ -2,15 +2,12 @@ import {
   CHROMADIN_COLLECTION_CONTRACT,
   CHROMADIN_DROP_CONTRACT,
 } from "@/lib/constants";
-import { setUpgrade } from "@/redux/reducers/upgradeSlice";
 import { RootState } from "@/redux/store";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useContractWrite, usePrepareContractWrite } from "wagmi";
 
 const useUpgrade = () => {
-  const dispatch = useDispatch();
-  const upgraded = useSelector((state: RootState) => state.app.upgradeReducer);
   const allCollections = useSelector(
     (state: RootState) => state.app.allCollectionsReducer.value
   );
@@ -95,7 +92,7 @@ const useUpgrade = () => {
   const upgradeTokens = (args: any, index: number) => {
     setNewIndex(index);
 
-    console.log({args})
+    console.log({ args });
 
     setCollectionArgs(args);
   };
@@ -114,14 +111,6 @@ const useUpgrade = () => {
     try {
       const tx = await writeAsync?.();
       await tx?.wait();
-      dispatch(
-        setUpgrade({
-          actionColl: upgraded.upgradedColl.map((obj, i) =>
-            i === newIndex ? true : obj
-          ),
-          actionDrop: upgraded.upgradeDrop,
-        })
-      );
     } catch (err: any) {
       console.error(err.message);
     }
@@ -131,7 +120,7 @@ const useUpgrade = () => {
   };
 
   const upgradeDrop = (args: any) => {
-    console.log(args)
+    console.log(args);
     setDropArgs(args);
   };
 

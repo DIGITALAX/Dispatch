@@ -8,9 +8,6 @@ export type AllDropsProps = {
   allDrops: any[];
   allDropsRedux: any[];
   dropsLoading: boolean;
-  dropLoading: boolean;
-  upgradeDrop: (args: any) => void;
-  allCollections: Collection[];
 };
 
 export type AddDropProps = {

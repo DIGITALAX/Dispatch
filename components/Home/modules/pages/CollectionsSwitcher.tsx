@@ -3,7 +3,6 @@ import useAllCollections from "@/components/Common/Collections/hooks/useAllColle
 import AddCollection from "@/components/Common/Collections/modules/AddCollection";
 import AllCollections from "@/components/Common/Collections/modules/AllCollections";
 import useImageUpload from "@/components/Common/Inputs/hooks/useImageUpload";
-import useUpgrade from "@/components/Common/Modals/hooks/useUpgrade";
 import { RootState } from "@/redux/store";
 import { FunctionComponent } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,14 +17,10 @@ const CollectionsSwitcher: FunctionComponent = (): JSX.Element => {
   const collectionDetails = useSelector(
     (state: RootState) => state.app.collectionDetailsReducer
   );
-  const upgraded = useSelector(
-    (state: RootState) => state.app.upgradeReducer.upgradedColl
-  );
 
   const dispatch = useDispatch();
   const { allCollections, collectionsLoading } = useAllCollections();
   const { uploadImage } = useImageUpload();
-  const { upgradeTokens, tokensLoading } = useUpgrade();
   const {
     imageLoading,
     setImageLoading,
@@ -68,9 +63,6 @@ const CollectionsSwitcher: FunctionComponent = (): JSX.Element => {
           allCollections={allCollections}
           allCollectionsRedux={allCollectionsRedux}
           collectionsLoading={collectionsLoading}
-          upgradeTokens={upgradeTokens}
-          upgraded={upgraded}
-          tokensLoading={tokensLoading}
         />
       );
   }

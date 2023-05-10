@@ -74,9 +74,6 @@ const DropsSwitcher: FunctionComponent = (): JSX.Element => {
           allDrops={allDrops}
           allDropsRedux={allDropsRedux}
           dropsLoading={dropsLoading}
-          allCollections={allCollections}
-          upgradeDrop={upgradeDrop}
-          dropLoading={dropLoading}
         />
       );
   }

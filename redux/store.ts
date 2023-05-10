@@ -37,7 +37,6 @@ import lastFeedIndexReducer from "./reducers/lastFeedIndexSlice";
 import feedSwitchReducer from "./reducers/feedSwitchSlice";
 import feedReactIdReducer from "./reducers/feedReactIdSlice";
 import salesReducer from "./reducers/salesSlice";
-import upgradeReducer from "./reducers/upgradeSlice";
 
 const reducer = combineReducers({
   lensProfileReducer,
@@ -77,7 +76,6 @@ const reducer = combineReducers({
   feedSwitchReducer,
   feedReactIdReducer,
   salesReducer,
-  upgradeReducer
 });
 
 export const store = configureStore({

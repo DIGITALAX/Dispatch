@@ -7,9 +7,6 @@ export type AllCollectionsProps = {
   allCollections: any[];
   allCollectionsRedux: any[];
   collectionsLoading: boolean;
-  upgradeTokens: (value: any, index: number) => void;
-  upgraded: boolean[];
-  tokensLoading: boolean[];
 };
 
 export type AddCollectionProps = {
