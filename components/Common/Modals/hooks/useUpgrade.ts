@@ -8,12 +8,9 @@ import { useSelector } from "react-redux";
 import { useContractWrite, usePrepareContractWrite } from "wagmi";
 
 const useUpgrade = () => {
-  const allCollections = useSelector(
-    (state: RootState) => state.app.allCollectionsReducer.value
-  );
   const [collectionArgs, setCollectionArgs] = useState<any[]>([]);
   const [tokensLoading, setTokensLoading] = useState<boolean[]>(
-    Array.from({ length: allCollections.length }, () => false)
+    Array.from({ length: 4 }, () => false)
   );
   const [dropLoading, setDropLoading] = useState<boolean>(false);
   const [newIndex, setNewIndex] = useState<number>();
@@ -89,19 +86,65 @@ const useUpgrade = () => {
 
   const { writeAsync: dropWriteAsync } = useContractWrite(dropConfig);
 
-  const upgradeTokens = (args: any, index: number) => {
-    setNewIndex(index);
+  const upgradeFirst = () => {
+    setNewIndex(0);
+    setCollectionArgs([
+      "ipfs://QmUgYVToxHkcy7ikbneWrhY7HwvsSHq2Zas4uFR33PonKK",
+      8,
+      "Thalassa",
+      [
+        0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270,
+        0xc2132d05d31c914a87c6611c10748aeb04b58e8f,
+      ],
+      [150000000000000000000, 150000000000000000000],
+    ]);
+  };
 
-    console.log({ args });
+  const upgradeSecond = () => {
+    setNewIndex(1);
+    setCollectionArgs([
+      "ipfs://QmY1F2d1TKGGHgMNVy1EcabioDfTT6d9A3a5oCLWoJ4APj",
+      8,
+      "Empathy muse",
+      [
+        0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270,
+        0xc2132d05d31c914a87c6611c10748aeb04b58e8f,
+      ],
+      [150000000000000000000, 150000000000000000000],
+    ]);
+  };
 
-    setCollectionArgs(args);
+  const upgradeThird = () => {
+    setNewIndex(2);
+    setCollectionArgs([
+      "ipfs://QmVKwa4uec6JLhjNeroU4ApExVuEPGQsUQvLqwBa9ELcZT",
+      8,
+      "Lea",
+      [
+        0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270,
+        0xc2132d05d31c914a87c6611c10748aeb04b58e8f,
+      ],
+      [150000000000000000000, 150000000000000000000],
+    ]);
+  };
+
+  const upgradeFourth = () => {
+    setNewIndex(3);
+    setCollectionArgs([
+      "ipfs://QmUbMQPnF2WX8rCBt4oZ2NpFNdb1FJBaEhM7SkWcYbpEL2",
+      8,
+      "Reo",
+      [
+        0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270,
+        0xc2132d05d31c914a87c6611c10748aeb04b58e8f,
+      ],
+      [150000000000000000000, 150000000000000000000],
+    ]);
   };
 
   const writeUpgrade = async () => {
     if (tokensLoading.length < 1) {
-      setTokensLoading(
-        Array.from({ length: allCollections.length }, (_, i) => i === newIndex)
-      );
+      setTokensLoading(Array.from({ length: 4 }, (_, i) => i === newIndex));
     } else {
       setTokensLoading((prevLoading) =>
         prevLoading.map((loading, i) => (i === newIndex ? true : loading))
@@ -119,9 +162,11 @@ const useUpgrade = () => {
     );
   };
 
-  const upgradeDrop = (args: any) => {
-    console.log(args);
-    setDropArgs(args);
+  const upgradeDrop = () => {
+    setDropArgs([
+      [29, 30, 31, 32],
+      `ipfs://QmR7Y8URQiDg5RqJHsWnDfi4tAHGh8acBneZQkSEMqUJx1`,
+    ]);
   };
 
   const writeDrop = async () => {
@@ -147,7 +192,15 @@ const useUpgrade = () => {
     }
   }, [isSuccess]);
 
-  return { upgradeTokens, tokensLoading, dropLoading, upgradeDrop };
+  return {
+    upgradeFirst,
+    tokensLoading,
+    dropLoading,
+    upgradeDrop,
+    upgradeSecond,
+    upgradeThird,
+    upgradeFourth,
+  };
 };
 
 export default useUpgrade;
