@@ -36,73 +36,54 @@ const Upgrade: FunctionComponent<any> = ({
                   }
                 />
               </div>
-              {type === "coll" ? (
-                <div className="relative w-full h-fit row-start-2 flex flex-col items-center justify-center gap-2 px-4">
-                  <div className="relative w-full flex h-fit font-arcade text-white justify-center">
-                    Upgrade Collections
+
+              <div className="relative w-full h-fit row-start-2 flex flex-col items-center justify-center gap-2 px-4">
+                <div className="relative w-full flex h-fit font-arcade text-white justify-center">
+                  Upgrade Collections
+                </div>
+                <div className="relative flex flex-wrap gap-2 w-full h-fit items-center justify-center">
+                  <div
+                    className={`relative w-fit h-fit font-earl text-white text-xs place-self-center text-center px-3 py-2 border border-white rounded-md cursor-pointer`}
+                    onClick={() => upgradeFirst()}
+                  >
+                    {tokensLoading[0] ? (
+                      <AiOutlineLoading size={10} color="white" />
+                    ) : (
+                      "upgrade thalassa"
+                    )}
                   </div>
-                  <div className="relative flex flex-wrap gap-2 w-full h-fit items-center justify-center">
-                    <div
-                      className={`relative w-fit h-fit font-earl text-white text-xs place-self-center text-center px-3 py-2 border border-white rounded-md cursor-pointer`}
-                      onClick={() => upgradeFirst()}
-                    >
-                      {tokensLoading[0] ? (
-                        <AiOutlineLoading size={10} color="white" />
-                      ) : (
-                        "upgrade thalassa"
-                      )}
-                    </div>
-                    <div
-                      className="relative w-fit h-fit font-earl text-white text-xs place-self-center text-center  px-3 py-2 border border-white rounded-md cursor-pointer"
-                      onClick={() => upgradeSecond()}
-                    >
-                      {tokensLoading[1] ? (
-                        <AiOutlineLoading size={10} color="white" />
-                      ) : (
-                        "upgrade empathy muse"
-                      )}
-                    </div>
-                    <div
-                      className="relative w-fit h-fit font-earl text-white text-xs place-self-center text-center  px-3 py-2 border border-white rounded-md cursor-pointer"
-                      onClick={() => upgradeThird()}
-                    >
-                      {tokensLoading[2] ? (
-                        <AiOutlineLoading size={10} color="white" />
-                      ) : (
-                        "upgrade lea"
-                      )}
-                    </div>
-                    <div
-                      className="relative w-fit h-fit font-earl text-white text-xs place-self-center text-center  px-3 py-2 border border-white rounded-md cursor-pointer"
-                      onClick={() => upgradeFourth()}
-                    >
-                      {tokensLoading[3] ? (
-                        <AiOutlineLoading size={10} color="white" />
-                      ) : (
-                        "upgrade reo"
-                      )}
-                    </div>
+                  <div
+                    className="relative w-fit h-fit font-earl text-white text-xs place-self-center text-center  px-3 py-2 border border-white rounded-md cursor-pointer"
+                    onClick={() => upgradeSecond()}
+                  >
+                    {tokensLoading[1] ? (
+                      <AiOutlineLoading size={10} color="white" />
+                    ) : (
+                      "upgrade empathy muse"
+                    )}
+                  </div>
+                  <div
+                    className="relative w-fit h-fit font-earl text-white text-xs place-self-center text-center  px-3 py-2 border border-white rounded-md cursor-pointer"
+                    onClick={() => upgradeThird()}
+                  >
+                    {tokensLoading[2] ? (
+                      <AiOutlineLoading size={10} color="white" />
+                    ) : (
+                      "upgrade lea"
+                    )}
+                  </div>
+                  <div
+                    className="relative w-fit h-fit font-earl text-white text-xs place-self-center text-center  px-3 py-2 border border-white rounded-md cursor-pointer"
+                    onClick={() => upgradeFourth()}
+                  >
+                    {tokensLoading[3] ? (
+                      <AiOutlineLoading size={10} color="white" />
+                    ) : (
+                      "upgrade reo"
+                    )}
                   </div>
                 </div>
-              ) : (
-                <div className="relative w-full h-fit row-start-2 flex flex-col items-center justify-center gap-2 px-4">
-                  <div className="relative w-full flex h-fit font-arcade text-white justify-center">
-                    Upgrade Drops
-                  </div>
-                  <div className="relative flex flex-wrap gap-2 w-full h-fit items-center justify-center">
-                    <div
-                      className="relative w-fit h-fit font-earl text-white text-xs place-self-center text-center px-3 py-2 border border-white rounded-md cursor-pointer"
-                      onClick={() => upgradeDrop()}
-                    >
-                      {dropLoading ? (
-                        <AiOutlineLoading size={10} color="white" />
-                      ) : (
-                        "upgrade choose empathy"
-                      )}
-                    </div>
-                  </div>
-                </div>
-              )}
+              </div>
             </div>
           </div>
         </div>

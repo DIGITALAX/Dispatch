@@ -45,8 +45,7 @@ const Modals = () => {
     upgradeSecond,
     upgradeFourth,
     upgradeThird,
-    dropLoading,
-    upgradeDrop,
+   
     tokensLoading,
   } = useUpgrade();
   const { address } = useAccount();
@@ -109,22 +108,7 @@ const Modals = () => {
           upgradeFourth={upgradeFourth}
           upgradeSecond={upgradeSecond}
           upgradeThird={upgradeThird}
-          dropLoading={dropLoading}
-          upgradeDrop={upgradeDrop}
           type={"coll"}
-        />
-      )}
-      {upgrade && option === "drops" && (
-        <Upgrade
-          dispatch={dispatch}
-          tokensLoading={tokensLoading}
-          upgradeFirst={upgradeFirst}
-          upgradeFourth={upgradeFourth}
-          upgradeSecond={upgradeSecond}
-          upgradeThird={upgradeThird}
-          dropLoading={dropLoading}
-          upgradeDrop={upgradeDrop}
-          type={"drop"}
         />
       )}
       {fullScreenVideo.value && (
