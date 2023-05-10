@@ -9,10 +9,9 @@ const Upgrade: FunctionComponent<any> = ({
   upgradeSecond,
   upgradeThird,
   upgradeFourth,
-  upgradeDrop,
+ 
   tokensLoading,
-  dropLoading,
-  type,
+  
 }): JSX.Element => {
   return (
     <div className="inset-0 justify-center fixed z-40 bg-opacity-50 backdrop-blur-sm overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
