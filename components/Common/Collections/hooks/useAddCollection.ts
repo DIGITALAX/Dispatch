@@ -1,5 +1,4 @@
 import {
-  CHROMADIN_COLLECTION_CONTRACT,
   CHROMADIN_COLLECTION_CONTRACT_NEW,
   MUMBAI_COLLECTION,
 } from "@/lib/constants";
@@ -86,10 +85,7 @@ const useAddCollection = () => {
   const { writeAsync } = useContractWrite(config);
 
   const { config: burnConfig } = usePrepareContractWrite({
-    address:
-      collectionValues?.contractType === "primary"
-        ? CHROMADIN_COLLECTION_CONTRACT
-        : CHROMADIN_COLLECTION_CONTRACT_NEW,
+    address: CHROMADIN_COLLECTION_CONTRACT_NEW,
     abi: [
       {
         inputs: [

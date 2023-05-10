@@ -230,7 +230,6 @@ const useAllPost = () => {
         profileId: lensProfile,
         limit: 30,
       });
-      console.log({data})
       if (!data || !data?.data || !data?.data?.feed) {
         setPostsLoading(false);
         return;

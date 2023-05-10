@@ -22,7 +22,7 @@ export const MUMBAI_COLLECTION: `0x${string}` =
 export const MUMBAI_DROP: `0x${string}` =
   "0x66f5320fDA50b9090C8508B81C678F477b77ec4c";
 export const CHROMADIN_COLLECTION_CONTRACT_NEW: `0x${string}` =
-  "0xA3C2F7ba49513Ae46d44D074679f52cAEF7E721B";
+  "0x80e8cf044ebb5dc23ae6d6a2db9a4e1714b58794";
 export const CHROMADIN_DROP_CONTRACT_NEW: `0x${string}` =
   "0xd68E8FD1dffC8F09b27b2973d06027D9E96e9d20";
 
