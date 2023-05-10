@@ -27,7 +27,6 @@ const useAllCollections = () => {
       const collections = await collectionGetter(
         colls,
         drops,
-        colls.data?.collectionMinteds?.length
       );
       setAllCollections(collections ? collections : []);
       dispatch(setAllCollectionsRedux(collections ? collections : []));

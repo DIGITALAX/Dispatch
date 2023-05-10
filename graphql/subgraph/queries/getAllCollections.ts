@@ -13,18 +13,6 @@ const COLLECTIONS = `
       soldTokens
       tokenIds
     }
-    chromadinCollectionNewCollectionMinteds(where: {owner: $owner}, orderDirection: desc) {
-      basePrices
-      uri
-      collectionId
-      amount
-      acceptedTokens
-      name
-      owner
-      blockTimestamp
-      tokenIds
-      soldTokens
-    }
   }
 `;
 

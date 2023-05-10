@@ -9,12 +9,6 @@ const DROPS = `
       creator
       collectionIds
     }
-    chromadinDropNewDropCreateds(orderDirection: desc, where: {creator: $creator}) {
-      dropId
-      dropURI
-      creator
-      collectionIds
-    }
   }
 `;
 

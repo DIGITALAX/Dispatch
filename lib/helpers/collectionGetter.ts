@@ -1,24 +1,14 @@
 import { Collection } from "@/components/Common/Collections/types/collections.types";
 import fetchIPFSJSON from "./fetchIPFSJSON";
 
-const collectionGetter = async (
-  colls: any,
-  drops: any,
-  amount: number
-): Promise<any> => {
+const collectionGetter = async (colls: any, drops: any): Promise<any> => {
   try {
-    if (
-      (!colls?.data?.collectionMinteds || colls?.data?.collectionMinteds < 1) &&
-      (!colls?.data?.chromadinCollectionNewCollectionMinteds ||
-        colls?.data?.chromadinCollectionNewCollectionMinteds < 1)
-    ) {
+    if (!colls?.data?.collectionMinteds || colls?.data?.collectionMinteds < 1) {
       return;
     }
     const collections = await Promise.all(
-      [
-        ...colls?.data?.collectionMinteds,
-        ...colls?.data?.chromadinCollectionNewCollectionMinteds,
-      ].map(async (collection: Collection, index: number) => {
+     colls?.data?.collectionMinteds
+      .map(async (collection: Collection, index: number) => {
         let dropjson: any;
         const json = await fetchIPFSJSON(
           (collection.uri as any)?.split("ipfs://")[1].replace(/"/g, "").trim()
@@ -26,13 +16,7 @@ const collectionGetter = async (
 
         let collectionDrops;
 
-        if (index < amount) {
-          collectionDrops = drops.data.dropCreateds;
-        } else {
-          collectionDrops = drops.data.chromadinDropNewDropCreateds;
-        }
-
-        collectionDrops = collectionDrops
+        collectionDrops = drops.data.dropCreateds
           .filter((drop: any) =>
             drop.collectionIds.includes(collection.collectionId)
           )
@@ -55,9 +39,6 @@ const collectionGetter = async (
             image: dropjson?.json?.image,
           },
           fileType: json.type,
-          contractType: index < amount ? "primary" : "secondary",
-          collectionIPFS: collection.uri,
-          dropIPFS: collectionDrops[0]?.dropURI,
         };
       })
     );

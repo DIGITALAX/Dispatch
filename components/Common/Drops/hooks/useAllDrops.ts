@@ -27,13 +27,9 @@ const useAllDrops = () => {
       const data = await getAllDrops(address);
       const colls = await getAllCollections(address);
       const drops =
-        (data?.data?.dropCreateds ||
-          data?.data?.chromadinDropNewDropCreateds) &&
+        data?.data?.dropCreateds &&
         (await Promise.all(
-          [
-            ...data.data?.dropCreateds,
-            ...data.data?.chromadinDropNewDropCreateds,
-          ]?.map(async (drop: any, index: any) => {
+          data.data?.dropCreateds?.map(async (drop: any, index: any) => {
             const json = await fetchIPFSJSON(
               (drop.dropURI as any)
                 ?.split("ipfs://")[1]
@@ -45,18 +41,12 @@ const useAllDrops = () => {
               ...drop,
               uri: json.json,
               fileType: json.type,
-              contractType:
-                index >= data.data?.dropCreateds?.length
-                  ? "secondary"
-                  : "primary",
-              dropIPFS: drop.dropURI,
             };
           })
         ));
       const collections = await collectionGetter(
         colls,
         data,
-        colls.data?.collectionMinteds?.length
       );
       dispatch(setAllCollectionsRedux(collections ? collections : []));
       setAllDrops(drops ? drops : []);

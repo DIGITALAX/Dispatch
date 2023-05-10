@@ -11,7 +11,6 @@ export interface CollectionDetailsState {
   fileType: string;
   type: string;
   id: number;
-  contractType: string
 }
 
 const initialCollectionDetailsState: CollectionDetailsState = {
@@ -25,7 +24,6 @@ const initialCollectionDetailsState: CollectionDetailsState = {
   fileType: "",
   type: "add",
   id: 0,
-  contractType: "secondary"
 };
 
 export const collectionDetailsSlice = createSlice({
@@ -46,7 +44,6 @@ export const collectionDetailsSlice = createSlice({
           actionFileType,
           actionType,
           actionId,
-          actionContractType
         },
       }
     ) => {
@@ -60,7 +57,6 @@ export const collectionDetailsSlice = createSlice({
       state.fileType = actionFileType;
       state.type = actionType;
       state.id = actionId;
-      state.contractType = actionContractType
     },
   },
 });

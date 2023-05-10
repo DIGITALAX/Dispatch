@@ -116,7 +116,6 @@ const useAddCollection = () => {
         actionFileType: collectionValues.fileType,
         actionType: collectionValues?.type,
         actionId: collectionValues.id,
-        actionContractType: collectionValues.contractType,
       })
     );
   };
@@ -134,7 +133,6 @@ const useAddCollection = () => {
         actionFileType: collectionValues.fileType,
         actionType: collectionValues?.type,
         actionId: collectionValues.id,
-        actionContractType: collectionValues.contractType,
       })
     );
   };
@@ -152,7 +150,6 @@ const useAddCollection = () => {
         actionFileType: collectionValues.fileType,
         actionType: collectionValues?.type,
         actionId: collectionValues.id,
-        actionContractType: collectionValues.contractType,
       })
     );
   };
@@ -197,11 +194,9 @@ const useAddCollection = () => {
         actionFileType: collectionValues.fileType,
         actionType: collectionValues?.type,
         actionId: collectionValues.id,
-        actionContractType: collectionValues.contractType,
       })
     );
   };
-
   const addCollection = async (): Promise<void> => {
     if (
       !collectionValues.image ||
@@ -243,13 +238,10 @@ const useAddCollection = () => {
           if (
             i === collectionValues.acceptedTokens.indexOf(availableTokens[2][1])
           ) {
-            // If the current index is the index of USDT, multiply by 10 ** 6
             return (BigInt(price) * BigInt(10 ** 6)).toString();
           } else if (Number.isInteger(price)) {
-            // If price is an integer, convert it to BigInt as before
             return (BigInt(price) * BigInt(10 ** 18)).toString();
           } else {
-            // If price has decimals, convert it to BigInt accordingly
             const [wholePart, decimalPart] = price
               .toFixed(2)
               .toString()
@@ -266,6 +258,8 @@ const useAddCollection = () => {
     }
     setAddCollectionLoading(false);
   };
+
+  console.log(collectionArgs);
 
   const addCollectionWrite = async (): Promise<void> => {
     setAddCollectionLoading(true);
@@ -306,7 +300,6 @@ const useAddCollection = () => {
           actionFileType: "",
           actionType: "",
           actionId: 0,
-          actionContractType: "secondary",
         })
       );
     } catch (err: any) {
@@ -367,7 +360,6 @@ const useAddCollection = () => {
           actionFileType: "",
           actionType: "",
           actionId: 0,
-          actionContractType: "secondary",
         })
       );
     } catch (err: any) {

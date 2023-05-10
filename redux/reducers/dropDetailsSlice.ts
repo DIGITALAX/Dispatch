@@ -8,7 +8,6 @@ export interface DropDetailsState {
   id?: number;
   fileType: string;
   type: string;
-  contractType: string;
 }
 
 const initialDropDetailsState: DropDetailsState = {
@@ -19,7 +18,6 @@ const initialDropDetailsState: DropDetailsState = {
   id: undefined,
   fileType: "",
   type: "add",
-  contractType: "secondary",
 };
 
 export const dropDetailsSlice = createSlice({
@@ -37,7 +35,6 @@ export const dropDetailsSlice = createSlice({
           actionId,
           actionFileType,
           actionType,
-          actionContractType,
         },
       }
     ) => {
@@ -48,7 +45,6 @@ export const dropDetailsSlice = createSlice({
       state.id = actionId;
       state.fileType = actionFileType;
       state.type = actionType;
-      state.contractType = actionContractType;
     },
   },
 });

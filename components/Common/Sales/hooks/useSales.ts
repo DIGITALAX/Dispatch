@@ -25,17 +25,9 @@ const useSales = () => {
     setSalesLoading(true);
     try {
       const res = await getSalesHistory(address);
-      if (
-        [
-          ...res.data.tokensBoughts,
-          ...res.data.chromadinMarketplaceNewTokensBoughts,
-        ].length > 0
-      ) {
+      if (res.data.tokensBoughts.length > 0) {
         const history = await Promise.all(
-          [
-            ...res.data.tokensBoughts,
-            ...res.data.chromadinMarketplaceNewTokensBoughts,
-          ].map(async (history: Sales) => {
+          res.data.tokensBoughts.map(async (history: Sales) => {
             const json = await fetchIPFSJSON(
               (history.uri as any)
                 ?.split("ipfs://")[1]

@@ -153,7 +153,7 @@ const AddDrop: FunctionComponent<AddDropProps> = ({
                         actionDisabled: true,
                         actionFileType: value.fileType,
                         actionId: value.collectionId,
-                        actionContractType: value.contractType,
+                       
                       })
                     );
                     dispatch(setCollectionSwitcher("add"));

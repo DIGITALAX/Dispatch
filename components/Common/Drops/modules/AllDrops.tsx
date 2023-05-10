@@ -27,7 +27,7 @@ const AllDrops: FunctionComponent<AllDropsProps> = ({
                 actionFileType: "",
                 actionType: "add",
                 actionId: 0,
-                actionContractType: "secondary"
+             
               })
             );
           }}
@@ -63,7 +63,7 @@ const AllDrops: FunctionComponent<AllDropsProps> = ({
                         actionId: value.dropId,
                         actionFileType: value.fileType,
                         actionType: "delete",
-                        actionContractType: value.contractType
+                      
                       })
                     );
                     dispatch(setDropSwitcher("add"));
@@ -153,7 +153,7 @@ const AllDrops: FunctionComponent<AllDropsProps> = ({
                                 actionId: value.dropId,
                                 actionFileType: value.fileType,
                                 actionType: "delete",
-                                actionContractType: value.contractType
+                            
                               })
                             );
                             dispatch(setDropSwitcher("add"));
