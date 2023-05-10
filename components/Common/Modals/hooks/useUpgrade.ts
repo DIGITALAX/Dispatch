@@ -95,6 +95,8 @@ const useUpgrade = () => {
   const upgradeTokens = (args: any, index: number) => {
     setNewIndex(index);
 
+    console.log({args})
+
     setCollectionArgs(args);
   };
 
@@ -129,7 +131,7 @@ const useUpgrade = () => {
   };
 
   const upgradeDrop = (args: any) => {
-    // console.log(args)
+    console.log(args)
     setDropArgs(args);
   };
 

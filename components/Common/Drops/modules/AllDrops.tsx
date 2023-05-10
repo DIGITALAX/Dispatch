@@ -149,7 +149,7 @@ const AllDrops: FunctionComponent<AllDropsProps> = ({
                           className="relative w-full h-10 py-2 px-3 bg-pos border-2 border-lily text-white font-earl text-base flex items-center justify-center flex-col"
                           onClick={(event) => {
                             event.stopPropagation();
-                            upgradeDrop([[1, 2, 3, 4, 5, 6], value.dropIPFS]);
+                            upgradeDrop([[12,13,14,15,16,17], value.dropIPFS]);
                             // dispatch(
                             //   setDropDetails({
                             //     actionTitle: value.uri.name,
