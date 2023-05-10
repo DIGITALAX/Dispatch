@@ -120,6 +120,8 @@ const useAddCollection = () => {
     );
   };
 
+  console.log({collectionArgs})
+
   const handleCollectionDescription = (e: FormEvent): void => {
     dispatch(
       setCollectionDetails({
