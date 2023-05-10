@@ -120,8 +120,6 @@ const useAddCollection = () => {
     );
   };
 
-  console.log({collectionArgs})
-
   const handleCollectionDescription = (e: FormEvent): void => {
     dispatch(
       setCollectionDetails({
@@ -260,8 +258,6 @@ const useAddCollection = () => {
     }
     setAddCollectionLoading(false);
   };
-
-  console.log(collectionArgs);
 
   const addCollectionWrite = async (): Promise<void> => {
     setAddCollectionLoading(true);

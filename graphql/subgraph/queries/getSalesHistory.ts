@@ -3,7 +3,7 @@ import { graphClient } from "@/lib/subgraph/client";
 
 const HISTORY = `
   query {
-    tokensBoughts(where: {creator: $creator} orderBy: blockTimestamp
+    tokensBoughts(orderBy: blockTimestamp
       orderDirection: desc) {
         uri
         totalPrice

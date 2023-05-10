@@ -19,6 +19,10 @@ const useSales = () => {
   const indexModal = useSelector(
     (state: RootState) => state.app.indexModalReducer.message
   );
+  const pages = useSelector((state: RootState) => state.app.pageReducer.value);
+  const allCollections = useSelector(
+    (state: RootState) => state.app.allCollectionsReducer.value
+  );
 
   const getUserHistory = async () => {
     if (!address) return;
@@ -55,8 +59,27 @@ const useSales = () => {
             };
           })
         );
-        dispatch(setSalesRedux(history));
-        setSales(history);
+        const newHistory: Sales[] = [];
+        history.forEach((tokenBought) => {
+          const tokenId = tokenBought.tokenIds[0];
+          const matchingObject = allCollections.find((collection) => {
+            return collection.tokenIds.includes(tokenId);
+          });
+
+          if (matchingObject) {
+            const index = matchingObject.basePrices.findIndex((value) => {
+              return value === tokenBought.totalPrice;
+            });
+            if (index !== -1) {
+              newHistory.push({
+                ...tokenBought,
+                type: matchingObject.acceptedTokens[index],
+              });
+            }
+          }
+        });
+        dispatch(setSalesRedux(newHistory));
+        setSales(newHistory);
       }
     } catch (err: any) {
       console.error(err.message);
@@ -68,7 +91,7 @@ const useSales = () => {
     if (salesReducer.length < 1 || !salesReducer) {
       getUserHistory();
     }
-  }, [indexModal]);
+  }, [indexModal, pages]);
 
   return { sales, salesLoading };
 };

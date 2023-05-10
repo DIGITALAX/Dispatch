@@ -19,10 +19,10 @@ const Options: FunctionComponent<OptionsProps> = ({
           <div
             key={index}
             className={`relative w-16 h-fit gap-2 flex flex-col items-center justify-center ${
-              index !== 0 && index !== 1 && "opacity-60"
+              index !== 0 && index !== 1 && index !== 3 && "opacity-60"
             }`}
             onClick={
-              index === 0 || index === 1
+              index === 0 || index === 1 || index === 3
                 ? () => dispatch(setPage(label))
                 : () => {}
             }
@@ -30,7 +30,7 @@ const Options: FunctionComponent<OptionsProps> = ({
             <div
               id="option"
               className={`relative w-12 h-12 flex border border-white rounded-br-xl rounded-bl-xl bg-midi rounded-tl-lg ${
-                (index === 0 || index === 1) &&
+                (index === 0 || index === 1 || index === 3) &&
                 "cursor-pointer active:scale-95 hover:opacity-70"
               }`}
             ></div>
