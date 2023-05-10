@@ -1,10 +1,6 @@
 import getAllCollections from "@/graphql/subgraph/queries/getAllCollections";
 import getAllDrops from "@/graphql/subgraph/queries/getAllDrops";
-import {
-  CHROMADIN_DROP_CONTRACT,
-  CHROMADIN_DROP_CONTRACT_NEW,
-  MUMBAI_DROP,
-} from "@/lib/constants";
+import { CHROMADIN_DROP_CONTRACT, MUMBAI_DROP } from "@/lib/constants";
 import { setAllDropsRedux } from "@/redux/reducers/allDropsSlice";
 import { setDropDetails } from "@/redux/reducers/dropDetailsSlice";
 import { setDropSwitcher } from "@/redux/reducers/dropSwitcherSlice";
@@ -44,10 +40,7 @@ const useAddDrop = () => {
   const [deleteDropLoading, setDeleteDropLoading] = useState<boolean>(false);
 
   const { config, isSuccess } = usePrepareContractWrite({
-    address:
-      dropValues?.contractType === "primary"
-        ? CHROMADIN_DROP_CONTRACT
-        : CHROMADIN_DROP_CONTRACT_NEW,
+    address: CHROMADIN_DROP_CONTRACT,
     abi: [
       {
         inputs: [
@@ -73,10 +66,8 @@ const useAddDrop = () => {
 
   const { config: addConfig, isSuccess: addIsSuccess } =
     usePrepareContractWrite({
-      address:
-        dropValues?.contractType === "primary"
-          ? CHROMADIN_DROP_CONTRACT
-          : CHROMADIN_DROP_CONTRACT_NEW,
+      address: CHROMADIN_DROP_CONTRACT,
+
       abi: [
         {
           inputs: [
@@ -97,9 +88,7 @@ const useAddDrop = () => {
   const { writeAsync: writeAddAsync } = useContractWrite(addConfig);
 
   const { config: deleteConfig } = usePrepareContractWrite({
-    address: dropValues?.contractType === "primary"
-    ? CHROMADIN_DROP_CONTRACT
-    : CHROMADIN_DROP_CONTRACT_NEW,
+    address: CHROMADIN_DROP_CONTRACT,
     abi: [
       {
         inputs: [{ internalType: "uint256", name: "_dropId", type: "uint256" }],

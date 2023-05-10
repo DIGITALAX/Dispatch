@@ -4,13 +4,18 @@ import { AllDropsProps, Drop } from "../types/drops.types";
 import { setDropDetails } from "@/redux/reducers/dropDetailsSlice";
 import Image from "next/legacy/image";
 import { INFURA_GATEWAY } from "@/lib/constants";
+import { AiOutlineLoading } from "react-icons/ai";
 
 const AllDrops: FunctionComponent<AllDropsProps> = ({
   dispatch,
   allDrops,
   allDropsRedux,
   dropsLoading,
+  dropLoading,
+  upgradeDrop,
+  allCollections,
 }): JSX.Element => {
+  console.log({ allCollections });
   return (
     <div className="relative w-full h-fit flex flex-row mid:justify-start mid:items-start items-center justify-center flex-wrap gap-8 overflow-y-scroll">
       <div className="relative w-52 h-60 sm:w-60 sm:h-72 flex items-center justify-center">
@@ -27,7 +32,7 @@ const AllDrops: FunctionComponent<AllDropsProps> = ({
                 actionFileType: "",
                 actionType: "add",
                 actionId: 0,
-                actionContractType: "secondary"
+                actionContractType: "secondary",
               })
             );
           }}
@@ -63,7 +68,7 @@ const AllDrops: FunctionComponent<AllDropsProps> = ({
                         actionId: value.dropId,
                         actionFileType: value.fileType,
                         actionType: "delete",
-                        actionContractType: value.contractType
+                        actionContractType: value.contractType,
                       })
                     );
                     dispatch(setDropSwitcher("add"));
@@ -144,35 +149,56 @@ const AllDrops: FunctionComponent<AllDropsProps> = ({
                           className="relative w-full h-10 py-2 px-3 bg-pos border-2 border-lily text-white font-earl text-base flex items-center justify-center flex-col"
                           onClick={(event) => {
                             event.stopPropagation();
-                            dispatch(
-                              setDropDetails({
-                                actionTitle: value.uri.name,
-                                actionImage: value.uri.image,
-                                actionCollectionIds: value.collectionIds,
-                                actionDisabled: true,
-                                actionId: value.dropId,
-                                actionFileType: value.fileType,
-                                actionType: "delete",
-                                actionContractType: value.contractType
-                              })
-                            );
-                            dispatch(setDropSwitcher("add"));
+                            upgradeDrop([[1, 2, 3, 4, 5, 6], value.dropIPFS]);
+                            // dispatch(
+                            //   setDropDetails({
+                            //     actionTitle: value.uri.name,
+                            //     actionImage: value.uri.image,
+                            //     actionCollectionIds: value.collectionIds,
+                            //     actionDisabled: true,
+                            //     actionId: value.dropId,
+                            //     actionFileType: value.fileType,
+                            //     actionType: "delete",
+                            //     actionContractType: value.contractType,
+                            //   })
+                            // );
+                            // dispatch(setDropSwitcher("add"));
                           }}
                         >
                           <div
-                            className="absolute w-fit h-fit items-center justify-center flex -top-px opacity-50"
+                            className={`absolute w-fit h-fit items-center justify-center flex -top-px opacity-50  ${
+                              dropLoading && "animate-spin"
+                            }`}
                             id="pageBack"
                           >
-                            ADD MORE
+                            {dropLoading ? (
+                              <AiOutlineLoading size={10} color="white" />
+                            ) : (
+                              "UPGRADE"
+                            )}
                           </div>
                           <div
-                            className="absolute w-fit h-fit items-center justify-center flex top-1 opacity-70"
+                            className={`absolute w-fit h-fit items-center justify-center flex top-1 opacity-70  ${
+                              dropLoading && "animate-spin"
+                            }`}
                             id="pageBack"
                           >
-                            ADD MORE
+                            {dropLoading ? (
+                              <AiOutlineLoading size={10} color="white" />
+                            ) : (
+                              "UPGRADE"
+                            )}
                           </div>
-                          <div className="relative w-fit h-fit items-center justify-center flex">
-                            ADD MORE
+                          <div
+                            className={`relative w-fit h-fit items-center justify-center flex ${
+                              dropLoading && "animate-spin"
+                            }`}
+                          >
+                            {dropLoading ? (
+                              <AiOutlineLoading size={10} color="white" />
+                            ) : (
+                              "UPGRADE"
+                            )}
                           </div>
                         </div>
                       </div>

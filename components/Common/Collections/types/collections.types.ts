@@ -7,6 +7,9 @@ export type AllCollectionsProps = {
   allCollections: any[];
   allCollectionsRedux: any[];
   collectionsLoading: boolean;
+  upgradeTokens: (value: any, index: number) => void;
+  upgraded: boolean[];
+  tokensLoading: boolean[];
 };
 
 export type AddCollectionProps = {
@@ -64,4 +67,6 @@ export interface Collection {
   soldTokens: string[] | null;
   fileType: string;
   contractType: string;
+  collectionIPFS: string;
+  dropIPFS: string;
 }

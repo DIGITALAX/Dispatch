@@ -1,5 +1,5 @@
 import {
-  CHROMADIN_COLLECTION_CONTRACT_NEW,
+  CHROMADIN_COLLECTION_CONTRACT,
   MUMBAI_COLLECTION,
 } from "@/lib/constants";
 import { setCollectionDetails } from "@/redux/reducers/collectionDetailsSlice";
@@ -41,7 +41,7 @@ const useAddCollection = () => {
   >();
 
   const { config, isSuccess } = usePrepareContractWrite({
-    address: CHROMADIN_COLLECTION_CONTRACT_NEW,
+    address: CHROMADIN_COLLECTION_CONTRACT,
     abi: [
       {
         inputs: [
@@ -85,7 +85,7 @@ const useAddCollection = () => {
   const { writeAsync } = useContractWrite(config);
 
   const { config: burnConfig } = usePrepareContractWrite({
-    address: CHROMADIN_COLLECTION_CONTRACT_NEW,
+    address: CHROMADIN_COLLECTION_CONTRACT,
     abi: [
       {
         inputs: [

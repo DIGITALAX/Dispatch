@@ -32,7 +32,7 @@ const collectionGetter = async (
           collectionDrops = drops.data.chromadinDropNewDropCreateds;
         }
 
-       collectionDrops = collectionDrops
+        collectionDrops = collectionDrops
           .filter((drop: any) =>
             drop.collectionIds.includes(collection.collectionId)
           )
@@ -56,6 +56,8 @@ const collectionGetter = async (
           },
           fileType: json.type,
           contractType: index < amount ? "primary" : "secondary",
+          collectionIPFS: collection.uri,
+          dropIPFS: collectionDrops[0]?.dropURI,
         };
       })
     );

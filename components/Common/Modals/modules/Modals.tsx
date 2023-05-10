@@ -7,7 +7,7 @@ import FullScreenVideo from "./FullScreenVideo";
 import useControls from "../../Tunes/hooks/useControls";
 import { useRef } from "react";
 import ImageViewerModal from "./ImageViewer";
-import Purchase from "./Purchase";
+import useUpgrade from "../hooks/useUpgrade";
 
 const Modals = () => {
   const dispatch = useDispatch();
@@ -37,6 +37,7 @@ const Modals = () => {
   const reaction = useSelector(
     (state: RootState) => state.app.reactionStateReducer
   );
+  const { upgradeTokens, tokensLoading } = useUpgrade();
   const { fullVideoRef, wrapperRef } = useControls();
   return (
     <>

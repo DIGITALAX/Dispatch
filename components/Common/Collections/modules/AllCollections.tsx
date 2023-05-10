@@ -6,12 +6,16 @@ import { INFURA_GATEWAY } from "@/lib/constants";
 import { setCollectionDetails } from "@/redux/reducers/collectionDetailsSlice";
 import { setPage } from "@/redux/reducers/pageSlice";
 import { setDropSwitcher } from "@/redux/reducers/dropSwitcherSlice";
+import { AiOutlineLoading } from "react-icons/ai";
 
 const AllCollections: FunctionComponent<AllCollectionsProps> = ({
   dispatch,
   allCollections,
   allCollectionsRedux,
   collectionsLoading,
+  upgradeTokens,
+  upgraded,
+  tokensLoading,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-fit flex flex-row mid:justify-start mid:items-start items-center justify-center flex-wrap gap-8 overflow-y-scroll">
@@ -144,36 +148,98 @@ const AllCollections: FunctionComponent<AllCollectionsProps> = ({
                     <div className="relative w-full h-fit flex flex-row gap-2 items-center justify-center flex-wrap">
                       <div
                         className="relative w-full h-10 py-2 px-3 border-2 border-lily text-white font-earl text-base flex items-center justify-center bg-pos flex-col"
-                        onClick={
-                          value?.drop?.name
-                            ? (event) => {
-                                event.stopPropagation();
-                                window.open(
-                                  `http://www.chromadin.xyz/#collect?option=history?search=${value?.name}`,
-                                  "_blank"
-                                );
-                              }
-                            : (event) => {
-                                event.stopPropagation();
-                                dispatch(setDropSwitcher("drops"));
-                                dispatch(setPage("drops"));
-                              }
-                        }
+                        // onClick={
+                        //   value?.drop?.name
+                        //     ? (event) => {
+                        //         event.stopPropagation();
+                        //         window.open(
+                        //           `http://www.chromadin.xyz/#collect?option=history?search=${value?.name}`,
+                        //           "_blank"
+                        //         );
+                        //       }
+                        //     : (event) => {
+                        //         event.stopPropagation();
+                        //         dispatch(setDropSwitcher("drops"));
+                        //         dispatch(setPage("drops"));
+                        //       }
+                        // }
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          upgradeTokens(
+                            [
+                              value.collectionIPFS,
+                              Math.ceil(Number(value?.amount)) as any,
+                              value?.name,
+                              value?.acceptedTokens as any,
+                              value?.basePrices.map((price, i: number) => {
+                                if (
+                                  i ===
+                                  value.acceptedTokens.indexOf(
+                                    "0xc2132d05d31c914a87c6611c10748aeb04b58e8f"
+                                  )
+                                ) {
+                                  // If the current index is the index of USDT, multiply by 10 ** 6
+                                  return (
+                                    BigInt(price) * BigInt(10 ** 6)
+                                  ).toString();
+                                } else {
+                                  // If price is an integer, convert it to BigInt as before
+                                  return (
+                                    BigInt(price) * BigInt(10 ** 18)
+                                  ).toString();
+                                }
+                              }) as any,
+                            ],
+                            index
+                          );
+                        }}
                       >
                         <div
-                          className="absolute w-fit h-fit items-center justify-center flex top-1 opacity-50"
+                          className={`absolute w-fit h-fit items-center justify-center flex top-1 opacity-50 ${
+                            tokensLoading?.[index] && "animate-spin"
+                          }`}
                           id="pageBack"
                         >
-                          {value?.drop?.name ? "VIEW IN MARKET" : "ADD TO DROP"}
+                          {tokensLoading?.[index] ? (
+                            <AiOutlineLoading size={10} color="white" />
+                          ) : !upgraded?.[index] ? (
+                            "UPGRADE"
+                          ) : value?.drop?.name ? (
+                            "VIEW IN MARKET"
+                          ) : (
+                            "ADD TO DROP"
+                          )}
                         </div>
                         <div
-                          className="absolute w-fit h-fit items-center justify-center flex top-2 opacity-70"
+                          className={`absolute w-fit h-fit items-center justify-center flex top-2 opacity-70 ${
+                            tokensLoading?.[index] && "animate-spin"
+                          }`}
                           id="pageBack"
                         >
-                          {value?.drop?.name ? "VIEW IN MARKET" : "ADD TO DROP"}
+                          {tokensLoading?.[index] ? (
+                            <AiOutlineLoading size={10} color="white" />
+                          ) : !upgraded?.[index] ? (
+                            "UPGRADE"
+                          ) : value?.drop?.name ? (
+                            "VIEW IN MARKET"
+                          ) : (
+                            "ADD TO DROP"
+                          )}
                         </div>
-                        <div className="relative w-fit h-fit items-center justify-center flex top-1">
-                          {value?.drop?.name ? "VIEW IN MARKET" : "ADD TO DROP"}
+                        <div
+                          className={`relative w-fit h-fit items-center justify-center flex top-1  ${
+                            tokensLoading?.[index] && "animate-spin"
+                          }`}
+                        >
+                          {tokensLoading?.[index] ? (
+                            <AiOutlineLoading size={10} color="white" />
+                          ) : !upgraded?.[index] ? (
+                            "UPGRADE"
+                          ) : value?.drop?.name ? (
+                            "VIEW IN MARKET"
+                          ) : (
+                            "ADD TO DROP"
+                          )}
                         </div>
                       </div>
                     </div>

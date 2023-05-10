@@ -3,6 +3,7 @@ import useAllDrops from "@/components/Common/Drops/hooks/useAllDrops";
 import AddDrop from "@/components/Common/Drops/modules/AddDrop";
 import AllDrops from "@/components/Common/Drops/modules/AllDrops";
 import useImageUpload from "@/components/Common/Inputs/hooks/useImageUpload";
+import useUpgrade from "@/components/Common/Modals/hooks/useUpgrade";
 import { RootState } from "@/redux/store";
 import { FunctionComponent } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -39,6 +40,7 @@ const DropsSwitcher: FunctionComponent = (): JSX.Element => {
     deleteDrop,
   } = useAddDrop();
   const { allDrops, dropsLoading } = useAllDrops();
+  const { dropLoading, upgradeDrop } = useUpgrade();
 
   switch (dropSwitcher) {
     case "add":
@@ -72,6 +74,9 @@ const DropsSwitcher: FunctionComponent = (): JSX.Element => {
           allDrops={allDrops}
           allDropsRedux={allDropsRedux}
           dropsLoading={dropsLoading}
+          allCollections={allCollections}
+          upgradeDrop={upgradeDrop}
+          dropLoading={dropLoading}
         />
       );
   }

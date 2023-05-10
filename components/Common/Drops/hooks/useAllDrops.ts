@@ -49,6 +49,7 @@ const useAllDrops = () => {
                 index >= data.data?.dropCreateds?.length
                   ? "secondary"
                   : "primary",
+              dropIPFS: drop.dropURI,
             };
           })
         ));
