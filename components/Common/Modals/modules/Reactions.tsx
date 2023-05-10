@@ -9,32 +9,32 @@ import { INFURA_GATEWAY } from "@/lib/constants";
 import { useAccount } from "wagmi";
 
 const Reactions: FunctionComponent = ({
-  buttonText,
-  symbol,
-  value,
-  limit,
-  time,
-  totalCollected,
-  canClick,
-  isApproved,
-  handleCollect,
-  approveCurrency,
-  collectLoading,
-  approvalLoading,
-  handleLensSignIn,
-  commentId,
+  // buttonText,
+  // symbol,
+  // value,
+  // limit,
+  // time,
+  // totalCollected,
+  // canClick,
+  // isApproved,
+  // handleCollect,
+  // approveCurrency,
+  // collectLoading,
+  // approvalLoading,
+  // handleLensSignIn,
+  // commentId,
 }): JSX.Element => {
   const lensProfile: string = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile?.id
   );
-  const { address } = useAccount();
-  const { openConnectModal } = useConnectModal();
-  useEffect(() => {
-    //collect refresh
-  }, [approvalLoading]);
+  // const { address } = useAccount();
+  // const { openConnectModal } = useConnectModal();
+  // useEffect(() => {
+  //   //collect refresh
+  // }, [approvalLoading]);
   return (
     <div className="relative w-full h-full flex flex-row text-center gap-3 items-center">
-      <div className="relative w-full h-60 flex p-2">
+      {/* <div className="relative w-full h-60 flex p-2">
         <Image
           src={`${INFURA_GATEWAY}/ipfs/QmcHYeemWE3z8qy7m42pJbasYzyvMRWNPRMfXvSNz6XKoK`}
           layout="fill"
@@ -110,7 +110,7 @@ const Reactions: FunctionComponent = ({
             </div>
           )}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
