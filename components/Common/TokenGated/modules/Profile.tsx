@@ -106,11 +106,15 @@ const Profile: FunctionComponent<ProfileSideBarProps> = ({
             @
             {publication?.__typename !== "Mirror"
               ? publication?.profile?.handle?.length > 15
-                ? publication?.profile?.handle?.substring(0, 15) + "..."
-                : publication?.profile?.handle
+                ? publication?.profile?.handle
+                    ?.split(".lens")[0]
+                    ?.substring(0, 15) + "..."
+                : publication?.profile?.handle?.split(".lens")[0]
               : publication?.mirrorOf?.profile?.handle?.length > 15
-              ? publication?.mirrorOf?.profile?.handle?.substring(0, 15) + "..."
-              : publication?.mirrorOf?.profile?.handle}
+              ? publication?.mirrorOf?.profile?.handle
+                  ?.split(".lens")[0]
+                  ?.substring(0, 15) + "..."
+              : publication?.mirrorOf?.profile?.handle?.split(".lens")[0]}
           </div>
         </div>
         <div className="relative w-full h-fit grid grid-flow-col auto-cols-auto">

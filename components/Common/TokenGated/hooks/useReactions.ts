@@ -105,16 +105,29 @@ const useReactions = () => {
     });
   const { writeAsync: collectWriteAsync } = useContractWrite(collectConfig);
 
-  const reactPost = async (id: string): Promise<void> => {
-    const index = (feedSwitch ? feedDispatch : timelineDispatch)?.findIndex(
-      (feed) => feed.id === id
-    );
+  const reactPost = async (
+    id: string,
+    loader?: (e: any) => void,
+    inputIndex?: number
+  ): Promise<void> => {
+    let index: number;
+    if (loader && inputIndex) {
+      loader((prev: any) => {
+        const updatedArray = [...prev];
+        updatedArray[inputIndex] = true;
+        return updatedArray as boolean[];
+      });
+    } else {
+      index = (feedSwitch ? feedDispatch : timelineDispatch)?.findIndex(
+        (feed) => feed.id === id
+      );
 
-    (feedSwitch ? setReactFeedLoading : setReactTimelineLoading)((prev) => {
-      const updatedArray = [...prev];
-      updatedArray[index] = true;
-      return updatedArray;
-    });
+      (feedSwitch ? setReactFeedLoading : setReactTimelineLoading)((prev) => {
+        const updatedArray = [...prev];
+        updatedArray[index] = true;
+        return updatedArray;
+      });
+    }
 
     try {
       await addReaction({
@@ -131,11 +144,19 @@ const useReactions = () => {
     } catch (err: any) {
       console.error(err.message);
     }
-    (feedSwitch ? setReactFeedLoading : setReactTimelineLoading)((prev) => {
-      const updatedArray = [...prev];
-      updatedArray[index] = false;
-      return updatedArray;
-    });
+    if (loader && inputIndex) {
+      loader((prev: any) => {
+        const updatedArray = [...prev];
+        updatedArray[inputIndex] = false;
+        return updatedArray as boolean[];
+      });
+    } else {
+      (feedSwitch ? setReactFeedLoading : setReactTimelineLoading)((prev) => {
+        const updatedArray = [...prev];
+        updatedArray[index] = false;
+        return updatedArray;
+      });
+    }
 
     dispatch(
       setIndexModal({
@@ -153,17 +174,33 @@ const useReactions = () => {
     }, 4000);
   };
 
-  const mirrorPost = async (id: string): Promise<void> => {
-    const index = (feedSwitch ? feedDispatch : timelineDispatch).findIndex(
-      (feed) => feed.id === id
-    );
-    setMirrorIndex(index);
+  const mirrorPost = async (
+    id: string,
+    loader?: (e: any) => void,
+    inputIndex?: number
+  ): Promise<void> => {
+    console.log({
+      inputIndex, loader
+    })
+    let index: number;
+    if (loader && inputIndex) {
+      loader((prev: any) => {
+        const updatedArray = [...prev];
+        updatedArray[inputIndex] = true;
+        return updatedArray as boolean[];
+      });
+    } else {
+      index = (feedSwitch ? feedDispatch : timelineDispatch).findIndex(
+        (feed) => feed.id === id
+      );
+      setMirrorIndex(index);
 
-    (feedSwitch ? setMirrorFeedLoading : setMirrorTimelineLoading)((prev) => {
-      const updatedArray = [...prev];
-      updatedArray[index] = true;
-      return updatedArray;
-    });
+      (feedSwitch ? setMirrorFeedLoading : setMirrorTimelineLoading)((prev) => {
+        const updatedArray = [...prev];
+        updatedArray[index] = true;
+        return updatedArray;
+      });
+    }
 
     let mirrorPost: any;
     try {
@@ -258,11 +295,19 @@ const useReactions = () => {
     } catch (err: any) {
       console.error(err.message);
     }
-    (feedSwitch ? setMirrorFeedLoading : setMirrorTimelineLoading)((prev) => {
-      const updatedArray = [...prev];
-      updatedArray[index] = false;
-      return updatedArray;
-    });
+    if (loader && inputIndex) {
+      loader((prev: any) => {
+        const updatedArray = [...prev];
+        updatedArray[inputIndex] = true;
+        return updatedArray as boolean[];
+      });
+    } else {
+      (feedSwitch ? setMirrorFeedLoading : setMirrorTimelineLoading)((prev) => {
+        const updatedArray = [...prev];
+        updatedArray[index] = false;
+        return updatedArray;
+      });
+    }
   };
 
   const mirrorWrite = async (): Promise<void> => {
@@ -293,16 +338,31 @@ const useReactions = () => {
     });
   };
 
-  const collectPost = async (id: string): Promise<void> => {
-    const index = (feedSwitch ? feedDispatch : timelineDispatch).findIndex(
-      (feed) => feed.id === id
-    );
-    setCollectIndex(index);
-    (feedSwitch ? setCollectFeedLoading : setCollectTimelineLoading)((prev) => {
-      const updatedArray = [...prev];
-      updatedArray[index] = true;
-      return updatedArray;
-    });
+  const collectPost = async (
+    id: string,
+    loader?: (e: any) => void,
+    inputIndex?: number
+  ): Promise<void> => {
+    let index: number;
+    if (loader && inputIndex) {
+      loader((prev: any) => {
+        const updatedArray = [...prev];
+        updatedArray[inputIndex] = true;
+        return updatedArray as boolean[];
+      });
+    } else {
+      index = (feedSwitch ? feedDispatch : timelineDispatch).findIndex(
+        (feed) => feed.id === id
+      );
+      setCollectIndex(index);
+      (feedSwitch ? setCollectFeedLoading : setCollectTimelineLoading)(
+        (prev) => {
+          const updatedArray = [...prev];
+          updatedArray[index] = true;
+          return updatedArray;
+        }
+      );
+    }
 
     try {
       const collectPost = await collect({
@@ -374,11 +434,21 @@ const useReactions = () => {
       console.error(err.message);
     }
 
-    (feedSwitch ? setCollectFeedLoading : setCollectTimelineLoading)((prev) => {
-      const updatedArray = [...prev];
-      updatedArray[index] = false;
-      return updatedArray;
-    });
+    if (loader && inputIndex) {
+      loader((prev: any) => {
+        const updatedArray = [...prev];
+        updatedArray[inputIndex] = true;
+        return updatedArray as boolean[];
+      });
+    } else {
+      (feedSwitch ? setCollectFeedLoading : setCollectTimelineLoading)(
+        (prev) => {
+          const updatedArray = [...prev];
+          updatedArray[index] = false;
+          return updatedArray;
+        }
+      );
+    }
   };
 
   const collectWrite = async (): Promise<void> => {
@@ -422,13 +492,6 @@ const useReactions = () => {
       updatedArray[collectIndex!] = false;
       return updatedArray;
     });
-  };
-
-  const commentPost = async (): Promise<void> => {
-    try {
-    } catch (err: any) {
-      console.error(err.message);
-    }
   };
 
   useEffect(() => {
@@ -555,7 +618,6 @@ const useReactions = () => {
     collectPost,
     mirrorPost,
     reactPost,
-    commentPost,
     authStatus,
     profileId,
     mirrorFeedLoading,

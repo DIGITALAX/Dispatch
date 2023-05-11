@@ -59,10 +59,10 @@ const descriptionRegex = (description: string, messages?: boolean) => {
         return word;
       }
     });
-    const styledLine = `<span>${styledWords.join(" ")}</span>`;
+    const styledLine = `<span>${styledWords?.join(" ")}</span>`;
     return styledLine;
   });
-  const formattedDescription = styledLines.join("<br /><br />");
+  const formattedDescription = styledLines?.join("<br /><br />");
   return `<div>${formattedDescription}</div>`;
 };
 

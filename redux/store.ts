@@ -37,6 +37,12 @@ import lastFeedIndexReducer from "./reducers/lastFeedIndexSlice";
 import feedSwitchReducer from "./reducers/feedSwitchSlice";
 import feedReactIdReducer from "./reducers/feedReactIdSlice";
 import salesReducer from "./reducers/salesSlice";
+import feedTypeReducer from "./reducers/feedTypeSlice";
+import commentCountReducer from "./reducers/commentCountSlice";
+import canCommentReducer from "./reducers/canCommentSlice";
+import postImageReducer from "./reducers/postImageSlice";
+import collectOpenReducer from "./reducers/collectOpenSlice";
+import collectValueTypeReducer from "./reducers/collectValueTypeSlice";
 
 const reducer = combineReducers({
   lensProfileReducer,
@@ -76,6 +82,12 @@ const reducer = combineReducers({
   feedSwitchReducer,
   feedReactIdReducer,
   salesReducer,
+  feedTypeReducer,
+  commentCountReducer,
+  canCommentReducer,
+  postImageReducer,
+  collectOpenReducer,
+  collectValueTypeReducer,
 });
 
 export const store = configureStore({

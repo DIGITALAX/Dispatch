@@ -3,7 +3,6 @@ import Profile from "./Profile";
 import { INFURA_GATEWAY } from "@/lib/constants";
 import Image from "next/legacy/image";
 import { AiFillEye, AiOutlineRetweet } from "react-icons/ai";
-import getLinkPreview from "@/lib/helpers/getLinkPreview";
 import { FunctionComponent } from "react";
 import { FeedPublicationProps } from "../types/allPosts.types";
 import { setImageViewer } from "@/redux/reducers/imageViewerSlice";
@@ -11,18 +10,16 @@ import { setReactionState } from "@/redux/reducers/reactionStateSlice";
 import { setCommentShow } from "@/redux/reducers/commentShowSlice";
 import descriptionRegex from "@/lib/helpers/descriptionRegex";
 import { FaRegCommentDots } from "react-icons/fa";
+import { setFeedType } from "@/redux/reducers/feedTypeSlice";
 
 const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
   publication,
   dispatch,
-  type,
   hasReacted,
   hasMirrored,
   followerOnly,
   height,
-  viewerOpen,
   address,
-  router,
   collectPost,
   commentPost,
   reactPost,
@@ -36,38 +33,18 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
   collectAmount,
   commentAmount,
   hasCollected,
+  feedType,
+  setCollectLoader,
+  setReactLoader,
+  setMirrorLoader,
 }): JSX.Element => {
-  const link = getLinkPreview(
-    publication?.__typename !== "Mirror"
-      ? publication?.metadata?.content
-      : publication?.mirrorOf?.metadata?.content
-  );
-  const tags = document.querySelectorAll("em");
-  if (tags.length > 0) {
-    for (let i = 0; i < tags.length; i++) {
-      tags[i].addEventListener("click", (e) => {
-        router
-          ?.push(
-            `/?search=${(e.target as any)?.innerText.replaceAll(
-              "#",
-              ""
-            )}/#Slider`
-          )
-          .catch((e) => {
-            if (!e.cancelled) {
-              throw e;
-            }
-          });
-      });
-    }
-  }
   return (
     <div
       className={`relative w-full ${
         height ? "h-full" : "h-fit"
       } flex flex-row flex-wrap sm:flex-nowrap gap-6 rounded-md z-0`}
-      data-post-id={publication.id}
-      id={publication.id}
+      data-post-id={publication?.id}
+      id={publication?.id}
     >
       <Profile
         publication={publication}
@@ -91,6 +68,9 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
         collectAmount={collectAmount}
         commentAmount={commentAmount}
         hasCollected={hasCollected}
+        setCollectLoader={setCollectLoader}
+        setReactLoader={setReactLoader}
+        setMirrorLoader={setMirrorLoader}
       />
       <div
         className={`relative w-full h-auto grow rounded-md grid grid-flow-row auto-rows-auto p-3 preG:p-6 gap-6 border-2 border-black bg-gradient-to-r from-offBlack via-gray-600 to-black`}
@@ -222,12 +202,28 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
               : "row-start-3"
           } grid grid-flow-col auto-cols-auto`}
         >
-          {!router.asPath.includes(publication?.id) && (
+          {feedType !==
+            (publication?.__typename !== "Mirror"
+              ? publication?.id
+              : publication?.mirrorOf.id) && (
             <div
               className={`relative w-fit h-full col-start-1 row-start-1 sm:col-start-2 sm:pt-0 pt-3 justify-self-end self-center grid grid-flow-col auto-cols-auto font-digi gap-1 cursor-pointer hover:opacity-70 active:scale-95 text-white`}
+              onClick={() =>
+                dispatch(
+                  setFeedType({
+                    actionValue:
+                      publication?.__typename !== "Mirror"
+                        ? publication?.id
+                        : publication?.mirrorOf.id,
+                    actionIndex: index,
+                  })
+                )
+              }
             >
               <div className="relative w-fit h-fit self-end col-start-1 text-sm">
-                {type === "Post" ? "View Post" : "View Comment"}
+                {publication?.__typename !== "Comment"
+                  ? "View Post"
+                  : "View Comment"}
               </div>
               <div className="relative w-fit h-fit col-start-2 self-end">
                 <AiFillEye color={"white"} size={20} />

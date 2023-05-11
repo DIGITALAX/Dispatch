@@ -1,11 +1,12 @@
 import useConnect from "@/components/Common/Connect/hooks/useConnect";
 import Wallet from "@/components/Common/Connect/modules/Wallet";
 import useAllPosts from "@/components/Common/TokenGated/hooks/useAllPosts";
+import useComment from "@/components/Common/TokenGated/hooks/useComment";
+import useIndividual from "@/components/Common/TokenGated/hooks/useIndividual";
 import useReactions from "@/components/Common/TokenGated/hooks/useReactions";
 import AllPosts from "@/components/Common/TokenGated/modules/AllPosts";
 import { setFeedSwitchRedux } from "@/redux/reducers/feedSwitchSlice";
 import { RootState } from "@/redux/store";
-import { useRouter } from "next/router";
 import { FunctionComponent } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useAccount } from "wagmi";
@@ -15,15 +16,11 @@ const TokenGatedSwitcher: FunctionComponent = (): JSX.Element => {
     (state: RootState) => state.app.authStatusReducer.value
   );
   const { address } = useAccount();
-  const router = useRouter();
   const feedDispatch = useSelector(
     (state: RootState) => state.app.feedReducer.value
   );
   const timelineDispatch = useSelector(
     (state: RootState) => state.app.timelineReducer.value
-  );
-  const viewerOpen = useSelector(
-    (state: RootState) => state.app.imageViewerReducer.open
   );
   const reactionAmounts = useSelector(
     (state: RootState) => state.app.reactionFeedCountReducer
@@ -33,6 +30,10 @@ const TokenGatedSwitcher: FunctionComponent = (): JSX.Element => {
   );
   const feedSwitch = useSelector(
     (state: RootState) => state.app.feedSwitchReducer.value
+  );
+  const feedType = useSelector((state: RootState) => state.app.feedTypeReducer);
+  const commentAmounts = useSelector(
+    (state: RootState) => state.app.commentCountReducer
   );
   const dispatch = useDispatch();
   const { handleLensSignIn } = useConnect();
@@ -47,23 +48,65 @@ const TokenGatedSwitcher: FunctionComponent = (): JSX.Element => {
   } = useAllPosts();
 
   const {
-    commentPost,
     reactPost,
     collectPost,
     mirrorPost,
     reactFeedLoading,
     mirrorFeedLoading,
     collectFeedLoading,
-    collectInfoLoading,
     reactTimelineLoading,
     mirrorTimelineLoading,
     collectTimelineLoading,
   } = useReactions();
 
+  const {
+    getMorePostComments,
+    commentors,
+    hasMoreComments,
+    commentsLoading,
+    mainPostLoading,
+    followerOnly: followerOnlyMain,
+    mainPost,
+    followerOnlyComments,
+    reactCommentLoading,
+    mirrorCommentLoading,
+    collectCommentLoading,
+    setMirrorCommentLoading,
+    setCollectCommentLoading,
+    setReactCommentLoading,
+    setCollectPostLoading,
+    setMirrorPostLoading,
+    setReactPostLoading,
+    collectPostLoading,
+    reactPostLoading,
+    mirrorPostLoading,
+  } = useIndividual();
+
+  const {
+    commentPost,
+    commentDescription,
+    textElement,
+    handleCommentDescription,
+    commentLoading,
+    caretCoord,
+    mentionProfiles,
+    profilesOpen,
+    handleMentionClick,
+    handleGifSubmit,
+    handleGif,
+    results,
+    gifs,
+    handleSetGif,
+    gifOpen,
+    setGifOpen,
+    handleKeyDownDelete,
+  } = useComment();
+
   switch (auth) {
     case true:
       return (
         <AllPosts
+          feedType={feedType}
           dispatch={dispatch}
           feedDispatch={feedDispatch}
           postsLoading={postsLoading}
@@ -71,12 +114,10 @@ const TokenGatedSwitcher: FunctionComponent = (): JSX.Element => {
           hasMore={hasMore}
           fetchMore={fetchMore}
           address={address!}
-          viewerOpen={viewerOpen ? viewerOpen : false}
           collectPost={collectPost}
           commentPost={commentPost}
           reactPost={reactPost}
           mirrorPost={mirrorPost}
-          router={router}
           reactLoading={reactFeedLoading}
           collectLoading={collectFeedLoading}
           mirrorLoading={mirrorFeedLoading}
@@ -91,6 +132,27 @@ const TokenGatedSwitcher: FunctionComponent = (): JSX.Element => {
           fetchMoreTimeline={fetchMoreTimeline}
           hasMoreTimeline={hasMoreTimeline}
           reactionTimelineAmounts={reactionTimelineAmounts}
+          mainPost={mainPost!}
+          followerOnlyMain={followerOnlyMain}
+          mainPostLoading={mainPostLoading}
+          hasMoreComments={hasMoreComments}
+          getMorePostComments={getMorePostComments}
+          commentors={commentors}
+          commentsLoading={commentsLoading}
+          reactCommentLoading={reactCommentLoading}
+          mirrorCommentLoading={mirrorCommentLoading}
+          collectCommentLoading={collectCommentLoading}
+          followerOnlyComments={followerOnlyComments}
+          commentAmounts={commentAmounts}
+          collectPostLoading={collectPostLoading}
+          mirrorPostLoading={mirrorPostLoading}
+          reactPostLoading={reactPostLoading}
+          setMirrorCommentLoading={setMirrorCommentLoading}
+          setCollectCommentLoading={setCollectCommentLoading}
+          setReactCommentLoading={setReactCommentLoading}
+          setCollectPostLoading={setCollectPostLoading}
+          setMirrorPostLoading={setMirrorPostLoading}
+          setReactPostLoading={setReactPostLoading}
         />
       );
 

@@ -16,6 +16,7 @@ import handleHidePost from "@/lib/helpers/handleHidePost";
 import { setFollowerOnly } from "@/redux/reducers/followerOnlySlice";
 import { setPurchase } from "@/redux/reducers/purchaseSlice";
 import { setReactionState } from "@/redux/reducers/reactionStateSlice";
+import { setFeedType } from "@/redux/reducers/feedTypeSlice";
 
 const Reactions: FunctionComponent<ReactionProps> = ({
   textColor,
@@ -42,7 +43,11 @@ const Reactions: FunctionComponent<ReactionProps> = ({
   collectAmount,
   mirrorAmount,
   commentAmount,
+  setCollectLoader,
+  setReactLoader,
+  setMirrorLoader,
 }): JSX.Element => {
+  console.log({setReactLoader})
   return (
     <div
       className={`relative w-fit h-fit col-start-1 justify-self-center grid grid-flow-col auto-cols-auto gap-4`}
@@ -52,7 +57,9 @@ const Reactions: FunctionComponent<ReactionProps> = ({
           className={`relative w-fit h-fit col-start-1 place-self-center cursor-pointer hover:opacity-70 active:scale-95 ${
             reactLoading && "animate-spin"
           }`}
-          onClick={() => !reactLoading && reactPost(publication?.id)}
+          onClick={() =>
+            !reactLoading && reactPost(publication?.id, setReactLoader, index)
+          }
         >
           {reactLoading ? (
             <AiOutlineLoading size={15} color={heartColor} />
@@ -102,13 +109,12 @@ const Reactions: FunctionComponent<ReactionProps> = ({
           onClick={() =>
             commentAmount > 0 &&
             dispatch(
-              setReactionState({
-                actionOpen: true,
-                actionType: "comment",
+              setFeedType({
                 actionValue:
-                  publication?.__typename === "Mirror"
-                    ? publication?.mirrorOf?.id
-                    : publication?.id,
+                  publication?.__typename !== "Mirror"
+                    ? publication?.id
+                    : publication?.mirrorOf.id,
+                actionIndex: index,
               })
             )
           }
@@ -123,7 +129,9 @@ const Reactions: FunctionComponent<ReactionProps> = ({
           className={`relative w-fit h-fit col-start-1 place-self-center cursor-pointer hover:opacity-70 active:scale-95 ${
             followerOnly && "opacity-50"
           } ${mirrorLoading && "animate-spin"}`}
-          onClick={() => !mirrorLoading && mirrorPost(publication.id)}
+          onClick={() =>
+            !mirrorLoading && mirrorPost(publication.id, setMirrorLoader, index)
+          }
         >
           {mirrorLoading ? (
             <AiOutlineLoading size={15} color={mirrorColor} />
@@ -191,7 +199,7 @@ const Reactions: FunctionComponent<ReactionProps> = ({
                         actionIndex: index,
                       })
                     )
-                : () => collectPost(publication?.id)
+                : () => collectPost(publication?.id, setCollectLoader, index)
             }
           >
             {collectLoading ? (

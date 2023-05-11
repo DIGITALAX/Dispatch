@@ -232,3 +232,7 @@ input[type="range"]::-moz-range-thumb {
 #sideProfile {
   background: linear-gradient(to right, transparent, white, #44afd3);
 }
+
+.infinite-scroll-component__outerdiv {
+  width: 100%;
+}

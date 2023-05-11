@@ -6,6 +6,8 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { BsToggle2Off, BsToggle2On } from "react-icons/bs";
 import FeedPublication from "./FeedPublication";
 import { Publication } from "@/components/Home/types/lens.types";
+import Individual from "./Individual";
+import { setFeedType } from "@/redux/reducers/feedTypeSlice";
 
 const AllPosts: FunctionComponent<AllPostsProps> = ({
   dispatch,
@@ -19,8 +21,6 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
   collectPost,
   mirrorPost,
   reactPost,
-  router,
-  viewerOpen,
   mirrorLoading,
   collectLoading,
   reactLoading,
@@ -35,6 +35,28 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
   reactionTimelineAmounts,
   fetchMoreTimeline,
   hasMoreTimeline,
+  feedType,
+  mainPost,
+  followerOnlyMain,
+  mainPostLoading,
+  hasMoreComments,
+  getMorePostComments,
+  commentors,
+  commentsLoading,
+  reactCommentLoading,
+  mirrorCommentLoading,
+  collectCommentLoading,
+  followerOnlyComments,
+  commentAmounts,
+  collectPostLoading,
+  mirrorPostLoading,
+  reactPostLoading,
+  setMirrorCommentLoading,
+  setCollectCommentLoading,
+  setReactCommentLoading,
+  setCollectPostLoading,
+  setMirrorPostLoading,
+  setReactPostLoading,
 }): JSX.Element => {
   return (
     <div
@@ -47,7 +69,15 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
         </div>
         <div
           className="relative w-fit h-fit cursor-pointer active:scale-95"
-          onClick={() => dispatch(setFeedSwitch(!feedSwitch))}
+          onClick={() => {
+            dispatch(
+              setFeedType({
+                actionValue: "",
+                actionIndex: 0,
+              })
+            );
+            dispatch(setFeedSwitch(!feedSwitch));
+          }}
         >
           {feedSwitch ? (
             <BsToggle2On size={30} color="white" />
@@ -58,7 +88,39 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
       </div>
       <div className="relative w-full h-full flex flex-col xl:flex-row items-start justify-end gap-8">
         <MakePost />
-        {postsLoading ? (
+        {feedType.value !== "" ? (
+          <Individual
+            dispatch={dispatch}
+            commentors={commentors}
+            fetchMoreComments={getMorePostComments}
+            commentsLoading={commentsLoading}
+            mainPost={mainPost!}
+            hasMoreComments={hasMoreComments}
+            mirrorPost={mirrorPost}
+            collectPost={collectPost}
+            reactPost={reactPost}
+            commentPost={commentPost}
+            followerOnlyMain={followerOnlyMain}
+            reactCommentLoading={reactCommentLoading}
+            mirrorCommentLoading={mirrorCommentLoading}
+            collectCommentLoading={collectCommentLoading}
+            mainPostLoading={mainPostLoading}
+            address={address}
+            feedType={feedType}
+            followerOnlyComments={followerOnlyComments}
+            commentAmounts={commentAmounts}
+            collectPostLoading={collectPostLoading}
+            mirrorPostLoading={mirrorPostLoading}
+            reactPostLoading={reactPostLoading}
+            setMirrorCommentLoading={setMirrorCommentLoading}
+            setCollectCommentLoading={setCollectCommentLoading}
+            setReactCommentLoading={setReactCommentLoading}
+            setCollectPostLoading={setCollectPostLoading}
+            setMirrorPostLoading={setMirrorPostLoading}
+            setReactPostLoading={setReactPostLoading}
+            postAmounts={reactionAmounts}
+          />
+        ) : postsLoading ? (
           <div className="relative w-full h-auto flex flex-col gap-4 overflow-y-scroll">
             {Array.from({ length: 10 }).map((_, index: number) => {
               return (
@@ -84,7 +146,7 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
             scrollThreshold={0.9}
             scrollableTarget={"scrollableDiv"}
           >
-            <div className="w-full xl:w-210 h-full relative flex flex-col gap-4 pb-3">
+            <div className="w-full xl:max-w-230 h-full relative flex flex-col gap-4 pb-3">
               {(feedSwitch ? feedDispatch : timelineDispatch)?.map(
                 (publication: Publication, index: number) => {
                   return (
@@ -92,7 +154,6 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
                       key={index}
                       dispatch={dispatch}
                       publication={publication}
-                      type={publication.__typename}
                       hasMirrored={
                         feedSwitch
                           ? reactionAmounts.hasMirrored[index]
@@ -119,8 +180,6 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
                       commentPost={commentPost}
                       address={address}
                       index={index}
-                      viewerOpen={viewerOpen}
-                      router={router}
                       mirrorLoading={
                         feedSwitch
                           ? mirrorLoading[index]
@@ -156,6 +215,7 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
                           ? reactionAmounts.comment[index]
                           : reactionTimelineAmounts.comment[index]
                       }
+                      feedType={feedType.value}
                     />
                   );
                 }
