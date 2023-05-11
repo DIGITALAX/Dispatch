@@ -179,9 +179,6 @@ const useReactions = () => {
     loader?: (e: any) => void,
     inputIndex?: number
   ): Promise<void> => {
-    console.log({
-      inputIndex, loader
-    })
     let index: number;
     if (loader && inputIndex) {
       loader((prev: any) => {

@@ -8,6 +8,7 @@ import FeedPublication from "./FeedPublication";
 import { Publication } from "@/components/Home/types/lens.types";
 import Individual from "./Individual";
 import { setFeedType } from "@/redux/reducers/feedTypeSlice";
+import MakeComment from "./MakeComment";
 
 const AllPosts: FunctionComponent<AllPostsProps> = ({
   dispatch,
@@ -119,6 +120,7 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
   mappedFeaturedFiles,
   canComment,
 }): JSX.Element => {
+  console.log({ commentOpen });
   return (
     <div
       className="relative w-full h-fit flex flex-col items-start justify-start gap-4"
@@ -272,73 +274,146 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
               {(feedSwitch ? feedDispatch : timelineDispatch)?.map(
                 (publication: Publication, index: number) => {
                   return (
-                    <FeedPublication
+                    <div
+                      className="relative w-full h-fit gap-2 flex flex-col"
                       key={index}
-                      dispatch={dispatch}
-                      publication={publication}
-                      hasMirrored={
-                        feedSwitch
-                          ? reactionAmounts.hasMirrored[index]
-                          : reactionTimelineAmounts.hasMirrored[index]
-                      }
-                      hasReacted={
-                        feedSwitch
-                          ? reactionAmounts.hasLiked?.[index]
-                          : reactionTimelineAmounts.hasLiked?.[index]
-                      }
-                      hasCollected={
-                        feedSwitch
-                          ? reactionAmounts.hasCollected[index]
-                          : reactionTimelineAmounts.hasCollected[index]
-                      }
-                      followerOnly={
-                        feedSwitch
-                          ? followerOnly[index]
-                          : timelineFollowerOnly[index]
-                      }
-                      collectPost={collectPost}
-                      mirrorPost={mirrorPost}
-                      reactPost={reactPost}
-                      address={address}
-                      index={index}
-                      mirrorLoading={
-                        feedSwitch
-                          ? mirrorLoading[index]
-                          : mirrorTimelineLoading[index]
-                      }
-                      reactLoading={
-                        feedSwitch
-                          ? reactLoading[index]
-                          : reactTimelineLoading[index]
-                      }
-                      collectLoading={
-                        feedSwitch
-                          ? collectLoading[index]
-                          : collectTimelineLoading[index]
-                      }
-                      reactAmount={
-                        feedSwitch
-                          ? reactionAmounts.like[index]
-                          : reactionTimelineAmounts.like[index]
-                      }
-                      mirrorAmount={
-                        feedSwitch
-                          ? reactionAmounts.mirror[index]
-                          : reactionTimelineAmounts.mirror[index]
-                      }
-                      collectAmount={
-                        feedSwitch
-                          ? reactionAmounts.collect[index]
-                          : reactionTimelineAmounts.collect[index]
-                      }
-                      commentAmount={
-                        feedSwitch
-                          ? reactionAmounts.comment[index]
-                          : reactionTimelineAmounts.comment[index]
-                      }
-                      feedType={feedType.value}
-                      openComment={commentOpen}
-                    />
+                    >
+                      <FeedPublication
+                        dispatch={dispatch}
+                        publication={publication}
+                        hasMirrored={
+                          feedSwitch
+                            ? reactionAmounts.hasMirrored[index]
+                            : reactionTimelineAmounts.hasMirrored[index]
+                        }
+                        hasReacted={
+                          feedSwitch
+                            ? reactionAmounts.hasLiked?.[index]
+                            : reactionTimelineAmounts.hasLiked?.[index]
+                        }
+                        hasCollected={
+                          feedSwitch
+                            ? reactionAmounts.hasCollected[index]
+                            : reactionTimelineAmounts.hasCollected[index]
+                        }
+                        followerOnly={
+                          feedSwitch
+                            ? followerOnly[index]
+                            : timelineFollowerOnly[index]
+                        }
+                        collectPost={collectPost}
+                        mirrorPost={mirrorPost}
+                        reactPost={reactPost}
+                        address={address}
+                        index={index}
+                        mirrorLoading={
+                          feedSwitch
+                            ? mirrorLoading[index]
+                            : mirrorTimelineLoading[index]
+                        }
+                        reactLoading={
+                          feedSwitch
+                            ? reactLoading[index]
+                            : reactTimelineLoading[index]
+                        }
+                        collectLoading={
+                          feedSwitch
+                            ? collectLoading[index]
+                            : collectTimelineLoading[index]
+                        }
+                        reactAmount={
+                          feedSwitch
+                            ? reactionAmounts.like[index]
+                            : reactionTimelineAmounts.like[index]
+                        }
+                        mirrorAmount={
+                          feedSwitch
+                            ? reactionAmounts.mirror[index]
+                            : reactionTimelineAmounts.mirror[index]
+                        }
+                        collectAmount={
+                          feedSwitch
+                            ? reactionAmounts.collect[index]
+                            : reactionTimelineAmounts.collect[index]
+                        }
+                        commentAmount={
+                          feedSwitch
+                            ? reactionAmounts.comment[index]
+                            : reactionTimelineAmounts.comment[index]
+                        }
+                        feedType={feedType.value}
+                        openComment={commentOpen}
+                      />
+                      {(publication?.__typename === "Mirror"
+                        ? publication?.mirrorOf?.id
+                        : publication?.id) === commentOpen && (
+                        <MakeComment
+                          commentPost={commentPost}
+                          commentDescription={commentDescription}
+                          textElement={textElement}
+                          handleCommentDescription={handleCommentDescription}
+                          commentLoading={commentLoading}
+                          caretCoord={caretCoord}
+                          mentionProfiles={mentionProfiles}
+                          profilesOpen={profilesOpen}
+                          handleMentionClick={handleMentionClick}
+                          handleGifSubmit={handleGifSubmit}
+                          handleGif={handleGif}
+                          results={results}
+                          handleSetGif={handleSetGif}
+                          gifOpen={gifOpen}
+                          setGifOpen={setGifOpen}
+                          handleKeyDownDelete={handleKeyDownDelete}
+                          handleLensSignIn={handleLensSignIn}
+                          handleConnect={handleConnect}
+                          handleRemoveImage={handleRemoveImage}
+                          authStatus={authStatus}
+                          profileId={profileId}
+                          videoLoading={videoLoading}
+                          uploadImages={uploadImages}
+                          uploadVideo={uploadVideo}
+                          imageLoading={imageLoading}
+                          mappedFeaturedFiles={mappedFeaturedFiles}
+                          collectOpen={collectOpen}
+                          enabledCurrencies={enabledCurrencies}
+                          audienceDropDown={audienceDropDown}
+                          audienceType={audienceType}
+                          setAudienceDropDown={setAudienceDropDown}
+                          setAudienceType={setAudienceType}
+                          value={value}
+                          setChargeCollect={setChargeCollect}
+                          setChargeCollectDropDown={setChargeCollectDropDown}
+                          setCollectible={setCollectible}
+                          setCollectibleDropDown={setCollectibleDropDown}
+                          setCurrencyDropDown={setCurrencyDropDown}
+                          setEnabledCurrency={setEnabledCurrency}
+                          setLimit={setLimit}
+                          setLimitedDropDown={setLimitedDropDown}
+                          setLimitedEdition={setLimitedEdition}
+                          setReferral={setReferral}
+                          setTimeLimit={setTimeLimit}
+                          setTimeLimitDropDown={setTimeLimitDropDown}
+                          setValue={setValue}
+                          enabledCurrency={enabledCurrency}
+                          chargeCollect={chargeCollect}
+                          chargeCollectDropDown={chargeCollectDropDown}
+                          limit={limit}
+                          limitedDropDown={limitedDropDown}
+                          limitedEdition={limitedEdition}
+                          timeLimit={timeLimit}
+                          timeLimitDropDown={timeLimitDropDown}
+                          audienceTypes={audienceTypes}
+                          referral={referral}
+                          canComment={canComment}
+                          collectNotif={collectNotif}
+                          collectible={collectible}
+                          collectibleDropDown={collectibleDropDown}
+                          commentId={commentOpen}
+                          currencyDropDown={currencyDropDown}
+                          dispatch={dispatch}
+                        />
+                      )}
+                    </div>
                   );
                 }
               )}

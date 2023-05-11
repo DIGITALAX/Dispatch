@@ -116,7 +116,7 @@ const Individual: FunctionComponent<IndividualProps> = ({
         </div>
       </div>
       {!mainPostLoading ? (
-        <div className="relative w-full h-full gap-2 flex flex-col">
+        <div className="relative w-full h-fit gap-2 flex flex-col">
           <FeedPublication
             dispatch={dispatch}
             publication={mainPost}
@@ -142,7 +142,9 @@ const Individual: FunctionComponent<IndividualProps> = ({
             setReactLoader={setReactPostLoading}
             openComment={commentOpen}
           />
-          {mainPost?.id === commentOpen && (
+          {(mainPost?.__typename === "Mirror"
+            ? mainPost?.mirrorOf?.id
+            : mainPost?.id) === commentOpen && (
             <MakeComment
               commentPost={commentPost}
               commentDescription={commentDescription}

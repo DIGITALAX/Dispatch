@@ -48,7 +48,6 @@ const Reactions: FunctionComponent<ReactionProps> = ({
   setMirrorLoader,
   openComment,
 }): JSX.Element => {
-  console.log({ setReactLoader });
   return (
     <div
       className={`relative w-fit h-fit col-start-1 justify-self-center grid grid-flow-col auto-cols-auto gap-4`}

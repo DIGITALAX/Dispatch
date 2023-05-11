@@ -90,7 +90,6 @@ const Comments: FunctionComponent<CommentsProps> = ({
   canComment,
   openComment,
 }): JSX.Element => {
-  console.log({ setReactLoader });
   return (
     <div className="relative w-full h-full flex min-w-full">
       {commentsLoading ? (
@@ -120,9 +119,11 @@ const Comments: FunctionComponent<CommentsProps> = ({
           <div className="w-full h-full relative flex flex-col gap-4 pb-3 min-w-full">
             {commentors?.map((comment: Publication, index: number) => {
               return (
-                <div className="relative w-full h-full flex flex-col gap-2">
+                <div
+                  className="relative w-full h-fit flex flex-col gap-2"
+                  key={index}
+                >
                   <FeedPublication
-                    key={index}
                     dispatch={dispatch}
                     publication={comment}
                     hasMirrored={commentAmounts.hasMirrored[index]}
