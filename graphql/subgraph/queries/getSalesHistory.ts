@@ -2,8 +2,8 @@ import { FetchResult, gql } from "@apollo/client";
 import { graphClient } from "@/lib/subgraph/client";
 
 const HISTORY = `
-  query {
-    tokensBoughts(orderBy: blockTimestamp
+  query($creator: String!) {
+    tokensBoughts(where: {creator: $creator} orderBy: blockTimestamp
       orderDirection: desc) {
         uri
         totalPrice

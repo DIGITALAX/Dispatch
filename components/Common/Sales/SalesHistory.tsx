@@ -12,49 +12,27 @@ const SalesHistory: FunctionComponent<SalesHistoryProps> = ({
   sales,
 }): JSX.Element => {
   return (
-    <div className="relative w-full h-full flex flex-row items-start justify-end gap-4">
+    <div className="relative w-full h-full flex flex-col sm:flex-row items-start justify-end gap-4">
       {salesLoading ? (
-        <div className="relative w-full h-full flex flex-col overflow-y-scroll gap-8 preG:gap-4 lg:gap-8 p-3 lg:flex-nowrap flex-nowrap preG:flex-wrap opacity-30 animate-pulse">
+        <div className="relative w-full h-fit flex flex-row mid:justify-start mid:items-start items-center justify-center flex-wrap gap-8 overflow-y-scroll sm:order-1 order-2">
           {Array.from({ length: 7 }).map((_: any, index: number) => {
             return (
               <div
+                className="relative w-52 h-60 sm:w-60 sm:h-72 flex items-center justify-center border border-white cursor-pointer rounded-tr-lg rounded-bl-lg"
+                id="staticLoad"
                 key={index}
-                className="relative w-full preG:w-fit lg:w-full h-full preG:h-fit lg:h-full flex flex-row gap-3 cursor-pointer items-center justify-center"
               >
-                <div
-                  className="flex relative w-36 h-24 rounded-lg"
-                  id="staticLoad"
-                ></div>
-                <div className="relative flex flex-col w-full preG:w-fit lg:w-full h-full gap-2 items-start justify-center">
-                  <div className="relative w-fit h-fit flex flex-row gap-2">
-                    <div
-                      className="relative w-6 h-6 border border-white flex justify-start items-center rounded-full"
-                      id="crt"
-                    ></div>
-                    <div className="relative w-fit h-fit text-ama font-arcade text-sm">
-                      @TboPcMv^&fN
-                    </div>
-                  </div>
-                  <div className="relative text-moda font-arcade flex items-center justify-start text-sm w-fit h-fit">
-                    boPH!lPnPcMv^&fN...
-                  </div>
-                  <div className="relative text-white font-arcade flex items-center justify-start text-sm w-fit h-fit">
-                    $H!lPn&bQ@f
-                  </div>
-                  <div className="relative text-verde font-arcade flex items-center justify-start text-xs w-fit h-fit">
-                    v^&fNboPH!lPnN
-                  </div>
-                </div>
+                <div className="relative w-full h-full bg-black/60 flex flex-col gap-2 p-3 rounded-tr-lg rounded-bl-lg"></div>
               </div>
             );
           })}
         </div>
-      ) : sales?.length !== 0 && salesReducer?.length !== 0 ? (
-        <div className="relative w-full h-full flex flex-col items-center justify-center font-earl text-moda text-center p-3 text-white">
+      ) : sales?.length === 0 && salesReducer?.length === 0 ? (
+        <div className="relative w-full h-full flex flex-col items-center justify-center font-earl text-moda text-center p-3 text-white sm:order-1 order-2">
           looking good. what did you see on the streams today?
         </div>
       ) : (
-        <div className="relative w-full h-fit flex flex-row mid:justify-start mid:items-start items-center justify-center flex-wrap gap-8 overflow-y-scroll">
+        <div className="relative w-full h-fit flex flex-row mid:justify-start mid:items-start items-center justify-center flex-wrap gap-8 overflow-y-scroll sm:order-1 order-2">
           {(sales.length < 1 ? salesReducer : sales)?.map(
             (value: Sales, index: number) => {
               const pfp = createProfilePicture(value.profile);
@@ -118,12 +96,13 @@ const SalesHistory: FunctionComponent<SalesHistoryProps> = ({
         </div>
       )}
       {sales.length < 1 && salesReducer.length < 1 && (
-        <div className="relative w-80 h-full flex p-2 border-2 border-white">
+        <div className="relative w-full sm:w-80 h-80 sm:h-184 lg:h-full flex p-2 border-2 border-white sm:order-2 order-1">
           <div className="relative w-full h-full">
             <Image
               src={`${INFURA_GATEWAY}/ipfs/QmSgc4gyyrYdy2kyZxnMa2CexXXwVmUjE5aZzrQr8mygVB`}
               layout="fill"
               objectFit="cover"
+              objectPosition={"center"}
               draggable={false}
             />
           </div>
