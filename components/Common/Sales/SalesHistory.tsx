@@ -69,12 +69,21 @@ const SalesHistory: FunctionComponent<SalesHistoryProps> = ({
                                   {value.transactionHash.slice(0, 14) + "..."}
                                 </div>
                                 <div className="relative text-white font-arcade flex items-center justify-start text-sm w-fit h-fit">
-                                  $
                                   {Number(value.totalPrice) /
                                     (value.type ===
                                     "0xc2132d05d31c914a87c6611c10748aeb04b58e8f"
                                       ? 10 ** 6
-                                      : 10 ** 18)}
+                                      : 10 ** 18)}{" "}
+                                  {value.type ===
+                                  "0xc2132d05d31c914a87c6611c10748aeb04b58e8f"
+                                    ? "USDT"
+                                    : value.type ===
+                                      "0x6968105460f67c3bf751be7c15f92f5286fd0ce5"
+                                    ? "MONA"
+                                    : value.type ===
+                                      "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270"
+                                    ? "WMATIC"
+                                    : "WETH"}
                                 </div>
                                 <div className="relative text-verde font-arcade flex items-center justify-start text-xs w-fit h-fit">
                                   {moment(
