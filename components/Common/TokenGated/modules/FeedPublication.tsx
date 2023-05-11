@@ -93,7 +93,7 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
         hasCollected={hasCollected}
       />
       <div
-        className={`relative w-full h-auto grow rounded-md grid grid-flow-row auto-rows-auto p-3 galaxy:p-6 gap-6 border-2 border-black bg-gradient-to-r from-offBlack via-gray-600 to-black`}
+        className={`relative w-full h-auto grow rounded-md grid grid-flow-row auto-rows-auto p-3 preG:p-6 gap-6 border-2 border-black bg-gradient-to-r from-offBlack via-gray-600 to-black`}
       >
         {(publication?.__typename === "Mirror" ||
           publication?.__typename === "Comment") && (
@@ -128,7 +128,7 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
           } relative w-full h-fit text-left font-dosis grid grid-flow-row auto-rows-auto gap-6`}
         >
           <div
-            className={`relative w-full h-fit row-start-1 relative w-fit h-fit text-white font-dosis self-center justify-self-start`}
+            className={`relative w-full h-fit row-start-1 relative h-fit text-white font-dosis self-center justify-self-start break-all`}
           >
             <div
               dangerouslySetInnerHTML={{
@@ -138,7 +138,7 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
                     : publication?.mirrorOf?.metadata?.content
                 ),
               }}
-              className="relative place-self-center whitespace-preline"
+              className="relative place-self-center whitespace-preline break-all"
             ></div>
           </div>
         </div>
@@ -167,7 +167,7 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
             return (
               <div
                 key={index}
-                className={`relative w-60 h-60 border-2 border-black rounded-lg bg-black grid grid-flow-col auto-cols-auto col-start-${
+                className={`relative w-40 h-40 preG:w-60 preG:h-60 border-2 border-black rounded-lg bg-black grid grid-flow-col auto-cols-auto col-start-${
                   index + 1
                 } cursor-pointer hover:opacity-70 active:scale-95`}
                 onClick={() =>

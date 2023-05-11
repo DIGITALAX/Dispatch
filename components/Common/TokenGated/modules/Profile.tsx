@@ -31,7 +31,7 @@ const Profile: FunctionComponent<ProfileSideBarProps> = ({
   const profileImage = createProfilePicture(publication, true);
   return (
     <div
-      className={`relative h-auto rounded-md pr-px py-px w-full sm:w-40 min-w-[7.5rem]`}
+      className={`relative h-auto rounded-md pr-px py-px w-full sm:w-40 preG:min-w-[7.5rem]`}
       id="sideProfile"
     >
       <div
@@ -57,7 +57,7 @@ const Profile: FunctionComponent<ProfileSideBarProps> = ({
             />
           </div>
           <Link
-            className={`absolute rounded-full flex bg-white w-8 h-full justify-self-center right-6 col-start-1 cursor-pointer active:scale-95 hover:opacity-80`}
+            className={`absolute rounded-full flex bg-white w-8 h-full justify-self-center sm:right-6 col-start-1 cursor-pointer active:scale-95 hover:opacity-80`}
             id="crt"
             target="_blank"
             rel="noreferrer"

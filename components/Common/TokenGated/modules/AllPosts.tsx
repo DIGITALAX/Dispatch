@@ -38,7 +38,7 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
 }): JSX.Element => {
   return (
     <div
-      className="relative w-full h-full flex flex-col items-start justify-end gap-4"
+      className="relative w-full h-fit flex flex-col items-start justify-start gap-4"
       id="here"
     >
       <div className="relative w-full h-10 flex flex-row items-center justify-end ml-auto gap-4">
@@ -56,7 +56,7 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
           )}
         </div>
       </div>
-      <div className="relative w-full h-full flex flex-row items-start justify-end gap-8">
+      <div className="relative w-full h-full flex flex-col xl:flex-row items-start justify-end gap-8">
         <MakePost />
         {postsLoading ? (
           <div className="relative w-full h-auto flex flex-col gap-4 overflow-y-scroll">
@@ -84,7 +84,7 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
             scrollThreshold={0.9}
             scrollableTarget={"scrollableDiv"}
           >
-            <div className="w-210 h-full relative flex flex-col gap-4 pb-3">
+            <div className="w-full xl:w-210 h-full relative flex flex-col gap-4 pb-3">
               {(feedSwitch ? feedDispatch : timelineDispatch)?.map(
                 (publication: Publication, index: number) => {
                   return (
