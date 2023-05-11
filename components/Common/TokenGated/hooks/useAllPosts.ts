@@ -1,6 +1,7 @@
 import { Publication } from "@/components/Home/types/lens.types";
 import feedTimeline from "@/graphql/lens/queries/getTimeline";
 import { profilePublicationsAuth } from "@/graphql/lens/queries/getVideos";
+import { LENS_CREATORS } from "@/lib/constants";
 import checkIfMirrored from "@/lib/helpers/checkIfMirrored";
 import checkPostReactions from "@/lib/helpers/checkPostReactions";
 import { setCommentFeedCount } from "@/redux/reducers/commentCountSlice";
@@ -236,14 +237,7 @@ const useAllPosts = () => {
     setPostsLoading(true);
     try {
       const data = await feedTimeline({
-        profileIds: [
-          "0x84ec",
-          "0x0197d6",
-          "0x016305",
-          "0x015ed3",
-          "0x01bbee",
-          "0x012a99",
-        ],
+        profileIds: LENS_CREATORS,
         publicationTypes: ["POST", "COMMENT", "MIRROR"],
         limit: 20,
       });
@@ -264,14 +258,7 @@ const useAllPosts = () => {
       setPaginatedTimeline(data?.data?.publications?.pageInfo);
       const hasReactedArr = await checkPostReactions(
         {
-          profileIds: [
-            "0x84ec",
-            "0x0197d6",
-            "0x016305",
-            "0x015ed3",
-            "0x01bbee",
-            "0x012a99",
-          ],
+          profileIds: LENS_CREATORS,
           publicationTypes: ["POST", "COMMENT", "MIRROR"],
           limit: 20,
         },
@@ -337,14 +324,7 @@ const useAllPosts = () => {
         return;
       }
       const data = await feedTimeline({
-        profileIds: [
-          "0x84ec",
-          "0x0197d6",
-          "0x016305",
-          "0x015ed3",
-          "0x01bbee",
-          "0x012a99",
-        ],
+        profileIds: LENS_CREATORS,
         publicationTypes: ["POST", "COMMENT", "MIRROR"],
         limit: 20,
         cursor: paginatedTimeline?.next,
@@ -365,14 +345,7 @@ const useAllPosts = () => {
       const hasMirroredArr = await checkIfMirrored(sortedArr, lensProfile);
       const hasReactedArr = await checkPostReactions(
         {
-          profileIds: [
-            "0x84ec",
-            "0x0197d6",
-            "0x016305",
-            "0x015ed3",
-            "0x01bbee",
-            "0x012a99",
-          ],
+          profileIds: LENS_CREATORS,
           publicationTypes: ["POST", "COMMENT", "MIRROR"],
           limit: 20,
           cursor: paginatedTimeline?.next,

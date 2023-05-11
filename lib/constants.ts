@@ -22,7 +22,6 @@ export const MUMBAI_COLLECTION: `0x${string}` =
 export const MUMBAI_DROP: `0x${string}` =
   "0x66f5320fDA50b9090C8508B81C678F477b77ec4c";
 
-
 export const LENS_HUB_PROXY_ADDRESS_MUMBAI: `0x${string}` =
   "0x60Ae865ee4C725cd04353b5AAb364553f56ceF82";
 export const LENS_PERIPHERY_CONTRACT_MUMBAI: `0x${string}` =
@@ -31,3 +30,13 @@ export const LENS_HUB_PROXY_ADDRESS_MATIC: `0x${string}` =
   "0xDb46d1Dc155634FbC732f92E853b10B288AD5a1d";
 export const LENS_PERIPHERY_CONTRACT_MATIC: `0x${string}` =
   "0xeff187b4190E551FC25a7fA4dFC6cf7fDeF7194f";
+
+export const LENS_CREATORS: string[] = [
+  "0x84ec",
+  "0x0197d6",
+  "0x016305",
+  "0x015ed3",
+  "0x01bbee",
+  "0x012a99",
+  "0x01c96b",
+];
