@@ -7,6 +7,14 @@ import FullScreenVideo from "./FullScreenVideo";
 import useControls from "../../Tunes/hooks/useControls";
 import { useRef } from "react";
 import ImageViewerModal from "./ImageViewer";
+import Who from "./Who";
+import useWho from "../../TokenGated/hooks/useWho";
+import Purchase from "./Purchase";
+import useReactions from "../../TokenGated/hooks/useReactions";
+import { useAccount } from "wagmi";
+import useConnect from "../../Connect/hooks/useConnect";
+import useFollowers from "../../TokenGated/hooks/useFollowers";
+import FollowerOnly from "./FollowerOnly";
 
 const Modals = () => {
   const dispatch = useDispatch();
@@ -27,6 +35,9 @@ const Modals = () => {
   const videoSync = useSelector(
     (state: RootState) => state.app.videoSyncReducer
   );
+  const lensProfile = useSelector(
+    (state: RootState) => state.app.lensProfileReducer.profile?.id
+  );
   const dispatchVideos = useSelector(
     (state: RootState) => state.app.channelsReducer.value
   );
@@ -36,40 +47,114 @@ const Modals = () => {
   const reaction = useSelector(
     (state: RootState) => state.app.reactionStateReducer
   );
+  const purchase = useSelector((state: RootState) => state.app.purchaseReducer);
+  const collectModuleValues = useSelector(
+    (state: RootState) => state.app.postCollectReducer
+  );
+  const followersModal = useSelector(
+    (state: RootState) => state.app.followerOnlyReducer
+  );
+  const feedSwitch = useSelector(
+    (state: RootState) => state.app.feedSwitchReducer.value
+  );
   const { fullVideoRef, wrapperRef } = useControls();
+  const {
+    reacters,
+    mirrorers,
+    collectors,
+    getMorePostCollects,
+    getMorePostMirrors,
+    getMorePostReactions,
+    mirrorInfoLoading,
+    reactInfoLoading,
+    collectInfoLoading,
+    hasMoreReact,
+    hasMoreCollect,
+    hasMoreMirror,
+  } = useWho();
+  const {
+    profile,
+    followProfile,
+    followLoading,
+    approved,
+    approveCurrency: approveFollowCurrency,
+  } = useFollowers();
+  const {
+    collectInfoLoading: purchaseInfoLoading,
+    approvalLoading,
+    collectFeedLoading,
+    collectTimelineLoading,
+    approveCurrency,
+    collectPost,
+  } = useReactions();
+  const { address } = useAccount();
+  const { handleLensSignIn } = useConnect();
   return (
     <>
-      {/* {reaction.open && reaction.type === "heart" && (
-        <Heart
-          reacters={reacters}
-          getMorePostReactions={getMorePostReactions}
-          reactionPost={reactionPost}
-          reactionLoading={reactionLoading}
-          reactionInfoLoading={reactionInfoLoading}
+      {reaction.open && (
+        <Who
+          accounts={
+            reaction.type === "heart"
+              ? reacters
+              : reaction.type === "mirror"
+              ? mirrorers
+              : collectors
+          }
+          fetchMore={
+            reaction.type === "heart"
+              ? getMorePostReactions
+              : reaction.type === "mirror"
+              ? getMorePostMirrors
+              : getMorePostCollects
+          }
+          loading={
+            reaction.type === "heart"
+              ? reactInfoLoading
+              : reaction.type === "mirror"
+              ? mirrorInfoLoading
+              : collectInfoLoading
+          }
+          dispatch={dispatch}
+          hasMore={
+            reaction.type === "heart"
+              ? hasMoreReact
+              : reaction.type === "mirror"
+              ? hasMoreMirror
+              : hasMoreCollect
+          }
+          type={
+            reaction.type === "heart" ? 0 : reaction.type === "collect" ? 1 : 2
+          }
         />
-      )} */}
-      {/* {reaction.open && reaction.type === "collect" && (
+      )}
+      {purchase.open && (
         <Purchase
-          collectInfoLoading={collectInfoLoading}
+          collectInfoLoading={purchaseInfoLoading}
           approvalLoading={approvalLoading}
           address={address}
           collectModuleValues={collectModuleValues}
           lensProfile={lensProfile}
-          collectComment={collectVideo}
-          collectLoading={collectLoading[purchaseModal?.index!]}
+          collectComment={collectPost}
+          collectLoading={
+            (feedSwitch ? collectFeedLoading : collectTimelineLoading)[
+              purchase?.index!
+            ]
+          }
           approveCurrency={approveCurrency}
           handleLensSignIn={handleLensSignIn}
-          commentId={purchaseModal?.id}
-        />
-      )} */}
-      {/* {reaction.open && reaction.type === "mirror" && (
-        <Mirror
-         
+          commentId={purchase?.id}
+          dispatch={dispatch}
         />
       )}
-      {
-        <Collect />
-      } */}
+      {followersModal?.open && (
+        <FollowerOnly
+          profile={profile}
+          followProfile={followProfile}
+          followLoading={followLoading}
+          approved={approved}
+          approveCurrency={approveFollowCurrency}
+        />
+      )}
       {fullScreenVideo.value && (
         <FullScreenVideo
           dispatch={dispatch}

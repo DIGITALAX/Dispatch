@@ -103,7 +103,6 @@ export type ReactionProps = {
 };
 
 export type AllPostsProps = {
-  feed: Publication[];
   dispatch: Dispatch<AnyAction>;
   followerOnly: boolean[];
   feedDispatch: Publication[];
@@ -128,7 +127,6 @@ export type AllPostsProps = {
   >;
   timelineFollowerOnly: boolean[];
   timelineDispatch: Publication[];
-  timeline: Publication[];
   mirrorTimelineLoading: boolean[];
   collectTimelineLoading: boolean[];
   reactTimelineLoading: boolean[];
@@ -163,3 +161,15 @@ export type PersonalTimelineProps = {
   reactLoading: boolean[];
   collectLoading: boolean[];
 };
+
+export interface FollowArgs {
+  follower: string;
+  profileIds: [string];
+  datas: [any];
+  sig: {
+    v: any;
+    r: any;
+    s: any;
+    deadline: any;
+  };
+}

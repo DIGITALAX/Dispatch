@@ -1,6 +1,7 @@
 import refresh from "../../graphql/lens/mutations/refresh";
 
 const AUTH_STORAGE_KEY = "LH_STORAGE_KEY_DISPATCH";
+const ADDRESS_DISPATCH = "ADDRESS_DISPATCH";
 
 interface authToken {
   token: {
@@ -77,3 +78,21 @@ export const refreshAuth = async (): Promise<string | undefined | null> => {
   }
 };
 
+export const setAddress = (value: string) => {
+  if (typeof window !== "undefined") {
+    localStorage.setItem(ADDRESS_DISPATCH, JSON.stringify(value));
+    return;
+  }
+};
+
+export const getAddress = () => {
+  if (typeof window !== "undefined") {
+    const data = localStorage.getItem(ADDRESS_DISPATCH);
+
+    if (!data) {
+      return false;
+    }
+
+    return data;
+  }
+};

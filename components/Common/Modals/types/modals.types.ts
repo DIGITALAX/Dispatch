@@ -58,7 +58,7 @@ export type CollectInfoProps = {
   canClick?: boolean;
   isApproved?: boolean;
   approveCurrency?: () => Promise<void>;
-  handleCollect?: (id?: string) => Promise<void>;
+  handleCollect?: (id: string) => Promise<void>;
   collectLoading: boolean;
   approvalLoading?: boolean;
   handleLensSignIn: () => Promise<void>;
@@ -75,10 +75,19 @@ export type PurchaseProps = {
   address: `0x${string}` | undefined;
   collectModuleValues: PostCollectValuesState;
   lensProfile: string;
-  collectComment: (id?: string) => Promise<void>;
+  collectComment: (id: string) => Promise<void>;
   collectLoading: boolean;
   approveCurrency: () => Promise<void>;
   handleLensSignIn: () => Promise<void>;
   commentId: string;
   dispatch: Dispatch<AnyAction>;
+};
+
+export type WhoProps = {
+  accounts: any[];
+  fetchMore: () => Promise<void>;
+  loading: boolean;
+  dispatch: Dispatch<AnyAction>;
+  hasMore: boolean;
+  type: number;
 };

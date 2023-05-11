@@ -8,7 +8,6 @@ import FeedPublication from "./FeedPublication";
 import { Publication } from "@/components/Home/types/lens.types";
 
 const AllPosts: FunctionComponent<AllPostsProps> = ({
-  feed,
   dispatch,
   followerOnly,
   feedDispatch,
@@ -30,7 +29,6 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
   setFeedSwitch,
   timelineFollowerOnly,
   timelineDispatch,
-  timeline,
   mirrorTimelineLoading,
   collectTimelineLoading,
   reactTimelineLoading,
@@ -39,10 +37,13 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
   hasMoreTimeline,
 }): JSX.Element => {
   return (
-    <div className="relative w-full h-full flex flex-col items-start justify-end gap-4">
+    <div
+      className="relative w-full h-full flex flex-col items-start justify-end gap-4"
+      id="here"
+    >
       <div className="relative w-full h-10 flex flex-row items-center justify-end ml-auto gap-4">
         <div className="w-fit h-fit text-white font-arcade text-sm">
-          {feedSwitch ? "Profile Feed" : "Timeline"}
+          {feedSwitch ? "Profile Feed" : "Creator Timeline"}
         </div>
         <div
           className="relative w-fit h-fit cursor-pointer active:scale-95"
@@ -75,92 +76,90 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
             loader={<FetchMoreLoading size="6" height="fit-content" />}
             hasMore={feedSwitch ? hasMore : hasMoreTimeline}
             next={feedSwitch ? fetchMore : fetchMoreTimeline}
-            dataLength={feedSwitch ? feed?.length : timeline?.length}
-            className={`relative row-start-1 w-full ml-auto h-full`}
+            dataLength={
+              feedSwitch ? feedDispatch?.length : timelineDispatch?.length
+            }
+            className={`relative row-start-1 w-full ml-auto h-full max-w-full overflow-y-scroll`}
             style={{ color: "#131313", fontFamily: "Digi Reg" }}
             scrollThreshold={0.9}
+            scrollableTarget={"scrollableDiv"}
           >
-            <div className="w-full h-full relative flex flex-col gap-4 overflow-y-scroll pb-3">
-              {(feedSwitch
-                ? feed.length < 1
-                  ? feedDispatch
-                  : feed
-                : timeline.length < 1
-                ? timelineDispatch
-                : timeline
-              )?.map((publication: Publication, index: number) => {
-                return (
-                  <FeedPublication
-                    key={index}
-                    dispatch={dispatch}
-                    publication={publication}
-                    type={publication.__typename}
-                    hasMirrored={
-                      feedSwitch
-                        ? reactionAmounts.hasMirrored[index]
-                        : reactionTimelineAmounts.hasMirrored[index]
-                    }
-                    hasReacted={
-                      feedSwitch
-                        ? reactionAmounts.hasLiked?.[index]
-                        : reactionTimelineAmounts.hasLiked?.[index]
-                    }
-                    hasCollected={
-                      feedSwitch
-                        ? reactionAmounts.hasCollected[index]
-                        : reactionTimelineAmounts.hasCollected[index]
-                    }
-                    followerOnly={
-                      feedSwitch
-                        ? followerOnly[index]
-                        : timelineFollowerOnly[index]
-                    }
-                    collectPost={collectPost}
-                    mirrorPost={mirrorPost}
-                    reactPost={reactPost}
-                    commentPost={commentPost}
-                    address={address}
-                    index={index}
-                    viewerOpen={viewerOpen}
-                    router={router}
-                    mirrorLoading={
-                      feedSwitch
-                        ? mirrorLoading[index]
-                        : mirrorTimelineLoading[index]
-                    }
-                    reactLoading={
-                      feedSwitch
-                        ? reactLoading[index]
-                        : reactTimelineLoading[index]
-                    }
-                    collectLoading={
-                      feedSwitch
-                        ? collectLoading[index]
-                        : collectTimelineLoading[index]
-                    }
-                    reactAmount={
-                      feedSwitch
-                        ? reactionAmounts.like[index]
-                        : reactionTimelineAmounts.like[index]
-                    }
-                    mirrorAmount={
-                      feedSwitch
-                        ? reactionAmounts.mirror[index]
-                        : reactionTimelineAmounts.mirror[index]
-                    }
-                    collectAmount={
-                      feedSwitch
-                        ? reactionAmounts.collect[index]
-                        : reactionTimelineAmounts.collect[index]
-                    }
-                    commentAmount={
-                      feedSwitch
-                        ? reactionAmounts.comment[index]
-                        : reactionTimelineAmounts.comment[index]
-                    }
-                  />
-                );
-              })}
+            <div className="w-210 h-full relative flex flex-col gap-4 pb-3">
+              {(feedSwitch ? feedDispatch : timelineDispatch)?.map(
+                (publication: Publication, index: number) => {
+                  return (
+                    <FeedPublication
+                      key={index}
+                      dispatch={dispatch}
+                      publication={publication}
+                      type={publication.__typename}
+                      hasMirrored={
+                        feedSwitch
+                          ? reactionAmounts.hasMirrored[index]
+                          : reactionTimelineAmounts.hasMirrored[index]
+                      }
+                      hasReacted={
+                        feedSwitch
+                          ? reactionAmounts.hasLiked?.[index]
+                          : reactionTimelineAmounts.hasLiked?.[index]
+                      }
+                      hasCollected={
+                        feedSwitch
+                          ? reactionAmounts.hasCollected[index]
+                          : reactionTimelineAmounts.hasCollected[index]
+                      }
+                      followerOnly={
+                        feedSwitch
+                          ? followerOnly[index]
+                          : timelineFollowerOnly[index]
+                      }
+                      collectPost={collectPost}
+                      mirrorPost={mirrorPost}
+                      reactPost={reactPost}
+                      commentPost={commentPost}
+                      address={address}
+                      index={index}
+                      viewerOpen={viewerOpen}
+                      router={router}
+                      mirrorLoading={
+                        feedSwitch
+                          ? mirrorLoading[index]
+                          : mirrorTimelineLoading[index]
+                      }
+                      reactLoading={
+                        feedSwitch
+                          ? reactLoading[index]
+                          : reactTimelineLoading[index]
+                      }
+                      collectLoading={
+                        feedSwitch
+                          ? collectLoading[index]
+                          : collectTimelineLoading[index]
+                      }
+                      reactAmount={
+                        feedSwitch
+                          ? reactionAmounts.like[index]
+                          : reactionTimelineAmounts.like[index]
+                      }
+                      mirrorAmount={
+                        feedSwitch
+                          ? reactionAmounts.mirror[index]
+                          : reactionTimelineAmounts.mirror[index]
+                      }
+                      collectAmount={
+                        feedSwitch
+                          ? reactionAmounts.collect[index]
+                          : reactionTimelineAmounts.collect[index]
+                      }
+                      commentAmount={
+                        feedSwitch
+                          ? reactionAmounts.comment[index]
+                          : reactionTimelineAmounts.comment[index]
+                      }
+                    />
+                  );
+                }
+              )}
             </div>
           </InfiniteScroll>
         )}

@@ -1,6 +1,6 @@
 import useConnect from "@/components/Common/Connect/hooks/useConnect";
 import Wallet from "@/components/Common/Connect/modules/Wallet";
-import useAllPost from "@/components/Common/TokenGated/hooks/useAllPosts";
+import useAllPosts from "@/components/Common/TokenGated/hooks/useAllPosts";
 import useReactions from "@/components/Common/TokenGated/hooks/useReactions";
 import AllPosts from "@/components/Common/TokenGated/modules/AllPosts";
 import { setFeedSwitchRedux } from "@/redux/reducers/feedSwitchSlice";
@@ -37,16 +37,14 @@ const TokenGatedSwitcher: FunctionComponent = (): JSX.Element => {
   const dispatch = useDispatch();
   const { handleLensSignIn } = useConnect();
   const {
-    feed,
     followerOnly,
     postsLoading,
     hasMore,
     fetchMore,
-    timeline,
     fetchMoreTimeline,
     hasMoreTimeline,
     followerOnlyTimeline,
-  } = useAllPost();
+  } = useAllPosts();
 
   const {
     commentPost,
@@ -66,7 +64,6 @@ const TokenGatedSwitcher: FunctionComponent = (): JSX.Element => {
     case true:
       return (
         <AllPosts
-          feed={feed}
           dispatch={dispatch}
           feedDispatch={feedDispatch}
           postsLoading={postsLoading}
@@ -86,7 +83,6 @@ const TokenGatedSwitcher: FunctionComponent = (): JSX.Element => {
           reactionAmounts={reactionAmounts}
           feedSwitch={feedSwitch}
           setFeedSwitch={setFeedSwitchRedux}
-          timeline={timeline}
           timelineDispatch={timelineDispatch}
           timelineFollowerOnly={followerOnlyTimeline}
           reactTimelineLoading={reactTimelineLoading}

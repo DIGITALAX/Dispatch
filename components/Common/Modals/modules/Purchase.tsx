@@ -1,6 +1,5 @@
 import { FunctionComponent } from "react";
 import { ImCross } from "react-icons/im";
-import { useDispatch } from "react-redux";
 import { AiOutlineLoading } from "react-icons/ai";
 import moment from "moment";
 import CollectInfo from "./CollectInfo";
@@ -18,7 +17,7 @@ const Purchase: FunctionComponent<PurchaseProps> = ({
   approveCurrency,
   handleLensSignIn,
   commentId,
-  dispatch
+  dispatch,
 }): JSX.Element => {
   return (
     <div className="inset-0 justify-center fixed z-50 bg-opacity-50 backdrop-blur-sm overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
@@ -33,7 +32,7 @@ const Purchase: FunctionComponent<PurchaseProps> = ({
               setPurchase({
                 actionOpen: false,
                 actionId: "",
-                actionIndex: undefined
+                actionIndex: undefined,
               })
             )
           }
@@ -54,8 +53,8 @@ const Purchase: FunctionComponent<PurchaseProps> = ({
               <CollectInfo
                 approvalLoading={approvalLoading}
                 buttonText={
-                  collectModuleValues?.type === "FreeCollectModule"
-                    ? "Collect"
+                  !collectModuleValues.type
+                    ? "Try Again Later"
                     : (collectModuleValues?.endTime &&
                         !moment(collectModuleValues?.endTime).isAfter()) ||
                       collectModuleValues?.totalCollects ===
@@ -80,7 +79,8 @@ const Purchase: FunctionComponent<PurchaseProps> = ({
                     lensProfile &&
                     Number(collectModuleValues?.limit) > 0 &&
                     Number(collectModuleValues?.totalCollects) ===
-                      Number(collectModuleValues?.limit))
+                      Number(collectModuleValues?.limit)) ||
+                  !collectModuleValues.type
                     ? false
                     : true
                 }

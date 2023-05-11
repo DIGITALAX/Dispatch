@@ -38,24 +38,13 @@ const useSales = () => {
                 ?.replace(/"/g, "")
                 ?.trim()
             );
-            let defaultProfile;
-            defaultProfile = await getDefaultProfile(history.creator);
-            if (!defaultProfile?.data?.defaultProfile) {
-              defaultProfile = {
-                handle: "syntheticfutures.lens",
-                picture: {
-                  original: {
-                    url: "ipfs://Qmd7PdjsVSfVs6j4uFbxZLsHmzkJw2DYQLxbmgX7aDWkb3",
-                  },
-                },
-              };
-            } else {
-              defaultProfile = defaultProfile?.data?.defaultProfile;
-            }
+
+            const defaultProfile = await getDefaultProfile(history.creator);
+
             return {
               ...history,
               uri: json,
-              profile: defaultProfile,
+              profile: defaultProfile?.data?.defaultProfile,
             };
           })
         );

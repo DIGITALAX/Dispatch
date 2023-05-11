@@ -31,7 +31,6 @@ const AllCollections: FunctionComponent<AllCollectionsProps> = ({
                 actionFileType: "",
                 actionType: "add",
                 actionId: 0,
-              
               })
             );
             dispatch(setCollectionSwitcher("add"));
@@ -81,7 +80,6 @@ const AllCollections: FunctionComponent<AllCollectionsProps> = ({
                       actionFileType: value.fileType,
                       actionType: "delete",
                       actionId: value.collectionId,
-                     
                     })
                   );
                   dispatch(setCollectionSwitcher("add"));
@@ -134,8 +132,16 @@ const AllCollections: FunctionComponent<AllCollectionsProps> = ({
                               {Number(value?.tokenIds?.length) -
                                 (value?.soldTokens?.length
                                   ? value?.soldTokens?.length
-                                  : 0)}{" "}
-                              / {Number(value?.tokenIds?.length)}
+                                  : 0) ===
+                              0
+                                ? "SOLD OUT"
+                                : `${
+                                    Number(value?.tokenIds?.length) -
+                                    (value?.soldTokens?.length
+                                      ? value?.soldTokens?.length
+                                      : 0)
+                                  } /
+                  ${Number(value?.tokenIds?.length)}`}
                             </div>
                           </div>
                         </div>

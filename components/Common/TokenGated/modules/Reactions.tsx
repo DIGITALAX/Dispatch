@@ -63,13 +63,19 @@ const Reactions: FunctionComponent<ReactionProps> = ({
           )}
         </div>
         <div
-          className={`relative w-fit h-fit col-start-2 text-${textColor} font-dosis text-xs place-self-center cursor-pointer`}
+          className={`relative w-fit h-fit col-start-2 text-${textColor} font-dosis text-xs place-self-center ${
+            reactAmount > 0 && "cursor-pointer"
+          }`}
           onClick={() =>
+            reactAmount > 0 &&
             dispatch(
               setReactionState({
                 actionOpen: true,
                 actionType: "heart",
-                actionValue: publication?.id,
+                actionValue:
+                  publication?.__typename === "Mirror"
+                    ? publication?.mirrorOf?.id
+                    : publication?.id,
                 actionResponseReact: hasReacted,
               })
             )
@@ -90,13 +96,19 @@ const Reactions: FunctionComponent<ReactionProps> = ({
           <FaRegCommentDots color={commentColor} size={15} />
         </div>
         <div
-          className={`relative w-fit h-fit col-start-2 text-${textColor} font-dosis text-xs place-self-center cursor-pointer`}
+          className={`relative w-fit h-fit col-start-2 text-${textColor} font-dosis text-xs place-self-center ${
+            commentAmount > 0 && "cursor-pointer"
+          }`}
           onClick={() =>
+            commentAmount > 0 &&
             dispatch(
               setReactionState({
                 actionOpen: true,
                 actionType: "comment",
-                actionValue: publication?.id,
+                actionValue:
+                  publication?.__typename === "Mirror"
+                    ? publication?.mirrorOf?.id
+                    : publication?.id,
               })
             )
           }
@@ -123,13 +135,19 @@ const Reactions: FunctionComponent<ReactionProps> = ({
           )}
         </div>
         <div
-          className={`relative w-fit h-fit col-start-2 text-${textColor} font-dosis text-xs place-self-center cursor-pointer`}
+          className={`relative w-fit h-fit col-start-2 text-${textColor} font-dosis text-xs place-self-center  ${
+            mirrorAmount && "cursor-pointer"
+          }`}
           onClick={() =>
+            mirrorAmount > 0 &&
             dispatch(
               setReactionState({
                 actionOpen: true,
                 actionType: "mirror",
-                actionValue: publication?.id,
+                actionValue:
+                  publication?.__typename === "Mirror"
+                    ? publication?.mirrorOf?.id
+                    : publication?.id,
                 actionResponseMirror: hasMirrored,
                 actionFollower: followerOnly,
               })
@@ -186,15 +204,21 @@ const Reactions: FunctionComponent<ReactionProps> = ({
           </div>
           <div
             onClick={() =>
+              collectAmount > 0 &&
               dispatch(
                 setReactionState({
                   actionOpen: true,
                   actionType: "collect",
-                  actionValue: publication?.id,
+                  actionValue:
+                    publication?.__typename === "Mirror"
+                      ? publication?.mirrorOf?.id
+                      : publication?.id,
                 })
               )
             }
-            className={`relative w-fit h-fit col-start-2 text-${textColor} font-dosis text-xs place-self-center cursor-pointer`}
+            className={`relative w-fit h-fit col-start-2 text-${textColor} font-dosis text-xs place-self-center ${
+              collectAmount > 0 && "cursor-pointer"
+            }`}
           >
             {collectAmount}
           </div>

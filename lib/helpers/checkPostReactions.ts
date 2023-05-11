@@ -1,33 +1,19 @@
-import {
-  hasReactedPost,
-  hasReactedFeed,
-} from "@/graphql/lens/queries/hasReacted";
+import { hasReactedPost } from "@/graphql/lens/queries/hasReacted";
 
 const checkPostReactions = async (
   publicationObject: any,
-  lensProfile: string | undefined,
-  type?: boolean
+  lensProfile: string | undefined
 ): Promise<any> => {
   let hasReactedArr: any[] = [];
   let hasReacted: any;
   try {
-    if (type) {
-      const data = await hasReactedFeed(publicationObject, {
-        profileId: lensProfile,
-      });
-      hasReacted = data.data.feed.items;
-    } else {
-      const data = await hasReactedPost(publicationObject, {
-        profileId: lensProfile,
-      });
-      hasReacted = data.data.publications.items;
-    }
+    const data = await hasReactedPost(publicationObject, {
+      profileId: lensProfile,
+    });
+    hasReacted = data.data.publications.items;
 
     for (let i = 0; i < hasReacted.length; i++) {
-      if (
-        (type ? hasReacted[i].root.reaction : hasReacted[i].reaction) ===
-        "UPVOTE"
-      ) {
+      if (hasReacted[i].reaction === "UPVOTE") {
         hasReactedArr.push(true);
       } else {
         hasReactedArr.push(false);

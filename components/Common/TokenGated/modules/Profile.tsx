@@ -5,6 +5,7 @@ import { ProfileSideBarProps } from "../types/allPosts.types";
 import createProfilePicture from "@/lib/helpers/createProfilePicture";
 import { INFURA_GATEWAY } from "@/lib/constants";
 import Reactions from "./Reactions";
+import Link from "next/link";
 
 const Profile: FunctionComponent<ProfileSideBarProps> = ({
   publication,
@@ -25,7 +26,7 @@ const Profile: FunctionComponent<ProfileSideBarProps> = ({
   reactAmount,
   collectAmount,
   mirrorAmount,
-  commentAmount
+  commentAmount,
 }): JSX.Element => {
   const profileImage = createProfilePicture(publication, true);
   return (
@@ -55,9 +56,16 @@ const Profile: FunctionComponent<ProfileSideBarProps> = ({
               className="rounded-full w-full h-full"
             />
           </div>
-          <div
+          <Link
             className={`absolute rounded-full flex bg-white w-8 h-full justify-self-center right-6 col-start-1 cursor-pointer active:scale-95 hover:opacity-80`}
             id="crt"
+            target="_blank"
+            rel="noreferrer"
+            href={`https://lenster.xyz/u/${
+              publication?.__typename !== "Mirror"
+                ? publication?.profile?.handle.split(".lens")[0]
+                : publication?.mirrorOf?.profile?.handle.split(".lens")[0]
+            }`}
           >
             {profileImage !== "" && (
               <Image
@@ -69,7 +77,7 @@ const Profile: FunctionComponent<ProfileSideBarProps> = ({
                 draggable={false}
               />
             )}
-          </div>
+          </Link>
         </div>
         <div className="relative w-full h-fit grid grid-flow-col auto-cols-auto">
           <div

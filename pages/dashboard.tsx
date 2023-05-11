@@ -118,6 +118,7 @@ export default function Dashboard() {
           <div
             style={{ height: "100%", overflowY: "auto" }}
             className="w-full flex"
+            id="scrollableDiv"
           >
             <Switcher />
           </div>

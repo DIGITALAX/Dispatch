@@ -5,8 +5,8 @@ import Image from "next/legacy/image";
 import { INFURA_GATEWAY } from "@/lib/constants";
 import { setFollowerOnly } from "@/redux/reducers/followerOnlySlice";
 import createProfilePicture from "@/lib/helpers/createProfilePicture";
-import { AiOutlineLoading } from "react-icons/ai";
 import { FollowerOnlyProps } from "../types/modals.types";
+import { AiOutlineLoading } from "react-icons/ai";
 
 const FollowerOnly: FunctionComponent<FollowerOnlyProps> = ({
   profile,

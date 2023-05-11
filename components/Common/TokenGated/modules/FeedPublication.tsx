@@ -10,6 +10,7 @@ import { setImageViewer } from "@/redux/reducers/imageViewerSlice";
 import { setReactionState } from "@/redux/reducers/reactionStateSlice";
 import { setCommentShow } from "@/redux/reducers/commentShowSlice";
 import descriptionRegex from "@/lib/helpers/descriptionRegex";
+import { FaRegCommentDots } from "react-icons/fa";
 
 const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
   publication,
@@ -94,21 +95,36 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
       <div
         className={`relative w-full h-auto grow rounded-md grid grid-flow-row auto-rows-auto p-3 galaxy:p-6 gap-6 border-2 border-black bg-gradient-to-r from-offBlack via-gray-600 to-black`}
       >
-        {publication?.__typename === "Mirror" && (
+        {(publication?.__typename === "Mirror" ||
+          publication?.__typename === "Comment") && (
           <div className="relative w-fit h-fit row-start-1 justify-self-end self-center grid grid-flow-col auto-cols-auto gap-2">
             <div
               className={`relative w-fit h-fit col-start-1 place-self-center text-xs font-dosis text-offWhite`}
             >
-              {`Mirrored by @${publication?.profile?.handle}`}
+              {publication?.__typename === "Mirror"
+                ? `Mirrored by @${publication?.profile?.handle}`
+                : `Comment of ${
+                    (publication as any)?.mainPost?.metadata?.content?.slice(
+                      0,
+                      10
+                    ) + "..."
+                  }`}
             </div>
             <div className="relative w-fit h-fit col-start-2 place-self-center">
-              <AiOutlineRetweet color={"red"} size={15} />
+              {publication?.__typename === "Mirror" ? (
+                <AiOutlineRetweet color={"red"} size={15} />
+              ) : (
+                <FaRegCommentDots color={"red"} size={15} />
+              )}
             </div>
           </div>
         )}
         <div
           className={`${
-            publication?.__typename === "Mirror" ? "row-start-2" : "row-start-1"
+            publication?.__typename === "Mirror" ||
+            publication?.__typename === "Comment"
+              ? "row-start-2"
+              : "row-start-1"
           } relative w-full h-fit text-left font-dosis grid grid-flow-row auto-rows-auto gap-6`}
         >
           <div
@@ -128,7 +144,10 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
         </div>
         <div
           className={`relative w-fit max-w-full h-fit rounded-lg overflow-x-scroll grid grid-flow-col auto-cols-auto gap-3 z-10 ${
-            publication?.__typename === "Mirror" ? "row-start-3" : "row-start-2"
+            publication?.__typename === "Mirror" ||
+            publication?.__typename === "Comment"
+              ? "row-start-3"
+              : "row-start-2"
           }`}
         >
           {(publication?.__typename === "Mirror"
@@ -197,7 +216,10 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
         </div>
         <div
           className={`relative w-full h-full ${
-            publication?.__typename === "Mirror" ? "row-start-4" : "row-start-3"
+            publication?.__typename === "Mirror" ||
+            publication?.__typename === "Comment"
+              ? "row-start-4"
+              : "row-start-3"
           } grid grid-flow-col auto-cols-auto`}
         >
           {!router.asPath.includes(publication?.id) && (

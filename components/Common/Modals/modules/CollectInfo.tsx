@@ -54,7 +54,7 @@ const CollectInfo: FunctionComponent<CollectInfoProps> = ({
               <div className="relative w-fit h-fitplace-self-center flex">
                 Limited Edition:
                 <br />
-                {totalCollected ? Number(limit) - totalCollected : 0} / {limit}
+                {totalCollected} / {limit}
               </div>
             )}
             {time && moment(time).isAfter() && (
