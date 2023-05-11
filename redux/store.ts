@@ -23,7 +23,6 @@ import videoSyncReducer from "./reducers/videoSyncSlice";
 import seekSecondReducer from "./reducers/seekSecondSlice";
 import reactionCountReducer from "./reducers/reactionCountSlice";
 import imageViewerReducer from "./reducers/imageViewerSlice";
-import commentShowReducer from "./reducers/commentShowSlice";
 import reactionStateReducer from "./reducers/reactionStateSlice";
 import feedReducer from "./reducers/feedSlice";
 import followerOnlyReducer from "./reducers/followerOnlySlice";
@@ -69,7 +68,6 @@ const reducer = combineReducers({
   seekSecondReducer,
   reactionCountReducer,
   imageViewerReducer,
-  commentShowReducer,
   reactionStateReducer,
   feedReducer,
   followerOnlyReducer,

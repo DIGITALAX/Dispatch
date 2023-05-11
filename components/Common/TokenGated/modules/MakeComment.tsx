@@ -77,9 +77,10 @@ const MakeComment: FunctionComponent<MakeCommentProps> = ({
   commentId,
   canComment,
 }): JSX.Element => {
+  
   return (
-    <div className="relative w-full h-96 galaxy:h-80 sm:h-full border-y border-l border-white flex flex-col bg-pink">
-      <div className="relative w-full h-full rounded-br-2xl rounded-tr-2xl bg-offBlack p-4 flex flex-col gap-3">
+    <div className="relative w-full h-60 flex flex-col ">
+      <div className="relative w-full h-full rounded-br-2xl rounded-tr-2xl border-2 border-black bg-gradient-to-r from-offBlack via-gray-600 to-black p-4 flex flex-col gap-3">
         {(mappedFeaturedFiles?.length !== 0 ||
           postImagesDispatched?.length !== 0) && (
           <ImageUploads
@@ -92,19 +93,19 @@ const MakeComment: FunctionComponent<MakeCommentProps> = ({
           <div className="relative w-full h-full grid grid-flow-row auto-rows-auto overflow-y-scroll">
             <div className="relative w-full h-fit flex flex-row gap-2">
               <input
-                className={`relative row-start-1 col-start-1 h-10 bg-offBlack border border-white font-geom text-white p-2 rounded-md caret-transparent w-full text-sm`}
+                className={`relative row-start-1 col-start-1 h-10 bg-black border border-white font-geom text-white p-2 rounded-md caret-transparent w-full text-sm`}
                 name="gif"
                 onChange={(e: FormEvent) => handleGif(e)}
               />
               <div
-                className="relative w-20 border border-white flex items-center text-center justify-center text-white font-arcade rounded-md cursor-pointer active:scale-95"
+                className="relative w-20 border border-white flex items-center text-center justify-center text-white font-economicaB rounded-md cursor-pointer active:scale-95"
                 onClick={() => handleGifSubmit()}
               >
                 Search
               </div>
             </div>
             {results?.length !== 0 && (
-              <div className="relative w-full h-full grid grid-cols-3 overflow-y-scroll gap-2 pt-3">
+              <div className="relative w-full h-full flex flex-row flex-wrap justify-center overflow-y-scroll gap-2 pt-3">
                 {results?.map((result: any, index: number) => {
                   return (
                     <div
@@ -127,10 +128,10 @@ const MakeComment: FunctionComponent<MakeCommentProps> = ({
             )}
           </div>
         ) : collectOpen ? (
-          <div className="relative w-full h-full flex overflow-y-scroll">
-            <div className="relative w-fit h-full flex auto-rows-auto gap-10">
-              <div className="relative w-fit h-fit row-start-1 flex flex-col flex-wrap place-self-start gap-3">
-                <div className="relative flex flex-col galaxy:flex-row">
+          <div className="relative w-full h-full flex overflow-y-scroll items-center justify-center flex-col">
+            <div className="relative w-full h-full flex flex-wrap gap-10 flex-row">
+              <div className="relative w-full h-fit flex flex-col flex-wrap justify-start items-start gap-3 break-words">
+                <div className="relative flex flex-col preG:flex-row">
                   <CollectButton
                     col={"1"}
                     row={"1"}
@@ -164,7 +165,7 @@ const MakeComment: FunctionComponent<MakeCommentProps> = ({
                     />
                   )}
                 </div>
-                <div className="relative flex flex-col galaxy:flex-row">
+                <div className="relative flex flex-col preG:flex-row">
                   {collectible === "yes" && chargeCollect === "yes" && (
                     <CollectButton
                       col={"1"}
@@ -204,7 +205,7 @@ const MakeComment: FunctionComponent<MakeCommentProps> = ({
                       />
                     )}
                 </div>
-                <div className="relative flex flex-col galaxy:flex-row w-full">
+                <div className="relative flex flex-col preG:flex-row w-full">
                   {collectible === "yes" && chargeCollect === "yes" && (
                     <CollectButton
                       col={"1"}
@@ -263,14 +264,14 @@ const MakeComment: FunctionComponent<MakeCommentProps> = ({
                   handleKeyDownDelete(e)
                 }
                 style={{ resize: "none" }}
-                className="relative w-full h-full bg-offBlack font-arcade text-white p-2 z-1 rounded-lg overflow-y-scroll"
+                className="relative w-full h-full bg-black font-economicaB text-white p-2 z-1 rounded-lg overflow-y-scroll"
                 ref={textElement}
                 value={commentDescription}
                 disabled={commentLoading || !canComment ? true : false}
               ></textarea>
               <pre
                 id="highlighting"
-                className={`absolute w-full h-full bg-offBlack font-arcade text-white p-2 rounded-lg overflow-y-scroll ${
+                className={`absolute w-full h-full bg-black font-economicaB text-white p-2 rounded-lg overflow-y-scroll ${
                   !canComment && "opacity-70"
                 }`}
               >
@@ -303,7 +304,7 @@ const MakeComment: FunctionComponent<MakeCommentProps> = ({
                           handleMentionClick(user);
                         }}
                       >
-                        <div className="relative flex flex-row w-full h-full text-black font-earl lowercase place-self-center gap-2">
+                        <div className="relative flex flex-row w-full h-full text-black font-economicaB lowercase place-self-center gap-2">
                           <div
                             className={`relative rounded-full flex bg-white w-3 h-3 items-center justify-center col-start-1`}
                             id="crt"
@@ -331,7 +332,7 @@ const MakeComment: FunctionComponent<MakeCommentProps> = ({
             </div>
           </div>
         )}
-        <div className="relative w-full h-fit galaxy:h-12 flex flex-row items-center gap-3 flex-wrap galaxy:flex-nowrap">
+        <div className="relative w-full h-fit preG:h-12 flex flex-row items-center gap-3 flex-wrap preG:flex-nowrap">
           <div className="relative w-fit h-fit flex flex-row items-center gap-2 justify-start">
             <div className="relative w-3 h-3 rounded-full" id="chrome"></div>
             <div className="relative w-3 h-3 rounded-full" id="chrome"></div>
@@ -350,7 +351,7 @@ const MakeComment: FunctionComponent<MakeCommentProps> = ({
           <div className="relative w-full h-fit justify-end flex flex-row gap-2 items-center">
             <div className="relative w-24 min-w-fit h-10 border-white border rounded-tr-xl rounded-bl-xl py-2 px-4 flex items-center cursor-pointer active:scale-95 hover:bg-moda justify-center">
               <div
-                className={`relative w-full h-full flex text-white font-arcade items-center text-center justify-center ${
+                className={`relative w-full h-full flex text-white font-economicaB items-center text-center justify-center ${
                   commentLoading && "animate-spin"
                 }`}
                 onClick={

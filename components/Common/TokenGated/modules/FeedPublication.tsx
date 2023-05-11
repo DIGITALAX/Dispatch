@@ -6,8 +6,6 @@ import { AiFillEye, AiOutlineRetweet } from "react-icons/ai";
 import { FunctionComponent } from "react";
 import { FeedPublicationProps } from "../types/allPosts.types";
 import { setImageViewer } from "@/redux/reducers/imageViewerSlice";
-import { setReactionState } from "@/redux/reducers/reactionStateSlice";
-import { setCommentShow } from "@/redux/reducers/commentShowSlice";
 import descriptionRegex from "@/lib/helpers/descriptionRegex";
 import { FaRegCommentDots } from "react-icons/fa";
 import { setFeedType } from "@/redux/reducers/feedTypeSlice";
@@ -48,10 +46,8 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
     >
       <Profile
         publication={publication}
-        setReactionState={setReactionState}
         followerOnly={followerOnly}
         dispatch={dispatch}
-        setCommentShow={setCommentShow}
         hasMirrored={hasMirrored}
         hasReacted={hasReacted}
         collectPost={collectPost}

@@ -236,3 +236,43 @@ input[type="range"]::-moz-range-thumb {
 .infinite-scroll-component__outerdiv {
   width: 100%;
 }
+
+code {
+  font-family: "Economica B";
+  font-size: 1rem;
+  line-height: 1.5rem;
+  overflow-y: scroll;
+  scrollbar-width: none;
+}
+
+code::-webkit-scrollbar {
+  display: none;
+}
+
+#post {
+  color: transparent;
+  background: transparent;
+  caret-color: white;
+}
+
+#post #highlighting * {
+  font-family: "Economica B";
+  font-size: 1rem; /* 16px */
+  line-height: 1.5rem;
+  overflow-y: scroll;
+  white-space: pre-wrap;
+}
+
+#chrome {
+  background: conic-gradient(
+    #f7f7f3,
+    #dbdfb2,
+    #aeeccf,
+    #cedfde,
+    #f1d2ef,
+    #f6ebf7,
+    #f0ecf6,
+    #ffffff,
+    #f6f7e6
+  );
+}

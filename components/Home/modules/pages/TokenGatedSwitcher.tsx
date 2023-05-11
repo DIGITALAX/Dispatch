@@ -52,6 +52,9 @@ const TokenGatedSwitcher: FunctionComponent = (): JSX.Element => {
   const profileId = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile?.id
   );
+  const postImagesDispatched = useSelector(
+    (state: RootState) => state.app.postImageReducer.value
+  );
 
   const dispatch = useDispatch();
   const { handleLensSignIn, handleConnect } = useConnect();
@@ -275,6 +278,7 @@ const TokenGatedSwitcher: FunctionComponent = (): JSX.Element => {
           collectible={collectible}
           collectibleDropDown={collectibleDropDown}
           currencyDropDown={currencyDropDown}
+          postImagesDispatched={postImagesDispatched}
         />
       );
 

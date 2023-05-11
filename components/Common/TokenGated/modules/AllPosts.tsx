@@ -119,8 +119,8 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
   collectOpen,
   mappedFeaturedFiles,
   canComment,
+  postImagesDispatched
 }): JSX.Element => {
-  console.log({ commentOpen });
   return (
     <div
       className="relative w-full h-fit flex flex-col items-start justify-start gap-4"
@@ -243,6 +243,7 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
             collectible={collectible}
             collectibleDropDown={collectibleDropDown}
             currencyDropDown={currencyDropDown}
+            postImagesDispatched={postImagesDispatched}
           />
         ) : postsLoading ? (
           <div className="relative w-full h-auto flex flex-col gap-4 overflow-y-scroll">
@@ -411,6 +412,7 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
                           commentId={commentOpen}
                           currencyDropDown={currencyDropDown}
                           dispatch={dispatch}
+                          postImagesDispatched={postImagesDispatched}
                         />
                       )}
                     </div>

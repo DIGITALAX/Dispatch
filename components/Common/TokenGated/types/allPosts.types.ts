@@ -68,13 +68,8 @@ export type FeedPublicationProps = {
 
 export type ProfileSideBarProps = {
   publication: Publication;
-  setReactionState: ActionCreatorWithPayload<
-    any,
-    "reactionState/setReactionState"
-  >;
   followerOnly: boolean | undefined;
   dispatch: Dispatch<AnyAction>;
-  setCommentShow: ActionCreatorWithPayload<any, "commentShow/setCommentShow">;
   hasMirrored: boolean | undefined;
   hasReacted: boolean | undefined;
   index: number;

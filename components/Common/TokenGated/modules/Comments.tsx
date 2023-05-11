@@ -213,6 +213,7 @@ const Comments: FunctionComponent<CommentsProps> = ({
                       commentId={commentId}
                       currencyDropDown={currencyDropDown}
                       dispatch={dispatch}
+                      postImagesDispatched={postImagesDispatched}
                     />
                   )}
                 </div>

@@ -13,7 +13,7 @@ const Collect: FunctionComponent<CollectModalProps> = ({
         className="relative w-full md:w-[40vw] h-fit col-start-1 place-self-center rounded-lg p-px"
         id="modal"
       >
-        <div className="relative w-full h-full bg-offBlack rounded-lg">
+        <div className="relative w-full h-full bg-black rounded-lg">
           <div className="relative w-full row-start-2 h-fit rounded-xl grid grid-flow-col auto-cols-auto">
             <div className="relative w-full h-full col-start-1 rounded-xl place-self-center">
               <div className="relative w-full h-full grid grid-flow-row auto-rows-auto gap-10 pb-8">

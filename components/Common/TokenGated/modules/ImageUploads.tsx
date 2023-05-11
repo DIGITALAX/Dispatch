@@ -16,7 +16,7 @@ const ImageUploads: FunctionComponent<ImageUploadsProps> = ({
           return (
             <div
               key={index}
-              className={`relative w-12 h-12 border-2 border-black rounded-lg bg-spots grid grid-flow-col auto-cols-auto col-start-${
+              className={`relative w-8 h-8 border-2 border-black rounded-lg bg-spots grid grid-flow-col auto-cols-auto col-start-${
                 index + 1
               }`}
             >
@@ -56,7 +56,7 @@ const ImageUploads: FunctionComponent<ImageUploadsProps> = ({
                     !commentLoading ? handleRemoveImage(image) : {};
                   }}
                 >
-                  <RiCloseCircleFill color="white" size={28} />
+                  <RiCloseCircleFill color="white" size={20} />
                 </div>
               </div>
             </div>
