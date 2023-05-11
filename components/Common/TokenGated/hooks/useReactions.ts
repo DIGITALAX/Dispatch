@@ -111,13 +111,7 @@ const useReactions = () => {
     inputIndex?: number
   ): Promise<void> => {
     let index: number;
-    if (loader && inputIndex) {
-      loader((prev: any) => {
-        const updatedArray = [...prev];
-        updatedArray[inputIndex] = true;
-        return updatedArray as boolean[];
-      });
-    } else {
+    if (inputIndex === undefined || inputIndex === null) {
       index = (feedSwitch ? feedDispatch : timelineDispatch)?.findIndex(
         (feed) => feed.id === id
       );
@@ -126,6 +120,12 @@ const useReactions = () => {
         const updatedArray = [...prev];
         updatedArray[index] = true;
         return updatedArray;
+      });
+    } else {
+      loader!((prev: any) => {
+        const updatedArray = [...prev];
+        updatedArray[inputIndex] = true;
+        return updatedArray as boolean[];
       });
     }
 
@@ -144,17 +144,17 @@ const useReactions = () => {
     } catch (err: any) {
       console.error(err.message);
     }
-    if (loader && inputIndex) {
-      loader((prev: any) => {
-        const updatedArray = [...prev];
-        updatedArray[inputIndex] = false;
-        return updatedArray as boolean[];
-      });
-    } else {
+    if (inputIndex === undefined || inputIndex === null) {
       (feedSwitch ? setReactFeedLoading : setReactTimelineLoading)((prev) => {
         const updatedArray = [...prev];
         updatedArray[index] = false;
         return updatedArray;
+      });
+    } else {
+      loader!((prev: any) => {
+        const updatedArray = [...prev];
+        updatedArray[inputIndex] = false;
+        return updatedArray as boolean[];
       });
     }
 
@@ -180,7 +180,7 @@ const useReactions = () => {
     inputIndex?: number
   ): Promise<void> => {
     let index: number;
-    if (!loader || !inputIndex) {
+    if (inputIndex === undefined || inputIndex === null) {
       index = (feedSwitch ? feedDispatch : timelineDispatch).findIndex(
         (feed) => feed.id === id
       );
@@ -192,8 +192,7 @@ const useReactions = () => {
         return updatedArray;
       });
     } else {
-      console.log("here");
-      loader((prev: any) => {
+      loader!((prev: any) => {
         const updatedArray = [...prev];
         updatedArray[inputIndex] = true;
         return updatedArray as boolean[];
@@ -293,16 +292,16 @@ const useReactions = () => {
     } catch (err: any) {
       console.error(err.message);
     }
-    if (!loader || !inputIndex) {
+    if (inputIndex === undefined || inputIndex === null) {
       (feedSwitch ? setMirrorFeedLoading : setMirrorTimelineLoading)((prev) => {
         const updatedArray = [...prev];
         updatedArray[index] = false;
         return updatedArray;
       });
     } else {
-      loader((prev: any) => {
+      loader!((prev: any) => {
         const updatedArray = [...prev];
-        updatedArray[inputIndex] = true;
+        updatedArray[inputIndex] = false;
         return updatedArray as boolean[];
       });
     }
@@ -342,13 +341,7 @@ const useReactions = () => {
     inputIndex?: number
   ): Promise<void> => {
     let index: number;
-    if (loader && inputIndex) {
-      loader((prev: any) => {
-        const updatedArray = [...prev];
-        updatedArray[inputIndex] = true;
-        return updatedArray as boolean[];
-      });
-    } else {
+    if (inputIndex === undefined || inputIndex === null) {
       index = (feedSwitch ? feedDispatch : timelineDispatch).findIndex(
         (feed) => feed.id === id
       );
@@ -360,6 +353,12 @@ const useReactions = () => {
           return updatedArray;
         }
       );
+    } else {
+      loader!((prev: any) => {
+        const updatedArray = [...prev];
+        updatedArray[inputIndex] = true;
+        return updatedArray as boolean[];
+      });
     }
 
     try {
@@ -432,13 +431,7 @@ const useReactions = () => {
       console.error(err.message);
     }
 
-    if (loader && inputIndex) {
-      loader((prev: any) => {
-        const updatedArray = [...prev];
-        updatedArray[inputIndex] = true;
-        return updatedArray as boolean[];
-      });
-    } else {
+    if (inputIndex === undefined || inputIndex === null) {
       (feedSwitch ? setCollectFeedLoading : setCollectTimelineLoading)(
         (prev) => {
           const updatedArray = [...prev];
@@ -446,6 +439,12 @@ const useReactions = () => {
           return updatedArray;
         }
       );
+    } else {
+      loader!((prev: any) => {
+        const updatedArray = [...prev];
+        updatedArray[inputIndex] = false;
+        return updatedArray as boolean[];
+      });
     }
   };
 

@@ -39,6 +39,9 @@ const useAllPosts = () => {
   const feedSwitch = useSelector(
     (state: RootState) => state.app.feedSwitchReducer.value
   );
+  const feedType = useSelector(
+    (state: RootState) => state.app.feedTypeReducer.value
+  );
   const dispatch = useDispatch();
   const [paginated, setPaginated] = useState<any>();
   const [followerOnly, setFollowerOnly] = useState<boolean[]>([]);
