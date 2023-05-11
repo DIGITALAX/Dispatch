@@ -28,6 +28,7 @@ const useIndividual = () => {
   const commentFeedCount = useSelector(
     (state: RootState) => state.app.commentCountReducer
   );
+  const index = useSelector((state: RootState) => state.app.indexModalReducer);
   const commentors = useSelector(
     (state: RootState) => state.app.commentsReducer.value
   );
@@ -334,6 +335,14 @@ const useIndividual = () => {
       getPostComments();
     }
   }, [feedType]);
+
+  useEffect(() => {
+    if (feedType !== "") {
+      if (index.message === "Successfully Indexed") {
+        getPostComments();
+      }
+    }
+  }, [index.message]);
 
   return {
     getMorePostComments,
