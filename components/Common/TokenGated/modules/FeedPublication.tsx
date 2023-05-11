@@ -34,7 +34,7 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
   setCollectLoader,
   setReactLoader,
   setMirrorLoader,
-  openComment
+  openComment,
 }): JSX.Element => {
   return (
     <div
@@ -67,6 +67,7 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
         setReactLoader={setReactLoader}
         setMirrorLoader={setMirrorLoader}
         openComment={openComment}
+        feedType={feedType}
       />
       <div
         className={`relative w-full h-auto grow rounded-md grid grid-flow-row auto-rows-auto p-3 preG:p-6 gap-6 border-2 border-black bg-gradient-to-r from-offBlack via-gray-600 to-black`}

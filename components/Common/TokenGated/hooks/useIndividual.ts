@@ -15,11 +15,23 @@ import { Publication } from "@/components/Home/types/lens.types";
 import canCommentPub from "@/graphql/lens/queries/canComment";
 import { setCanComment } from "@/redux/reducers/canCommentSlice";
 import { setCommentFeedCount } from "@/redux/reducers/commentCountSlice";
+import { setCommentsRedux } from "@/redux/reducers/commentsSlice";
 
 const useIndividual = () => {
   const dispatch = useDispatch();
+  const lensProfile = useSelector(
+    (state: RootState) => state.app.lensProfileReducer.profile?.id
+  );
+  const feedType = useSelector(
+    (state: RootState) => state.app.feedTypeReducer.value
+  );
+  const commentFeedCount = useSelector(
+    (state: RootState) => state.app.commentCountReducer
+  );
+  const commentors = useSelector(
+    (state: RootState) => state.app.commentsReducer.value
+  );
   const [commentsLoading, setCommentsLoading] = useState<boolean>(false);
-  const [commentors, setCommentors] = useState<Publication[]>([]);
   const [paginated, setPaginated] = useState<any>();
   const [hasMoreComments, setHasMoreComments] = useState<boolean>(true);
   const [mainPost, setMainPost] = useState<Publication>();
@@ -45,20 +57,7 @@ const useIndividual = () => {
   ]);
   const [reactPostLoading, setReactPostLoading] = useState<boolean[]>([false]);
   const [commentLoading, setCommentLoading] = useState<boolean>(false);
-  const [commentArgs, setCommentArgs] = useState<any[]>([])
-
-  const lensProfile = useSelector(
-    (state: RootState) => state.app.lensProfileReducer.profile?.id
-  );
-  const feedType = useSelector(
-    (state: RootState) => state.app.feedTypeReducer.value
-  );
-  const commentFeedCount = useSelector(
-    (state: RootState) => state.app.commentCountReducer
-  );
-  const dispatcher = useSelector(
-    (state: RootState) => state.app.dispatcherReducer.value
-  );
+  const [commentArgs, setCommentArgs] = useState<any[]>([]);
 
   const getPostComments = async (): Promise<void> => {
     setCommentsLoading(true);
@@ -89,7 +88,7 @@ const useIndividual = () => {
       } else {
         setHasMoreComments(true);
       }
-      setCommentors(sortedArr);
+      dispatch(setCommentsRedux(sortedArr));
       setPaginated(comments?.data?.publications?.pageInfo);
       setFollowerOnlyComments(
         sortedArr?.map((obj: Publication) =>
@@ -184,7 +183,7 @@ const useIndividual = () => {
       if (sortedArr?.length < 30) {
         setHasMoreComments(false);
       }
-      setCommentors([...commentors, ...sortedArr]);
+      dispatch(setCommentsRedux([...commentors, ...sortedArr]));
       setPaginated(comments?.data?.publications?.pageInfo);
       setFollowerOnlyComments([
         ...followerOnlyComments,
@@ -338,7 +337,6 @@ const useIndividual = () => {
 
   return {
     getMorePostComments,
-    commentors,
     hasMoreComments,
     commentsLoading,
     mainPostLoading,

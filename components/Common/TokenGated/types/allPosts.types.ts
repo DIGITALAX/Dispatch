@@ -39,17 +39,20 @@ export type FeedPublicationProps = {
   collectPost: (
     id: string,
     loader?: (e: boolean[]) => void,
-    inputIndex?: number
+    inputIndex?: number,
+    mirrorId?: string
   ) => Promise<void>;
   mirrorPost: (
     id: string,
     loader?: (e: boolean[]) => void,
-    inputIndex?: number
+    inputIndex?: number,
+    mirrorId?: string
   ) => Promise<void>;
   reactPost: (
     id: string,
     loader?: (e: boolean[]) => void,
-    inputIndex?: number
+    inputIndex?: number,
+    mirrorId?: string
   ) => Promise<void>;
   index: number;
   mirrorLoading: boolean;
@@ -77,17 +80,20 @@ export type ProfileSideBarProps = {
   collectPost: (
     id: string,
     loader?: (e: boolean[]) => void,
-    inputIndex?: number
+    inputIndex?: number,
+    mirrorId?: string
   ) => Promise<void>;
   mirrorPost: (
     id: string,
     loader?: (e: boolean[]) => void,
-    inputIndex?: number
+    inputIndex?: number,
+    mirrorId?: string
   ) => Promise<void>;
   reactPost: (
     id: string,
     loader?: (e: boolean[]) => void,
-    inputIndex?: number
+    inputIndex?: number,
+    mirrorId?: string
   ) => Promise<void>;
   mirrorLoading: boolean;
   reactLoading: boolean;
@@ -101,6 +107,7 @@ export type ProfileSideBarProps = {
   setReactLoader?: (e: boolean[]) => void;
   setMirrorLoader?: (e: boolean[]) => void;
   openComment: string;
+  feedType: string;
 };
 
 export type ReactionProps = {
@@ -120,17 +127,20 @@ export type ReactionProps = {
   collectPost: (
     id: string,
     loader?: (e: boolean[]) => void,
-    inputIndex?: number
+    inputIndex?: number,
+    mirrorId?: string
   ) => Promise<void>;
   mirrorPost: (
     id: string,
     loader?: (e: boolean[]) => void,
-    inputIndex?: number
+    inputIndex?: number,
+    mirrorId?: string
   ) => Promise<void>;
   reactPost: (
     id: string,
     loader?: (e: boolean[]) => void,
-    inputIndex?: number
+    inputIndex?: number,
+    mirrorId?: string
   ) => Promise<void>;
   index: number;
   mirrorLoading: boolean;
@@ -144,6 +154,7 @@ export type ReactionProps = {
   setReactLoader?: (e: boolean[]) => void;
   setMirrorLoader?: (e: boolean[]) => void;
   openComment: string;
+  feedType: string;
 };
 
 export type AllPostsProps = {
@@ -157,17 +168,20 @@ export type AllPostsProps = {
   collectPost: (
     id: string,
     loader?: (e: boolean[]) => void,
-    inputIndex?: number
+    inputIndex?: number,
+    mirrorId?: string
   ) => Promise<void>;
   mirrorPost: (
     id: string,
     loader?: (e: boolean[]) => void,
-    inputIndex?: number
+    inputIndex?: number,
+    mirrorId?: string
   ) => Promise<void>;
   reactPost: (
     id: string,
     loader?: (e: boolean[]) => void,
-    inputIndex?: number
+    inputIndex?: number,
+    mirrorId?: string
   ) => Promise<void>;
   mirrorLoading: boolean[];
   reactLoading: boolean[];
@@ -297,17 +311,20 @@ export type PersonalTimelineProps = {
   collectPost: (
     id: string,
     loader?: (e: boolean[]) => void,
-    inputIndex?: number
+    inputIndex?: number,
+    mirrorId?: string
   ) => Promise<void>;
   mirrorPost: (
     id: string,
     loader?: (e: boolean[]) => void,
-    inputIndex?: number
+    inputIndex?: number,
+    mirrorId?: string
   ) => Promise<void>;
   reactPost: (
     id: string,
     loader?: (e: boolean[]) => void,
-    inputIndex?: number
+    inputIndex?: number,
+    mirrorId?: string
   ) => Promise<void>;
   address: `0x${string}`;
   viewerOpen: boolean;
@@ -341,17 +358,20 @@ export type IndividualProps = {
   collectPost: (
     id: string,
     loader?: (e: boolean[]) => void,
-    inputIndex?: number
+    inputIndex?: number,
+    mirrorId?: string
   ) => Promise<void>;
   mirrorPost: (
     id: string,
     loader?: (e: boolean[]) => void,
-    inputIndex?: number
+    inputIndex?: number,
+    mirrorId?: string
   ) => Promise<void>;
   reactPost: (
     id: string,
     loader?: (e: boolean[]) => void,
-    inputIndex?: number
+    inputIndex?: number,
+    mirrorId?: string
   ) => Promise<void>;
   mainPostLoading: boolean;
   commentAmounts: CommentFeedCountState;
@@ -451,20 +471,23 @@ export type CommentsProps = {
   dispatch: Dispatch<AnyAction>;
   address: `0x${string}`;
   followerOnly: boolean[];
-  reactPost: (
-    id: string,
-    loader?: (e: boolean[]) => void,
-    inputIndex?: number
-  ) => Promise<void>;
   collectPost: (
     id: string,
     loader?: (e: boolean[]) => void,
-    inputIndex?: number
+    inputIndex?: number,
+    mirrorId?: string
   ) => Promise<void>;
   mirrorPost: (
     id: string,
     loader?: (e: boolean[]) => void,
-    inputIndex?: number
+    inputIndex?: number,
+    mirrorId?: string
+  ) => Promise<void>;
+  reactPost: (
+    id: string,
+    loader?: (e: boolean[]) => void,
+    inputIndex?: number,
+    mirrorId?: string
   ) => Promise<void>;
   fetchMoreComments: () => Promise<void>;
   hasMoreComments: boolean;
@@ -538,7 +561,7 @@ export type CommentsProps = {
   handleKeyDownDelete: (e: KeyboardEvent<Element>) => void;
   commentId: string;
   canComment: boolean;
-  openComment: string
+  openComment: string;
 };
 
 export interface UploadedMedia {

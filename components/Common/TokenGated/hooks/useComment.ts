@@ -327,6 +327,22 @@ const useComment = () => {
         }
       }
     } catch (err: any) {
+      if (err.message.includes("data availability publication")) {
+        dispatch(
+          setIndexModal({
+            actionValue: true,
+            actionMessage: "Momoka won't let you interact ATM.",
+          })
+        );
+        setTimeout(() => {
+          dispatch(
+            setIndexModal({
+              actionValue: false,
+              actionMessage: "",
+            })
+          );
+        }, 4000);
+      }
       console.error(err.message);
     }
     setCommentLoading(false);
@@ -425,7 +441,6 @@ const useComment = () => {
     gifOpen,
     setGifOpen,
     handleKeyDownDelete,
-    
   };
 };
 

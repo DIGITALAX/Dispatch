@@ -43,6 +43,7 @@ import postImageReducer from "./reducers/postImageSlice";
 import collectOpenReducer from "./reducers/collectOpenSlice";
 import collectValueTypeReducer from "./reducers/collectValueTypeSlice";
 import openCommentReducer from "./reducers/openCommentSlice";
+import commentsReducer from "./reducers/commentsSlice";
 
 const reducer = combineReducers({
   lensProfileReducer,
@@ -88,6 +89,7 @@ const reducer = combineReducers({
   collectOpenReducer,
   collectValueTypeReducer,
   openCommentReducer,
+  commentsReducer,
 });
 
 export const store = configureStore({

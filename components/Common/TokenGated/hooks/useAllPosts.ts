@@ -3,6 +3,7 @@ import feedTimeline from "@/graphql/lens/queries/getTimeline";
 import { profilePublicationsAuth } from "@/graphql/lens/queries/getVideos";
 import checkIfMirrored from "@/lib/helpers/checkIfMirrored";
 import checkPostReactions from "@/lib/helpers/checkPostReactions";
+import { setCommentFeedCount } from "@/redux/reducers/commentCountSlice";
 import { setFeedsRedux } from "@/redux/reducers/feedSlice";
 import { setReactionFeedCount } from "@/redux/reducers/reactionFeedCountSlice";
 import { setReactionTimelineCount } from "@/redux/reducers/reactionTimelineCountSlice";
@@ -41,6 +42,12 @@ const useAllPosts = () => {
   );
   const feedType = useSelector(
     (state: RootState) => state.app.feedTypeReducer.value
+  );
+  const commentFeed = useSelector(
+    (state: RootState) => state.app.commentCountReducer
+  );
+  const comments = useSelector(
+    (state: RootState) => state.app.commentsReducer.value
   );
   const dispatch = useDispatch();
   const [paginated, setPaginated] = useState<any>();
@@ -427,124 +434,185 @@ const useAllPosts = () => {
     }
   };
 
-  const refetchInteractions = async () => {
+  const refetchInteractions = () => {
     try {
       const index = (feedSwitch ? feedDispatch : timelineDispatch)?.findIndex(
         (feed) => feed.id === feedId.value
       );
-      if (feedSwitch) {
-        dispatch(
-          setReactionFeedCount({
-            actionLike:
-              feedId.type === 0
-                ? reactionFeedCount.like.map((obj: number, number: number) =>
-                    number === index ? obj + 1 : obj
-                  )
-                : reactionFeedCount.like,
-            actionMirror:
-              feedId.type === 1
-                ? reactionFeedCount.mirror.map((obj: number, number: number) =>
-                    number === index ? obj + 1 : obj
-                  )
-                : reactionFeedCount.mirror,
-            actionCollect:
-              feedId.type === 2
-                ? reactionFeedCount.collect.map((obj: number, number: number) =>
-                    number === index ? obj + 1 : obj
-                  )
-                : reactionFeedCount.collect,
-            actionComment:
-              feedId.type === 3
-                ? reactionFeedCount.comment.map((obj: number, number: number) =>
-                    number === index ? obj + 1 : obj
-                  )
-                : reactionFeedCount.comment,
-            actionHasLiked:
-              feedId.type === 0
-                ? reactionFeedCount.hasLiked.map(
-                    (obj: boolean, number: number) =>
-                      number === index ? true : obj
-                  )
-                : reactionFeedCount.hasLiked,
-            actionHasMirrored:
-              feedId.type === 1
-                ? reactionFeedCount.hasMirrored.map(
-                    (obj: boolean, number: number) =>
-                      number === index ? true : obj
-                  )
-                : reactionFeedCount.mirror,
-            actionHasCollected:
-              feedId.type === 2
-                ? reactionFeedCount.hasCollected.map(
-                    (obj: boolean, number: number) =>
-                      number === index ? true : obj
-                  )
-                : reactionFeedCount.collect,
-          })
-        );
-      } else {
-        dispatch(
-          setReactionTimelineCount({
-            actionLike:
-              feedId.type === 0
-                ? reactionTimelineCount.like.map(
-                    (obj: number, number: number) =>
+      if (index > 0) {
+        if (feedSwitch) {
+          dispatch(
+            setReactionFeedCount({
+              actionLike:
+                feedId.type === 0
+                  ? reactionFeedCount.like.map((obj: number, number: number) =>
                       number === index ? obj + 1 : obj
-                  )
-                : reactionTimelineCount.like,
-            actionMirror:
-              feedId.type === 1
-                ? reactionTimelineCount.mirror.map(
-                    (obj: number, number: number) =>
-                      number === index ? obj + 1 : obj
-                  )
-                : reactionTimelineCount.mirror,
-            actionCollect:
-              feedId.type === 2
-                ? reactionTimelineCount.collect.map(
-                    (obj: number, number: number) =>
-                      number === index ? obj + 1 : obj
-                  )
-                : reactionTimelineCount.collect,
-            actionComment:
-              feedId.type === 3
-                ? reactionTimelineCount.comment.map(
-                    (obj: number, number: number) =>
-                      number === index ? obj + 1 : obj
-                  )
-                : reactionTimelineCount.comment,
-            actionHasLiked:
-              feedId.type === 0
-                ? reactionTimelineCount.hasLiked.map(
-                    (obj: boolean, number: number) =>
-                      number === index ? true : obj
-                  )
-                : reactionTimelineCount.hasLiked,
-            actionHasMirrored:
-              feedId.type === 1
-                ? reactionTimelineCount.hasMirrored.map(
-                    (obj: boolean, number: number) =>
-                      number === index ? true : obj
-                  )
-                : reactionTimelineCount.mirror,
-            actionHasCollected:
-              feedId.type === 2
-                ? reactionTimelineCount.hasCollected.map(
-                    (obj: boolean, number: number) =>
-                      number === index ? true : obj
-                  )
-                : reactionTimelineCount.collect,
-          })
-        );
+                    )
+                  : reactionFeedCount.like,
+              actionMirror:
+                feedId.type === 1
+                  ? reactionFeedCount.mirror.map(
+                      (obj: number, number: number) =>
+                        number === index ? obj + 1 : obj
+                    )
+                  : reactionFeedCount.mirror,
+              actionCollect:
+                feedId.type === 2
+                  ? reactionFeedCount.collect.map(
+                      (obj: number, number: number) =>
+                        number === index ? obj + 1 : obj
+                    )
+                  : reactionFeedCount.collect,
+              actionComment:
+                feedId.type === 3
+                  ? reactionFeedCount.comment.map(
+                      (obj: number, number: number) =>
+                        number === index ? obj + 1 : obj
+                    )
+                  : reactionFeedCount.comment,
+              actionHasLiked:
+                feedId.type === 0
+                  ? reactionFeedCount.hasLiked.map(
+                      (obj: boolean, number: number) =>
+                        number === index ? true : obj
+                    )
+                  : reactionFeedCount.hasLiked,
+              actionHasMirrored:
+                feedId.type === 1
+                  ? reactionFeedCount.hasMirrored.map(
+                      (obj: boolean, number: number) =>
+                        number === index ? true : obj
+                    )
+                  : reactionFeedCount.mirror,
+              actionHasCollected:
+                feedId.type === 2
+                  ? reactionFeedCount.hasCollected.map(
+                      (obj: boolean, number: number) =>
+                        number === index ? true : obj
+                    )
+                  : reactionFeedCount.collect,
+            })
+          );
+        } else {
+          dispatch(
+            setReactionTimelineCount({
+              actionLike:
+                feedId.type === 0
+                  ? reactionTimelineCount.like.map(
+                      (obj: number, number: number) =>
+                        number === index ? obj + 1 : obj
+                    )
+                  : reactionTimelineCount.like,
+              actionMirror:
+                feedId.type === 1
+                  ? reactionTimelineCount.mirror.map(
+                      (obj: number, number: number) =>
+                        number === index ? obj + 1 : obj
+                    )
+                  : reactionTimelineCount.mirror,
+              actionCollect:
+                feedId.type === 2
+                  ? reactionTimelineCount.collect.map(
+                      (obj: number, number: number) =>
+                        number === index ? obj + 1 : obj
+                    )
+                  : reactionTimelineCount.collect,
+              actionComment:
+                feedId.type === 3
+                  ? reactionTimelineCount.comment.map(
+                      (obj: number, number: number) =>
+                        number === index ? obj + 1 : obj
+                    )
+                  : reactionTimelineCount.comment,
+              actionHasLiked:
+                feedId.type === 0
+                  ? reactionTimelineCount.hasLiked.map(
+                      (obj: boolean, number: number) =>
+                        number === index ? true : obj
+                    )
+                  : reactionTimelineCount.hasLiked,
+              actionHasMirrored:
+                feedId.type === 1
+                  ? reactionTimelineCount.hasMirrored.map(
+                      (obj: boolean, number: number) =>
+                        number === index ? true : obj
+                    )
+                  : reactionTimelineCount.mirror,
+              actionHasCollected:
+                feedId.type === 2
+                  ? reactionTimelineCount.hasCollected.map(
+                      (obj: boolean, number: number) =>
+                        number === index ? true : obj
+                    )
+                  : reactionTimelineCount.collect,
+            })
+          );
+        }
       }
     } catch (err: any) {
       console.error(err.message);
     }
   };
 
+  const refetchComments = () => {
+    const index = comments?.findIndex((comment) => comment.id === feedId.value);
+    if (index > 0) {
+      dispatch(
+        setCommentFeedCount({
+          actionLike:
+            feedId.type === 0
+              ? commentFeed.like.map((obj: number, number: number) =>
+                  number === index ? obj + 1 : obj
+                )
+              : commentFeed.like,
+          actionMirror:
+            feedId.type === 1
+              ? commentFeed.mirror.map((obj: number, number: number) =>
+                  number === index ? obj + 1 : obj
+                )
+              : commentFeed.mirror,
+          actionCollect:
+            feedId.type === 2
+              ? commentFeed.collect.map((obj: number, number: number) =>
+                  number === index ? obj + 1 : obj
+                )
+              : commentFeed.collect,
+          actionComment:
+            feedId.type === 3
+              ? commentFeed.comment.map((obj: number, number: number) =>
+                  number === index ? obj + 1 : obj
+                )
+              : commentFeed.comment,
+          actionHasLiked:
+            feedId.type === 0
+              ? commentFeed.hasLiked.map((obj: boolean, number: number) =>
+                  number === index ? true : obj
+                )
+              : commentFeed.hasLiked,
+          actionHasMirrored:
+            feedId.type === 1
+              ? commentFeed.hasMirrored.map((obj: boolean, number: number) =>
+                  number === index ? true : obj
+                )
+              : commentFeed.mirror,
+          actionHasCollected:
+            feedId.type === 2
+              ? commentFeed.hasCollected.map((obj: boolean, number: number) =>
+                  number === index ? true : obj
+                )
+              : commentFeed.collect,
+        })
+      );
+    }
+  };
+
   useEffect(() => {
     if (indexer.message === "Successfully Indexed") {
       refetchInteractions();
+
+      if (feedType !== "") {
+        refetchComments();
+      }
     }
   }, [indexer.message]);
 

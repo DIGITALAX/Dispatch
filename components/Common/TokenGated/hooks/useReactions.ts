@@ -108,14 +108,14 @@ const useReactions = () => {
   const reactPost = async (
     id: string,
     loader?: (e: any) => void,
-    inputIndex?: number
+    inputIndex?: number,
+    mirrorId?: string
   ): Promise<void> => {
     let index: number;
     if (inputIndex === undefined || inputIndex === null) {
       index = (feedSwitch ? feedDispatch : timelineDispatch)?.findIndex(
-        (feed) => feed.id === id
+        (feed) => feed.id === (mirrorId !== undefined ? mirrorId : id)
       );
-
       (feedSwitch ? setReactFeedLoading : setReactTimelineLoading)((prev) => {
         const updatedArray = [...prev];
         updatedArray[index] = true;
@@ -177,12 +177,13 @@ const useReactions = () => {
   const mirrorPost = async (
     id: string,
     loader?: (e: any) => void,
-    inputIndex?: number
+    inputIndex?: number,
+    mirrorId?: string
   ): Promise<void> => {
     let index: number;
     if (inputIndex === undefined || inputIndex === null) {
       index = (feedSwitch ? feedDispatch : timelineDispatch).findIndex(
-        (feed) => feed.id === id
+        (feed) => feed.id === (mirrorId !== undefined ? mirrorId : id)
       );
       setMirrorIndex(index);
 
@@ -290,6 +291,22 @@ const useReactions = () => {
         }
       }
     } catch (err: any) {
+      if (err.message.includes("data availability publication")) {
+        dispatch(
+          setIndexModal({
+            actionValue: true,
+            actionMessage: "Momoka won't let you interact ATM.",
+          })
+        );
+        setTimeout(() => {
+          dispatch(
+            setIndexModal({
+              actionValue: false,
+              actionMessage: "",
+            })
+          );
+        }, 4000);
+      }
       console.error(err.message);
     }
     if (inputIndex === undefined || inputIndex === null) {
@@ -338,12 +355,13 @@ const useReactions = () => {
   const collectPost = async (
     id: string,
     loader?: (e: any) => void,
-    inputIndex?: number
+    inputIndex?: number,
+    mirrorId?: string
   ): Promise<void> => {
     let index: number;
     if (inputIndex === undefined || inputIndex === null) {
       index = (feedSwitch ? feedDispatch : timelineDispatch).findIndex(
-        (feed) => feed.id === id
+        (feed) => feed.id === (mirrorId !== undefined ? mirrorId : id)
       );
       setCollectIndex(index);
       (feedSwitch ? setCollectFeedLoading : setCollectTimelineLoading)(
@@ -427,6 +445,22 @@ const useReactions = () => {
             actionMessage: "Insufficient Balance to Collect.",
           })
         );
+      }
+      if (err.message.includes("data availability publication")) {
+        dispatch(
+          setIndexModal({
+            actionValue: true,
+            actionMessage: "Momoka won't let you interact ATM.",
+          })
+        );
+        setTimeout(() => {
+          dispatch(
+            setIndexModal({
+              actionValue: false,
+              actionMessage: "",
+            })
+          );
+        }, 4000);
       }
       console.error(err.message);
     }

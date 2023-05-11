@@ -30,6 +30,7 @@ const Profile: FunctionComponent<ProfileSideBarProps> = ({
   setMirrorLoader,
   setCollectLoader,
   setReactLoader,
+  feedType
 }): JSX.Element => {
   const profileImage = createProfilePicture(publication, true);
   return (
@@ -90,11 +91,11 @@ const Profile: FunctionComponent<ProfileSideBarProps> = ({
             {publication?.__typename !== "Mirror"
               ? publication?.profile?.name
                 ? publication?.profile?.name?.length > 25
-                  ? publication?.profile?.name?.substring(0, 25) + "..."
+                  ? publication?.profile?.name?.substring(0, 20) + "..."
                   : publication?.profile?.name
                 : ""
               : publication?.mirrorOf?.profile?.name
-              ? publication?.mirrorOf?.profile?.name?.length > 25
+              ? publication?.mirrorOf?.profile?.name?.length > 20
                 ? publication?.mirrorOf?.profile?.name?.substring(0, 25) + "..."
                 : publication?.mirrorOf?.profile?.name
               : ""}
@@ -111,12 +112,12 @@ const Profile: FunctionComponent<ProfileSideBarProps> = ({
               ? publication?.profile?.handle?.length > 15
                 ? publication?.profile?.handle
                     ?.split(".lens")[0]
-                    ?.substring(0, 15) + "..."
+                    ?.substring(0, 10) + "..."
                 : publication?.profile?.handle?.split(".lens")[0]
               : publication?.mirrorOf?.profile?.handle?.length > 15
               ? publication?.mirrorOf?.profile?.handle
                   ?.split(".lens")[0]
-                  ?.substring(0, 15) + "..."
+                  ?.substring(0, 10) + "..."
               : publication?.mirrorOf?.profile?.handle?.split(".lens")[0]}
           </div>
         </div>
@@ -157,6 +158,7 @@ const Profile: FunctionComponent<ProfileSideBarProps> = ({
             setReactLoader={setReactLoader}
             setMirrorLoader={setMirrorLoader}
             setCollectLoader={setCollectLoader}
+            feedType={feedType}
           />
         </div>
       </div>

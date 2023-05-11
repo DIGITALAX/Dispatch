@@ -55,6 +55,9 @@ const TokenGatedSwitcher: FunctionComponent = (): JSX.Element => {
   const postImagesDispatched = useSelector(
     (state: RootState) => state.app.postImageReducer.value
   );
+  const commentors = useSelector(
+    (state: RootState) => state.app.commentsReducer.value
+  );
 
   const dispatch = useDispatch();
   const { handleLensSignIn, handleConnect } = useConnect();
@@ -82,7 +85,6 @@ const TokenGatedSwitcher: FunctionComponent = (): JSX.Element => {
 
   const {
     getMorePostComments,
-    commentors,
     hasMoreComments,
     commentsLoading,
     mainPostLoading,
