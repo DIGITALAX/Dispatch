@@ -421,11 +421,11 @@ const useComment = () => {
     handleGifSubmit,
     handleGif,
     results,
-    gifs,
     handleSetGif,
     gifOpen,
     setGifOpen,
     handleKeyDownDelete,
+    
   };
 };
 

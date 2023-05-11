@@ -1,8 +1,13 @@
-import { Publication } from "@/components/Home/types/lens.types";
+import {
+  Erc20,
+  Profile,
+  Publication,
+} from "@/components/Home/types/lens.types";
 import { CommentFeedCountState } from "@/redux/reducers/commentCountSlice";
 import { ReactionFeedCountState } from "@/redux/reducers/reactionFeedCountSlice";
 import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
 import { NextRouter } from "next/router";
+import { FormEvent, KeyboardEvent, Ref } from "react";
 import { AnyAction, Dispatch } from "redux";
 
 export enum MediaType {
@@ -36,11 +41,6 @@ export type FeedPublicationProps = {
     loader?: (e: boolean[]) => void,
     inputIndex?: number
   ) => Promise<void>;
-  commentPost: (
-    id: string,
-    loader?: (e: boolean[]) => void,
-    inputIndex?: number
-  ) => Promise<void>;
   mirrorPost: (
     id: string,
     loader?: (e: boolean[]) => void,
@@ -63,6 +63,7 @@ export type FeedPublicationProps = {
   setCollectLoader?: (e: boolean[]) => void;
   setReactLoader?: (e: boolean[]) => void;
   setMirrorLoader?: (e: boolean[]) => void;
+  openComment: string;
 };
 
 export type ProfileSideBarProps = {
@@ -79,11 +80,6 @@ export type ProfileSideBarProps = {
   index: number;
   address: `0x${string}`;
   collectPost: (
-    id: string,
-    loader?: (e: boolean[]) => void,
-    inputIndex?: number
-  ) => Promise<void>;
-  commentPost: (
     id: string,
     loader?: (e: boolean[]) => void,
     inputIndex?: number
@@ -109,6 +105,7 @@ export type ProfileSideBarProps = {
   setCollectLoader?: (e: boolean[]) => void;
   setReactLoader?: (e: boolean[]) => void;
   setMirrorLoader?: (e: boolean[]) => void;
+  openComment: string;
 };
 
 export type ReactionProps = {
@@ -126,11 +123,6 @@ export type ReactionProps = {
   publication: Publication;
   address: `0x${string}`;
   collectPost: (
-    id: string,
-    loader?: (e: boolean[]) => void,
-    inputIndex?: number
-  ) => Promise<void>;
-  commentPost: (
     id: string,
     loader?: (e: boolean[]) => void,
     inputIndex?: number
@@ -156,6 +148,7 @@ export type ReactionProps = {
   setCollectLoader?: (e: boolean[]) => void;
   setReactLoader?: (e: boolean[]) => void;
   setMirrorLoader?: (e: boolean[]) => void;
+  openComment: string;
 };
 
 export type AllPostsProps = {
@@ -167,11 +160,6 @@ export type AllPostsProps = {
   fetchMore: () => Promise<void>;
   address: `0x${string}`;
   collectPost: (
-    id: string,
-    loader?: (e: boolean[]) => void,
-    inputIndex?: number
-  ) => Promise<void>;
-  commentPost: (
     id: string,
     loader?: (e: boolean[]) => void,
     inputIndex?: number
@@ -228,6 +216,72 @@ export type AllPostsProps = {
   setCollectPostLoading: (e: boolean[]) => void;
   setMirrorPostLoading: (e: boolean[]) => void;
   setReactPostLoading: (e: boolean[]) => void;
+  commentOpen: string;
+  commentPost: (id: string) => Promise<void>;
+  commentDescription: string;
+  handleCommentDescription: (e: FormEvent) => Promise<void>;
+  textElement: Ref<HTMLTextAreaElement>;
+  caretCoord: {
+    x: number;
+    y: number;
+  };
+  mentionProfiles: Profile[];
+  profilesOpen: boolean;
+  handleMentionClick: (user: any) => void;
+  commentLoading: boolean;
+  gifOpen: boolean;
+  handleKeyDownDelete: (e: KeyboardEvent<Element>) => void;
+  handleGifSubmit: () => Promise<void>;
+  handleGif: (e: FormEvent) => void;
+  results: any[];
+  handleSetGif: (result: any) => void;
+  setGifOpen: (e: boolean) => void;
+  videoLoading: boolean;
+  imageLoading: boolean;
+  uploadImages: (e: FormEvent) => Promise<void>;
+  uploadVideo: (e: FormEvent) => Promise<void>;
+  handleRemoveImage: (e: UploadedMedia) => void;
+  postImagesDispatched?: UploadedMedia[];
+  mappedFeaturedFiles: UploadedMedia[];
+  collectOpen: boolean;
+  enabledCurrencies: Erc20[];
+  audienceTypes: string[];
+  setAudienceType: (e: string) => void;
+  audienceType: string;
+  setEnabledCurrency: (e: string) => void;
+  enabledCurrency: string | undefined;
+  setChargeCollectDropDown: (e: boolean) => void;
+  setAudienceDropDown: (e: boolean) => void;
+  setCurrencyDropDown: (e: boolean) => void;
+  chargeCollectDropDown: boolean;
+  audienceDropDown: boolean;
+  currencyDropDown: boolean;
+  referral: number;
+  setReferral: (e: number) => void;
+  limit: number;
+  setLimit: (e: number) => void;
+  value: number;
+  setValue: (e: number) => void;
+  collectibleDropDown: boolean;
+  setCollectibleDropDown: (e: boolean) => void;
+  collectible: string;
+  setCollectible: (e: string) => void;
+  chargeCollect: string;
+  setChargeCollect: (e: string) => void;
+  limitedDropDown: boolean;
+  setLimitedDropDown: (e: boolean) => void;
+  limitedEdition: string;
+  setLimitedEdition: (e: string) => void;
+  setTimeLimit: (e: string) => void;
+  timeLimit: string;
+  timeLimitDropDown: boolean;
+  setTimeLimitDropDown: (e: boolean) => void;
+  collectNotif: string;
+  canComment: boolean;
+  authStatus: boolean;
+  profileId: string;
+  handleLensSignIn: () => Promise<void>;
+  handleConnect: () => void;
 };
 
 export interface ApprovalArgs {
@@ -246,11 +300,6 @@ export type PersonalTimelineProps = {
   hasCollected: boolean[];
   followerOnly: boolean[];
   collectPost: (
-    id: string,
-    loader?: (e: boolean[]) => void,
-    inputIndex?: number
-  ) => Promise<void>;
-  commentPost: (
     id: string,
     loader?: (e: boolean[]) => void,
     inputIndex?: number
@@ -304,11 +353,6 @@ export type IndividualProps = {
     loader?: (e: boolean[]) => void,
     inputIndex?: number
   ) => Promise<void>;
-  commentPost: (
-    id: string,
-    loader?: (e: boolean[]) => void,
-    inputIndex?: number
-  ) => Promise<void>;
   reactPost: (
     id: string,
     loader?: (e: boolean[]) => void,
@@ -334,6 +378,72 @@ export type IndividualProps = {
   setMirrorPostLoading: (e: boolean[]) => void;
   setReactPostLoading: (e: boolean[]) => void;
   postAmounts: ReactionFeedCountState;
+  commentOpen: string;
+  commentPost: (id: string) => Promise<void>;
+  commentDescription: string;
+  handleCommentDescription: (e: FormEvent) => Promise<void>;
+  textElement: Ref<HTMLTextAreaElement>;
+  caretCoord: {
+    x: number;
+    y: number;
+  };
+  mentionProfiles: Profile[];
+  profilesOpen: boolean;
+  handleMentionClick: (user: any) => void;
+  commentLoading: boolean;
+  gifOpen: boolean;
+  handleKeyDownDelete: (e: KeyboardEvent<Element>) => void;
+  handleGifSubmit: () => Promise<void>;
+  handleGif: (e: FormEvent) => void;
+  results: any[];
+  handleSetGif: (result: any) => void;
+  setGifOpen: (e: boolean) => void;
+  videoLoading: boolean;
+  imageLoading: boolean;
+  uploadImages: (e: FormEvent) => Promise<void>;
+  uploadVideo: (e: FormEvent) => Promise<void>;
+  handleRemoveImage: (e: UploadedMedia) => void;
+  postImagesDispatched?: UploadedMedia[];
+  mappedFeaturedFiles: UploadedMedia[];
+  collectOpen: boolean;
+  enabledCurrencies: Erc20[];
+  audienceTypes: string[];
+  setAudienceType: (e: string) => void;
+  audienceType: string;
+  setEnabledCurrency: (e: string) => void;
+  enabledCurrency: string | undefined;
+  setChargeCollectDropDown: (e: boolean) => void;
+  setAudienceDropDown: (e: boolean) => void;
+  setCurrencyDropDown: (e: boolean) => void;
+  chargeCollectDropDown: boolean;
+  audienceDropDown: boolean;
+  currencyDropDown: boolean;
+  referral: number;
+  setReferral: (e: number) => void;
+  limit: number;
+  setLimit: (e: number) => void;
+  value: number;
+  setValue: (e: number) => void;
+  collectibleDropDown: boolean;
+  setCollectibleDropDown: (e: boolean) => void;
+  collectible: string;
+  setCollectible: (e: string) => void;
+  chargeCollect: string;
+  setChargeCollect: (e: string) => void;
+  limitedDropDown: boolean;
+  setLimitedDropDown: (e: boolean) => void;
+  limitedEdition: string;
+  setLimitedEdition: (e: string) => void;
+  setTimeLimit: (e: string) => void;
+  timeLimit: string;
+  timeLimitDropDown: boolean;
+  setTimeLimitDropDown: (e: boolean) => void;
+  collectNotif: string;
+  canComment: boolean;
+  authStatus: boolean;
+  profileId: string;
+  handleLensSignIn: () => Promise<void>;
+  handleConnect: () => void;
 };
 
 export type CommentsProps = {
@@ -346,11 +456,6 @@ export type CommentsProps = {
   dispatch: Dispatch<AnyAction>;
   address: `0x${string}`;
   followerOnly: boolean[];
-  commentPost: (
-    id: string,
-    loader?: (e: boolean[]) => void,
-    inputIndex?: number
-  ) => Promise<void>;
   reactPost: (
     id: string,
     loader?: (e: boolean[]) => void,
@@ -372,6 +477,73 @@ export type CommentsProps = {
   setReactLoader: (e: boolean[]) => void;
   setMirrorLoader: (e: boolean[]) => void;
   setCollectLoader: (e: boolean[]) => void;
+  authStatus: boolean;
+  profileId: string;
+  commentPost: (id: string) => Promise<void>;
+  handleLensSignIn: () => Promise<void>;
+  handleConnect: () => void;
+  commentDescription: string;
+  commentLoading: boolean;
+  handleCommentDescription: (e: FormEvent) => Promise<void>;
+  textElement: Ref<HTMLTextAreaElement>;
+  caretCoord: {
+    x: number;
+    y: number;
+  };
+  mentionProfiles: Profile[];
+  profilesOpen: boolean;
+  handleMentionClick: (user: any) => void;
+  videoLoading: boolean;
+  imageLoading: boolean;
+  uploadImages: (e: FormEvent) => Promise<void>;
+  uploadVideo: (e: FormEvent) => Promise<void>;
+  handleRemoveImage: (e: UploadedMedia) => void;
+  postImagesDispatched?: UploadedMedia[];
+  mappedFeaturedFiles: UploadedMedia[];
+  handleGifSubmit: () => Promise<void>;
+  handleGif: (e: FormEvent) => void;
+  results: any[];
+  handleSetGif: (result: any) => void;
+  setGifOpen: (e: boolean) => void;
+  gifOpen: boolean;
+  collectOpen: boolean;
+  enabledCurrencies: Erc20[];
+  audienceTypes: string[];
+  setAudienceType: (e: string) => void;
+  audienceType: string;
+  setEnabledCurrency: (e: string) => void;
+  enabledCurrency: string | undefined;
+  setChargeCollectDropDown: (e: boolean) => void;
+  setAudienceDropDown: (e: boolean) => void;
+  setCurrencyDropDown: (e: boolean) => void;
+  chargeCollectDropDown: boolean;
+  audienceDropDown: boolean;
+  currencyDropDown: boolean;
+  referral: number;
+  setReferral: (e: number) => void;
+  limit: number;
+  setLimit: (e: number) => void;
+  value: number;
+  setValue: (e: number) => void;
+  collectibleDropDown: boolean;
+  setCollectibleDropDown: (e: boolean) => void;
+  collectible: string;
+  setCollectible: (e: string) => void;
+  chargeCollect: string;
+  setChargeCollect: (e: string) => void;
+  limitedDropDown: boolean;
+  setLimitedDropDown: (e: boolean) => void;
+  limitedEdition: string;
+  setLimitedEdition: (e: string) => void;
+  setTimeLimit: (e: string) => void;
+  timeLimit: string;
+  timeLimitDropDown: boolean;
+  setTimeLimitDropDown: (e: boolean) => void;
+  collectNotif: string;
+  handleKeyDownDelete: (e: KeyboardEvent<Element>) => void;
+  commentId: string;
+  canComment: boolean;
+  openComment: string
 };
 
 export interface UploadedMedia {
@@ -384,6 +556,139 @@ export interface PostImage {
   type: string;
   altTag: string;
 }
+
+export interface CollectValueType {
+  freeCollectModule?: {
+    followerOnly: boolean;
+  };
+  revertCollectModule?: boolean;
+  feeCollectModule?: {
+    amount: {
+      currency: string;
+      value: string;
+    };
+    recipient: string;
+    referralFee: number;
+    followerOnly: boolean;
+  };
+  limitedFeeCollectModule?: {
+    collectLimit: string;
+    amount: {
+      currency: string;
+      value: string;
+    };
+    recipient: string;
+    referralFee: number;
+    followerOnly: boolean;
+  };
+  limitedTimedFeeCollectModule?: {
+    collectLimit: string;
+    amount: {
+      currency: string;
+      value: string;
+    };
+    recipient: string;
+    referralFee: number;
+    followerOnly: boolean;
+  };
+  timedFeeCollectModule?: {
+    amount: {
+      currency: string;
+      value: string;
+    };
+    recipient: string;
+    referralFee: number;
+    followerOnly: boolean;
+  };
+}
+
+export type ImageUploadsProps = {
+  handleRemoveImage: (e: UploadedMedia) => void;
+  commentLoading: boolean;
+  postImagesDispatched?: UploadedMedia[];
+};
+
+export type MakeCommentProps = {
+  authStatus: boolean;
+  profileId: string;
+  commentPost: (id: string) => Promise<void>;
+  handleLensSignIn: () => Promise<void>;
+  handleConnect: () => void;
+  commentDescription: string;
+  commentLoading: boolean;
+  handleCommentDescription: (e: FormEvent) => Promise<void>;
+  textElement: Ref<HTMLTextAreaElement>;
+  caretCoord: {
+    x: number;
+    y: number;
+  };
+  mentionProfiles: Profile[];
+  profilesOpen: boolean;
+  handleMentionClick: (user: any) => void;
+  videoLoading: boolean;
+  imageLoading: boolean;
+  uploadImages: (e: FormEvent) => Promise<void>;
+  uploadVideo: (e: FormEvent) => Promise<void>;
+  handleRemoveImage: (e: UploadedMedia) => void;
+  postImagesDispatched?: UploadedMedia[];
+  mappedFeaturedFiles: UploadedMedia[];
+  handleGifSubmit: () => Promise<void>;
+  handleGif: (e: FormEvent) => void;
+  results: any[];
+  handleSetGif: (result: any) => void;
+  setGifOpen: (e: boolean) => void;
+  gifOpen: boolean;
+  collectOpen: boolean;
+  enabledCurrencies: Erc20[];
+  audienceTypes: string[];
+  setAudienceType: (e: string) => void;
+  audienceType: string;
+  setEnabledCurrency: (e: string) => void;
+  enabledCurrency: string | undefined;
+  setChargeCollectDropDown: (e: boolean) => void;
+  setAudienceDropDown: (e: boolean) => void;
+  setCurrencyDropDown: (e: boolean) => void;
+  chargeCollectDropDown: boolean;
+  audienceDropDown: boolean;
+  currencyDropDown: boolean;
+  referral: number;
+  setReferral: (e: number) => void;
+  limit: number;
+  setLimit: (e: number) => void;
+  value: number;
+  setValue: (e: number) => void;
+  collectibleDropDown: boolean;
+  setCollectibleDropDown: (e: boolean) => void;
+  collectible: string;
+  setCollectible: (e: string) => void;
+  chargeCollect: string;
+  setChargeCollect: (e: string) => void;
+  limitedDropDown: boolean;
+  setLimitedDropDown: (e: boolean) => void;
+  limitedEdition: string;
+  setLimitedEdition: (e: string) => void;
+  setTimeLimit: (e: string) => void;
+  timeLimit: string;
+  timeLimitDropDown: boolean;
+  setTimeLimitDropDown: (e: boolean) => void;
+  collectNotif: string;
+  dispatch: Dispatch<AnyAction>;
+  handleKeyDownDelete: (e: KeyboardEvent<Element>) => void;
+  commentId: string;
+  canComment: boolean;
+};
+
+export type OptionsCommentProps = {
+  videoLoading: boolean;
+  imageLoading: boolean;
+  commentLoading: boolean;
+  uploadImages: (e: FormEvent) => Promise<void>;
+  uploadVideo: (e: FormEvent) => Promise<void>;
+  setGifOpen: (e: boolean) => void;
+  gifOpen: boolean;
+  collectOpen: boolean;
+  dispatch: Dispatch<AnyAction>;
+};
 
 export interface CollectValueType {
   freeCollectModule?: {

@@ -17,6 +17,7 @@ import { setFollowerOnly } from "@/redux/reducers/followerOnlySlice";
 import { setPurchase } from "@/redux/reducers/purchaseSlice";
 import { setReactionState } from "@/redux/reducers/reactionStateSlice";
 import { setFeedType } from "@/redux/reducers/feedTypeSlice";
+import { setOpenComment } from "@/redux/reducers/openCommentSlice";
 
 const Reactions: FunctionComponent<ReactionProps> = ({
   textColor,
@@ -33,7 +34,6 @@ const Reactions: FunctionComponent<ReactionProps> = ({
   collectPost,
   mirrorPost,
   reactPost,
-  commentPost,
   index,
   mirrorLoading,
   reactLoading,
@@ -46,8 +46,9 @@ const Reactions: FunctionComponent<ReactionProps> = ({
   setCollectLoader,
   setReactLoader,
   setMirrorLoader,
+  openComment,
 }): JSX.Element => {
-  console.log({setReactLoader})
+  console.log({ setReactLoader });
   return (
     <div
       className={`relative w-fit h-fit col-start-1 justify-self-center grid grid-flow-col auto-cols-auto gap-4`}
@@ -58,7 +59,14 @@ const Reactions: FunctionComponent<ReactionProps> = ({
             reactLoading && "animate-spin"
           }`}
           onClick={() =>
-            !reactLoading && reactPost(publication?.id, setReactLoader, index)
+            !reactLoading &&
+            reactPost(
+              publication?.__typename !== "Mirror"
+                ? publication?.id
+                : publication?.mirrorOf.id,
+              setReactLoader,
+              index
+            )
           }
         >
           {reactLoading ? (
@@ -98,7 +106,20 @@ const Reactions: FunctionComponent<ReactionProps> = ({
           className={`relative w-fit h-fit col-start-1 place-self-center cursor-pointer hover:opacity-70 active:scale-95 ${
             followerOnly && "opacity-50"
           }`}
-          onClick={() => commentPost(publication?.id)}
+          onClick={() =>
+            dispatch(
+              setOpenComment(
+                openComment !==
+                  (publication?.__typename !== "Mirror"
+                    ? publication?.id
+                    : publication?.mirrorOf.id)
+                  ? publication?.__typename !== "Mirror"
+                    ? publication?.id
+                    : publication?.mirrorOf.id
+                  : ""
+              )
+            )
+          }
         >
           <FaRegCommentDots color={commentColor} size={15} />
         </div>
@@ -130,7 +151,14 @@ const Reactions: FunctionComponent<ReactionProps> = ({
             followerOnly && "opacity-50"
           } ${mirrorLoading && "animate-spin"}`}
           onClick={() =>
-            !mirrorLoading && mirrorPost(publication.id, setMirrorLoader, index)
+            !mirrorLoading &&
+            mirrorPost(
+              publication?.__typename !== "Mirror"
+                ? publication?.id
+                : publication?.mirrorOf.id,
+              setMirrorLoader,
+              index
+            )
           }
         >
           {mirrorLoading ? (
@@ -199,7 +227,14 @@ const Reactions: FunctionComponent<ReactionProps> = ({
                         actionIndex: index,
                       })
                     )
-                : () => collectPost(publication?.id, setCollectLoader, index)
+                : () =>
+                    collectPost(
+                      publication?.__typename !== "Mirror"
+                        ? publication?.id
+                        : publication?.mirrorOf.id,
+                      setCollectLoader,
+                      index
+                    )
             }
           >
             {collectLoading ? (

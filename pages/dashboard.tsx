@@ -66,16 +66,16 @@ export default function Dashboard() {
                 chromadin dispatcher
               </div>
               <div
-                className="absolute items-center justify-center flex top-1.5 break-words"
+                className="absolute items-center justify-center flex top-1 break-words"
                 id="dispatcherBack"
               >
                 chromadin dispatcher
               </div>
-              <div className="relative items-center justify-center flex top-2 break-words">
+              <div className="relative items-center justify-center flex top-px break-words">
                 chromadin dispatcher
               </div>
             </div>
-            <div className="relative font-arcade w-fit justify-start items-center h-fit py-4 px-3 text-white text-sm preG:text-lg flex flex-col top-1.5">
+            <div className="relative font-arcade w-fit justify-start items-center h-fit py-4 px-3 text-white text-sm preG:text-lg flex flex-col">
               <div
                 className="absolute w-fit h-fit flex items-center justify-center top-2 opacity-70"
                 id="pageBack"

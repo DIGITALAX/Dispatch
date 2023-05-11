@@ -21,7 +21,6 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
   height,
   address,
   collectPost,
-  commentPost,
   reactPost,
   mirrorPost,
   index,
@@ -37,6 +36,7 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
   setCollectLoader,
   setReactLoader,
   setMirrorLoader,
+  openComment
 }): JSX.Element => {
   return (
     <div
@@ -55,7 +55,6 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
         hasMirrored={hasMirrored}
         hasReacted={hasReacted}
         collectPost={collectPost}
-        commentPost={commentPost}
         reactPost={reactPost}
         mirrorPost={mirrorPost}
         address={address}
@@ -71,6 +70,7 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
         setCollectLoader={setCollectLoader}
         setReactLoader={setReactLoader}
         setMirrorLoader={setMirrorLoader}
+        openComment={openComment}
       />
       <div
         className={`relative w-full h-auto grow rounded-md grid grid-flow-row auto-rows-auto p-3 preG:p-6 gap-6 border-2 border-black bg-gradient-to-r from-offBlack via-gray-600 to-black`}

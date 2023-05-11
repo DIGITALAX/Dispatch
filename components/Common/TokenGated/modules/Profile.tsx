@@ -15,7 +15,6 @@ const Profile: FunctionComponent<ProfileSideBarProps> = ({
   hasReacted,
   index,
   collectPost,
-  commentPost,
   reactPost,
   mirrorPost,
   address,
@@ -27,6 +26,7 @@ const Profile: FunctionComponent<ProfileSideBarProps> = ({
   collectAmount,
   mirrorAmount,
   commentAmount,
+  openComment
 }): JSX.Element => {
   const profileImage = createProfilePicture(publication, true);
   return (
@@ -139,7 +139,6 @@ const Profile: FunctionComponent<ProfileSideBarProps> = ({
             collectPost={collectPost}
             mirrorPost={mirrorPost}
             reactPost={reactPost}
-            commentPost={commentPost}
             address={address!}
             publication={publication}
             index={index}
@@ -151,6 +150,7 @@ const Profile: FunctionComponent<ProfileSideBarProps> = ({
             mirrorAmount={mirrorAmount}
             hasCollected={hasCollected ? hasCollected : false}
             commentAmount={commentAmount}
+            openComment={openComment}
           />
         </div>
       </div>

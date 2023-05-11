@@ -17,7 +17,6 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
   hasMore,
   fetchMore,
   address,
-  commentPost,
   collectPost,
   mirrorPost,
   reactPost,
@@ -57,6 +56,68 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
   setCollectPostLoading,
   setMirrorPostLoading,
   setReactPostLoading,
+  commentOpen,
+  commentPost,
+  commentDescription,
+  textElement,
+  handleCommentDescription,
+  commentLoading,
+  caretCoord,
+  mentionProfiles,
+  profilesOpen,
+  handleMentionClick,
+  handleGifSubmit,
+  handleGif,
+  results,
+  handleSetGif,
+  gifOpen,
+  setGifOpen,
+  handleKeyDownDelete,
+  collectNotif,
+  referral,
+  setCollectible,
+  collectibleDropDown,
+  setCollectibleDropDown,
+  collectible,
+  setAudienceDropDown,
+  audienceType,
+  audienceTypes,
+  chargeCollect,
+  limit,
+  limitedEdition,
+  audienceDropDown,
+  setAudienceType,
+  setTimeLimit,
+  timeLimit,
+  timeLimitDropDown,
+  setTimeLimitDropDown,
+  setLimitedEdition,
+  limitedDropDown,
+  setLimitedDropDown,
+  setReferral,
+  setLimit,
+  setChargeCollect,
+  setCurrencyDropDown,
+  chargeCollectDropDown,
+  setChargeCollectDropDown,
+  enabledCurrencies,
+  enabledCurrency,
+  currencyDropDown,
+  setEnabledCurrency,
+  value,
+  setValue,
+  handleLensSignIn,
+  handleConnect,
+  handleRemoveImage,
+  authStatus,
+  videoLoading,
+  profileId,
+  uploadImages,
+  uploadVideo,
+  imageLoading,
+  collectOpen,
+  mappedFeaturedFiles,
+  canComment,
 }): JSX.Element => {
   return (
     <div
@@ -99,7 +160,6 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
             mirrorPost={mirrorPost}
             collectPost={collectPost}
             reactPost={reactPost}
-            commentPost={commentPost}
             followerOnlyMain={followerOnlyMain}
             reactCommentLoading={reactCommentLoading}
             mirrorCommentLoading={mirrorCommentLoading}
@@ -119,6 +179,68 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
             setMirrorPostLoading={setMirrorPostLoading}
             setReactPostLoading={setReactPostLoading}
             postAmounts={reactionAmounts}
+            commentPost={commentPost}
+            commentDescription={commentDescription}
+            textElement={textElement}
+            handleCommentDescription={handleCommentDescription}
+            commentLoading={commentLoading}
+            caretCoord={caretCoord}
+            mentionProfiles={mentionProfiles}
+            profilesOpen={profilesOpen}
+            handleMentionClick={handleMentionClick}
+            handleGifSubmit={handleGifSubmit}
+            handleGif={handleGif}
+            results={results}
+            handleSetGif={handleSetGif}
+            gifOpen={gifOpen}
+            setGifOpen={setGifOpen}
+            handleKeyDownDelete={handleKeyDownDelete}
+            commentOpen={commentOpen}
+            handleLensSignIn={handleLensSignIn}
+            handleConnect={handleConnect}
+            handleRemoveImage={handleRemoveImage}
+            authStatus={authStatus}
+            profileId={profileId}
+            videoLoading={videoLoading}
+            uploadImages={uploadImages}
+            uploadVideo={uploadVideo}
+            imageLoading={imageLoading}
+            mappedFeaturedFiles={mappedFeaturedFiles}
+            collectOpen={collectOpen}
+            enabledCurrencies={enabledCurrencies}
+            audienceDropDown={audienceDropDown}
+            audienceType={audienceType}
+            setAudienceDropDown={setAudienceDropDown}
+            setAudienceType={setAudienceType}
+            value={value}
+            setChargeCollect={setChargeCollect}
+            setChargeCollectDropDown={setChargeCollectDropDown}
+            setCollectible={setCollectible}
+            setCollectibleDropDown={setCollectibleDropDown}
+            setCurrencyDropDown={setCurrencyDropDown}
+            setEnabledCurrency={setEnabledCurrency}
+            setLimit={setLimit}
+            setLimitedDropDown={setLimitedDropDown}
+            setLimitedEdition={setLimitedEdition}
+            setReferral={setReferral}
+            setTimeLimit={setTimeLimit}
+            setTimeLimitDropDown={setTimeLimitDropDown}
+            setValue={setValue}
+            enabledCurrency={enabledCurrency}
+            chargeCollect={chargeCollect}
+            chargeCollectDropDown={chargeCollectDropDown}
+            limit={limit}
+            limitedDropDown={limitedDropDown}
+            limitedEdition={limitedEdition}
+            timeLimit={timeLimit}
+            timeLimitDropDown={timeLimitDropDown}
+            audienceTypes={audienceTypes}
+            referral={referral}
+            canComment={canComment}
+            collectNotif={collectNotif}
+            collectible={collectible}
+            collectibleDropDown={collectibleDropDown}
+            currencyDropDown={currencyDropDown}
           />
         ) : postsLoading ? (
           <div className="relative w-full h-auto flex flex-col gap-4 overflow-y-scroll">
@@ -177,7 +299,6 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
                       collectPost={collectPost}
                       mirrorPost={mirrorPost}
                       reactPost={reactPost}
-                      commentPost={commentPost}
                       address={address}
                       index={index}
                       mirrorLoading={
@@ -216,6 +337,7 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
                           : reactionTimelineAmounts.comment[index]
                       }
                       feedType={feedType.value}
+                      openComment={commentOpen}
                     />
                   );
                 }

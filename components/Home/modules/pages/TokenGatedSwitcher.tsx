@@ -1,6 +1,8 @@
 import useConnect from "@/components/Common/Connect/hooks/useConnect";
 import Wallet from "@/components/Common/Connect/modules/Wallet";
+import useImageUpload from "@/components/Common/Inputs/hooks/useImageUpload";
 import useAllPosts from "@/components/Common/TokenGated/hooks/useAllPosts";
+import useCollectOptions from "@/components/Common/TokenGated/hooks/useCollectOptions";
 import useComment from "@/components/Common/TokenGated/hooks/useComment";
 import useIndividual from "@/components/Common/TokenGated/hooks/useIndividual";
 import useReactions from "@/components/Common/TokenGated/hooks/useReactions";
@@ -35,8 +37,24 @@ const TokenGatedSwitcher: FunctionComponent = (): JSX.Element => {
   const commentAmounts = useSelector(
     (state: RootState) => state.app.commentCountReducer
   );
+  const commentOpen = useSelector(
+    (state: RootState) => state.app.openCommentReducer.value
+  );
+  const authStatus = useSelector(
+    (state: RootState) => state.app.authStatusReducer.value
+  );
+  const canComment = useSelector(
+    (state: RootState) => state.app.canCommentReducer.value
+  );
+  const collectOpen = useSelector(
+    (state: RootState) => state.app.collectOpenReducer.value
+  );
+  const profileId = useSelector(
+    (state: RootState) => state.app.lensProfileReducer.profile?.id
+  );
+
   const dispatch = useDispatch();
-  const { handleLensSignIn } = useConnect();
+  const { handleLensSignIn, handleConnect } = useConnect();
   const {
     followerOnly,
     postsLoading,
@@ -95,12 +113,55 @@ const TokenGatedSwitcher: FunctionComponent = (): JSX.Element => {
     handleGifSubmit,
     handleGif,
     results,
-    gifs,
     handleSetGif,
     gifOpen,
     setGifOpen,
     handleKeyDownDelete,
   } = useComment();
+
+  const {
+    collectNotif,
+    referral,
+    setCollectible,
+    collectibleDropDown,
+    setCollectibleDropDown,
+    collectible,
+    setAudienceDropDown,
+    audienceType,
+    audienceTypes,
+    chargeCollect,
+    limit,
+    limitedEdition,
+    audienceDropDown,
+    setAudienceType,
+    setTimeLimit,
+    timeLimit,
+    timeLimitDropDown,
+    setTimeLimitDropDown,
+    setLimitedEdition,
+    limitedDropDown,
+    setLimitedDropDown,
+    setReferral,
+    setLimit,
+    setChargeCollect,
+    setCurrencyDropDown,
+    chargeCollectDropDown,
+    setChargeCollectDropDown,
+    enabledCurrencies,
+    enabledCurrency,
+    currencyDropDown,
+    setEnabledCurrency,
+    value,
+    setValue,
+  } = useCollectOptions();
+  const {
+    videoLoading,
+    imageLoading,
+    uploadImages,
+    uploadVideo,
+    handleRemoveImage,
+    mappedFeaturedFiles,
+  } = useImageUpload();
 
   switch (auth) {
     case true:
@@ -115,7 +176,6 @@ const TokenGatedSwitcher: FunctionComponent = (): JSX.Element => {
           fetchMore={fetchMore}
           address={address!}
           collectPost={collectPost}
-          commentPost={commentPost}
           reactPost={reactPost}
           mirrorPost={mirrorPost}
           reactLoading={reactFeedLoading}
@@ -153,6 +213,68 @@ const TokenGatedSwitcher: FunctionComponent = (): JSX.Element => {
           setCollectPostLoading={setCollectPostLoading}
           setMirrorPostLoading={setMirrorPostLoading}
           setReactPostLoading={setReactPostLoading}
+          commentPost={commentPost}
+          commentDescription={commentDescription}
+          textElement={textElement}
+          handleCommentDescription={handleCommentDescription}
+          commentLoading={commentLoading}
+          caretCoord={caretCoord}
+          mentionProfiles={mentionProfiles}
+          profilesOpen={profilesOpen}
+          handleMentionClick={handleMentionClick}
+          handleGifSubmit={handleGifSubmit}
+          handleGif={handleGif}
+          results={results}
+          handleSetGif={handleSetGif}
+          gifOpen={gifOpen}
+          setGifOpen={setGifOpen}
+          handleKeyDownDelete={handleKeyDownDelete}
+          commentOpen={commentOpen}
+          handleLensSignIn={handleLensSignIn}
+          handleConnect={handleConnect}
+          handleRemoveImage={handleRemoveImage}
+          authStatus={authStatus}
+          profileId={profileId}
+          videoLoading={videoLoading}
+          uploadImages={uploadImages}
+          uploadVideo={uploadVideo}
+          imageLoading={imageLoading}
+          mappedFeaturedFiles={mappedFeaturedFiles}
+          collectOpen={collectOpen}
+          enabledCurrencies={enabledCurrencies}
+          audienceDropDown={audienceDropDown}
+          audienceType={audienceType}
+          setAudienceDropDown={setAudienceDropDown}
+          setAudienceType={setAudienceType}
+          value={value}
+          setChargeCollect={setChargeCollect}
+          setChargeCollectDropDown={setChargeCollectDropDown}
+          setCollectible={setCollectible}
+          setCollectibleDropDown={setCollectibleDropDown}
+          setCurrencyDropDown={setCurrencyDropDown}
+          setEnabledCurrency={setEnabledCurrency}
+          setLimit={setLimit}
+          setLimitedDropDown={setLimitedDropDown}
+          setLimitedEdition={setLimitedEdition}
+          setReferral={setReferral}
+          setTimeLimit={setTimeLimit}
+          setTimeLimitDropDown={setTimeLimitDropDown}
+          setValue={setValue}
+          enabledCurrency={enabledCurrency}
+          chargeCollect={chargeCollect}
+          chargeCollectDropDown={chargeCollectDropDown}
+          limit={limit}
+          limitedDropDown={limitedDropDown}
+          limitedEdition={limitedEdition}
+          timeLimit={timeLimit}
+          timeLimitDropDown={timeLimitDropDown}
+          audienceTypes={audienceTypes}
+          referral={referral}
+          canComment={canComment}
+          collectNotif={collectNotif}
+          collectible={collectible}
+          collectibleDropDown={collectibleDropDown}
+          currencyDropDown={currencyDropDown}
         />
       );
 
