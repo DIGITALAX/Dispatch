@@ -74,7 +74,20 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
       >
         {(publication?.__typename === "Mirror" ||
           publication?.__typename === "Comment") && (
-          <div className="relative w-fit h-fit row-start-1 justify-self-end self-center grid grid-flow-col auto-cols-auto gap-2">
+          <div
+            className={`relative w-fit h-fit row-start-1 justify-self-end self-center grid grid-flow-col auto-cols-auto gap-2 ${
+              publication?.__typename === "Comment" && "cursor-pointer"
+            }`}
+            onClick={() =>
+              publication?.__typename === "Comment" &&
+              dispatch(
+                setFeedType({
+                  actionValue: publication?.mainPost?.id,
+                  actionIndex: index,
+                })
+              )
+            }
+          >
             <div
               className={`relative w-fit h-fit col-start-1 place-self-center text-xs font-dosis text-offWhite`}
             >

@@ -101,9 +101,9 @@ const Individual: FunctionComponent<IndividualProps> = ({
 }): JSX.Element => {
   return (
     <div className="relative flex flex-col items-start justify-start gap-3 h-full w-full min-w-230">
-      <div className="sticky z-1 w-full h-10 flex flex-col items-center justify-start">
+      <div className="sticky z-1 w-full h-fit flex flex-col items-start justify-start">
         <div
-          className="relative w-full h-full flex items-center cursor-pointer"
+          className="relative w-fit h-fit flex items-start justify-start cursor-pointer"
           onClick={() => {
             dispatch(
               setFeedType({
