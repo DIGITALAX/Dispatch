@@ -57,8 +57,6 @@ const useIndividual = () => {
     false,
   ]);
   const [reactPostLoading, setReactPostLoading] = useState<boolean[]>([false]);
-  const [commentLoading, setCommentLoading] = useState<boolean>(false);
-  const [commentArgs, setCommentArgs] = useState<any[]>([]);
 
   const getPostComments = async (): Promise<void> => {
     setCommentsLoading(true);
