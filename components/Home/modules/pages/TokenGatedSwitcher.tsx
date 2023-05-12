@@ -61,6 +61,9 @@ const TokenGatedSwitcher: FunctionComponent = (): JSX.Element => {
   const commentors = useSelector(
     (state: RootState) => state.app.commentsReducer.value
   );
+  const individualAmounts = useSelector(
+    (state: RootState) => state.app.individualFeedCountReducer
+  );
 
   const dispatch = useDispatch();
   const { handleLensSignIn, handleConnect } = useConnect();
@@ -287,6 +290,7 @@ const TokenGatedSwitcher: FunctionComponent = (): JSX.Element => {
           postImagesDispatched={postImagesDispatched}
           setScrollPos={setScrollPos}
           scrollPos={scrollPos}
+          individualAmounts={individualAmounts}
         />
       );
 

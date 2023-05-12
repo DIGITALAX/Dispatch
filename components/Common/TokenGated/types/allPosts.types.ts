@@ -4,6 +4,7 @@ import {
   Publication,
 } from "@/components/Home/types/lens.types";
 import { CommentFeedCountState } from "@/redux/reducers/commentCountSlice";
+import { IndividualFeedCountState } from "@/redux/reducers/individualFeedCountSlice";
 import { ReactionFeedCountState } from "@/redux/reducers/reactionFeedCountSlice";
 import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
 import { NextRouter } from "next/router";
@@ -266,6 +267,7 @@ export type AllPostsProps = {
   audienceDropDown: boolean;
   currencyDropDown: boolean;
   referral: number;
+  individualAmounts: IndividualFeedCountState;
   setReferral: (e: number) => void;
   limit: number;
   setLimit: (e: number) => void;
@@ -464,6 +466,7 @@ export type IndividualProps = {
   profileId: string;
   handleLensSignIn: () => Promise<void>;
   handleConnect: () => void;
+  individualAmounts: IndividualFeedCountState;
 };
 
 export type CommentsProps = {
