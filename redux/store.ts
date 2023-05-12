@@ -45,6 +45,7 @@ import collectValueTypeReducer from "./reducers/collectValueTypeSlice";
 import openCommentReducer from "./reducers/openCommentSlice";
 import commentsReducer from "./reducers/commentsSlice";
 import paginatedReducer from "./reducers/paginatedSlice";
+import scrollPosReducer from "./reducers/scrollPosSlice";
 
 const reducer = combineReducers({
   lensProfileReducer,
@@ -91,7 +92,8 @@ const reducer = combineReducers({
   collectValueTypeReducer,
   openCommentReducer,
   commentsReducer,
-  paginatedReducer
+  paginatedReducer,
+  scrollPosReducer
 });
 
 export const store = configureStore({

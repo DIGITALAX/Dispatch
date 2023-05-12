@@ -291,6 +291,11 @@ export type AllPostsProps = {
   profileId: string;
   handleLensSignIn: () => Promise<void>;
   handleConnect: () => void;
+  setScrollPos: (e: MouseEvent) => void;
+  scrollPos: {
+    feed: number;
+    timeline: number;
+  };
 };
 
 export interface ApprovalArgs {

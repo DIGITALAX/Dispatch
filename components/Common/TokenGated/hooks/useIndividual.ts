@@ -25,6 +25,7 @@ const useIndividual = () => {
   const feedType = useSelector(
     (state: RootState) => state.app.feedTypeReducer.value
   );
+  const page = useSelector((state: RootState) => state.app.pageReducer.value);
   const commentFeedCount = useSelector(
     (state: RootState) => state.app.commentCountReducer
   );
@@ -335,7 +336,7 @@ const useIndividual = () => {
   }, [feedType]);
 
   useEffect(() => {
-    if (feedType !== "") {
+    if (feedType !== "" && page === "token gated") {
       if (index.message === "Successfully Indexed") {
         getPostComments();
       }

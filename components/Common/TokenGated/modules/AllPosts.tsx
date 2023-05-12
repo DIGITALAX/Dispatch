@@ -119,12 +119,12 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
   collectOpen,
   mappedFeaturedFiles,
   canComment,
-  postImagesDispatched
+  postImagesDispatched,
+  setScrollPos,
+  scrollPos,
 }): JSX.Element => {
   return (
-    <div
-      className="relative w-full h-fit flex flex-col items-start justify-start gap-4"
-    >
+    <div className="relative w-full h-fit flex flex-col items-start justify-start gap-4">
       <div className="relative w-full h-10 flex flex-row items-center justify-end ml-auto gap-4">
         <div className="w-fit h-fit text-white font-arcade text-sm">
           {feedSwitch ? "Profile Feed" : "Creator Timeline"}
@@ -269,6 +269,8 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
             style={{ color: "#131313", fontFamily: "Digi Reg" }}
             scrollThreshold={0.9}
             scrollableTarget={"scrollableDiv"}
+            onScroll={(e) => setScrollPos(e)}
+            initialScrollY={feedSwitch ? scrollPos.feed : scrollPos.timeline}
           >
             <div className="w-full xl:max-w-230 h-full relative flex flex-col gap-4 pb-3">
               {(feedSwitch ? feedDispatch : timelineDispatch)?.map(

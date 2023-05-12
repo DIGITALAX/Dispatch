@@ -33,6 +33,9 @@ const TokenGatedSwitcher: FunctionComponent = (): JSX.Element => {
   const feedSwitch = useSelector(
     (state: RootState) => state.app.feedSwitchReducer.value
   );
+  const scrollPos = useSelector(
+    (state: RootState) => state.app.scrollPosReducer
+  );
   const feedType = useSelector((state: RootState) => state.app.feedTypeReducer);
   const commentAmounts = useSelector(
     (state: RootState) => state.app.commentCountReducer
@@ -69,6 +72,7 @@ const TokenGatedSwitcher: FunctionComponent = (): JSX.Element => {
     fetchMoreTimeline,
     hasMoreTimeline,
     followerOnlyTimeline,
+    setScrollPos,
   } = useAllPosts();
 
   const {
@@ -281,6 +285,8 @@ const TokenGatedSwitcher: FunctionComponent = (): JSX.Element => {
           collectibleDropDown={collectibleDropDown}
           currencyDropDown={currencyDropDown}
           postImagesDispatched={postImagesDispatched}
+          setScrollPos={setScrollPos}
+          scrollPos={scrollPos}
         />
       );
 

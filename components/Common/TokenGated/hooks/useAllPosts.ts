@@ -9,6 +9,7 @@ import { setFeedsRedux } from "@/redux/reducers/feedSlice";
 import { setPaginated } from "@/redux/reducers/paginatedSlice";
 import { setReactionFeedCount } from "@/redux/reducers/reactionFeedCountSlice";
 import { setReactionTimelineCount } from "@/redux/reducers/reactionTimelineCountSlice";
+import { setScrollPosRedux } from "@/redux/reducers/scrollPosSlice";
 import { setTimelinesRedux } from "@/redux/reducers/timelineSlice";
 import { RootState } from "@/redux/store";
 import { useEffect, useState } from "react";
@@ -54,6 +55,10 @@ const useAllPosts = () => {
   const paginated = useSelector(
     (state: RootState) => state.app.paginatedReducer
   );
+  const scrollPos = useSelector(
+    (state: RootState) => state.app.scrollPosReducer
+  );
+  const page = useSelector((state: RootState) => state.app.pageReducer.value);
   const dispatch = useDispatch();
   const [followerOnly, setFollowerOnly] = useState<boolean[]>([]);
   const [postsLoading, setPostsLoading] = useState<boolean>(false);
@@ -601,12 +606,32 @@ const useAllPosts = () => {
     }
   };
 
-  useEffect(() => {
-    if (indexer.message === "Successfully Indexed") {
-      refetchInteractions();
+  const setScrollPos = (e: MouseEvent) => {
+    if (feedSwitch) {
+      dispatch(
+        setScrollPosRedux({
+          actionFeed: (e.target as HTMLDivElement)?.scrollTop,
+          actionTimeline: scrollPos.timeline,
+        })
+      );
+    } else {
+      dispatch(
+        setScrollPosRedux({
+          actionFeed: scrollPos.feed,
+          actionTimeline: (e.target as HTMLDivElement)?.scrollTop,
+        })
+      );
+    }
+  };
 
-      if (feedType !== "") {
-        refetchComments();
+  useEffect(() => {
+    if (page === "token gated") {
+      if (indexer.message === "Successfully Indexed") {
+        refetchInteractions();
+
+        if (feedType !== "") {
+          refetchComments();
+        }
       }
     }
   }, [indexer.message]);
@@ -633,6 +658,7 @@ const useAllPosts = () => {
     fetchMoreTimeline,
     hasMoreTimeline,
     followerOnlyTimeline,
+    setScrollPos,
   };
 };
 
