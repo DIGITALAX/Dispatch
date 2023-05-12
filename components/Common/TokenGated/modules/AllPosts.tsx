@@ -124,7 +124,6 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
   return (
     <div
       className="relative w-full h-fit flex flex-col items-start justify-start gap-4"
-      id="here"
     >
       <div className="relative w-full h-10 flex flex-row items-center justify-end ml-auto gap-4">
         <div className="w-fit h-fit text-white font-arcade text-sm">

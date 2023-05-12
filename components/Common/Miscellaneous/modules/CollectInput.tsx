@@ -1,5 +1,5 @@
 import { FormEvent, FunctionComponent } from "react";
-import { CollectInputProps } from "./types/buttons.types";
+import { CollectInputProps } from "../types/misc.types";
 
 const CollectInput: FunctionComponent<CollectInputProps> = ({
   id,

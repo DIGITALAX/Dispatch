@@ -2,7 +2,7 @@ import { FunctionComponent } from "react";
 import { IoMdArrowDropdown } from "react-icons/io";
 import lodash, { isString } from "lodash";
 import { Erc20 } from "@/components/Home/types/lens.types";
-import { CollectButtonProps } from "./types/buttons.types";
+import { CollectButtonProps } from "../types/misc.types";
 
 const CollectButton: FunctionComponent<CollectButtonProps> = ({
   values,
