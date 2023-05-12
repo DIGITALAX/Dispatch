@@ -209,7 +209,7 @@ const useComment = () => {
       const allProfiles = await searchProfile({
         query: e.target.value.split(" ")[e.target.value.split(" ")?.length - 1],
         type: "PROFILE",
-        limit: 50,
+        limit: 20,
       });
       setMentionProfiles(allProfiles?.data?.search?.items);
     } else {

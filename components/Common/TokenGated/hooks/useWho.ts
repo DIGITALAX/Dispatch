@@ -32,7 +32,7 @@ const useWho = () => {
     try {
       const reactions = await whoReactedublications({
         publicationId: pubId,
-        limit: 30,
+        limit: 10,
       });
       const upvoteArr = lodash.filter(
         reactions?.data?.whoReactedPublication.items,
@@ -42,7 +42,7 @@ const useWho = () => {
       const sortedArr: any[] = arr.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );
-      if (sortedArr?.length < 30) {
+      if (sortedArr?.length < 10) {
         setHasMoreReact(false);
       } else {
         setHasMoreReact(true);
@@ -64,14 +64,14 @@ const useWho = () => {
       }
       const reactions = await whoReactedublications({
         publicationId: pubId,
-        limit: 30,
+        limit: 10,
         cursor: reactionPageInfo?.next,
       });
       const arr: any[] = [...reactions?.data?.whoReactedPublication?.items];
       const sortedArr: any[] = arr.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );
-      if (sortedArr?.length < 30) {
+      if (sortedArr?.length < 10) {
         setHasMoreReact(false);
       } else {
         setHasMoreReact(true);
@@ -88,13 +88,13 @@ const useWho = () => {
     try {
       const mirrors = await whoMirroredPublications({
         whoMirroredPublicationId: pubId,
-        limit: 30,
+        limit: 10,
       });
       const arr: any[] = [...mirrors.data.profiles.items];
       const sortedArr: any[] = arr.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );
-      if (sortedArr?.length < 30) {
+      if (sortedArr?.length < 10) {
         setHasMoreMirror(false);
       } else {
         setHasMoreMirror(true);
@@ -116,14 +116,14 @@ const useWho = () => {
       }
       const mirrors = await whoMirroredPublications({
         whoMirroredPublicationId: pubId,
-        limit: 30,
+        limit: 10,
         cursor: mirrorPageInfo?.next,
       });
       const arr: any[] = [...mirrors.data.profiles.items];
       const sortedArr: any[] = arr.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );
-      if (sortedArr?.length < 30) {
+      if (sortedArr?.length < 10) {
         setHasMoreMirror(false);
       } else {
         setHasMoreMirror(true);
@@ -140,13 +140,13 @@ const useWho = () => {
     try {
       const collects = await whoCollectedPublications({
         publicationId: pubId,
-        limit: 30,
+        limit: 10,
       });
       const arr: any[] = [...collects.data.whoCollectedPublication.items];
       const sortedArr: any[] = arr.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );
-      if (sortedArr?.length < 30) {
+      if (sortedArr?.length < 10) {
         setHasMoreCollect(false);
       } else {
         setHasMoreCollect(true);
@@ -168,14 +168,14 @@ const useWho = () => {
       }
       const collects = await whoCollectedPublications({
         publicationId: pubId,
-        limit: 30,
+        limit: 10,
         cursor: collectPageInfo?.next,
       });
       const arr: any[] = [...collects.data.whoCollectedPublication.items];
       const sortedArr: any[] = arr.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );
-      if (sortedArr?.length < 30) {
+      if (sortedArr?.length < 10) {
         setHasMoreCollect(false);
       } else {
         setHasMoreCollect(true);

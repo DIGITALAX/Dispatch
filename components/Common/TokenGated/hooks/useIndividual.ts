@@ -66,12 +66,12 @@ const useIndividual = () => {
       if (lensProfile) {
         comments = await whoCommentedPublicationsAuth({
           commentsOf: feedType,
-          limit: 30,
+          limit: 10,
         });
       } else {
         comments = await whoCommentedPublications({
           commentsOf: feedType,
-          limit: 30,
+          limit: 10,
         });
       }
       if (!comments || !comments?.data || !comments?.data?.publications) {
@@ -82,7 +82,7 @@ const useIndividual = () => {
       const sortedArr = arr.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );
-      if (sortedArr?.length < 30) {
+      if (sortedArr?.length < 10) {
         setHasMoreComments(false);
       } else {
         setHasMoreComments(true);
@@ -106,7 +106,7 @@ const useIndividual = () => {
         const hasReactedArr = await checkPostReactions(
           {
             commentsOf: feedType,
-            limit: 30,
+            limit: 10,
             commentsOfOrdering: "RANKING",
             commentsRankingFilter: "RELEVANT",
           },
@@ -152,7 +152,7 @@ const useIndividual = () => {
       if (lensProfile) {
         comments = await whoCommentedPublicationsAuth({
           commentsOf: feedType,
-          limit: 30,
+          limit: 10,
           cursor: paginated?.next,
           commentsOfOrdering: "RANKING",
           commentsRankingFilter: "RELEVANT",
@@ -160,7 +160,7 @@ const useIndividual = () => {
       } else {
         comments = await whoCommentedPublications({
           commentsOf: feedType,
-          limit: 30,
+          limit: 10,
           cursor: paginated?.next,
           commentsOfOrdering: "RANKING",
           commentsRankingFilter: "RELEVANT",
@@ -179,7 +179,7 @@ const useIndividual = () => {
       const sortedArr = arr.sort(
         (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
       );
-      if (sortedArr?.length < 30) {
+      if (sortedArr?.length < 10) {
         setHasMoreComments(false);
       }
       dispatch(setCommentsRedux([...commentors, ...sortedArr]));
@@ -202,7 +202,7 @@ const useIndividual = () => {
         const hasReactedArr = await checkPostReactions(
           {
             commentsOf: feedType,
-            limit: 30,
+            limit: 10,
             cursor: paginated?.next,
             commentsOfOrdering: "RANKING",
             commentsRankingFilter: "RELEVANT",
