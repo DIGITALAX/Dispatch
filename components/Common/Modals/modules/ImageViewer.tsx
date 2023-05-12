@@ -23,7 +23,7 @@ const ImageViewerModal: FunctionComponent<ImageViewerProps> = ({
         }
       >
         <div className="relative w-full h-screen grid grid-flow-row auto-rows-auto py-8">
-          <div className="relative w-full h-full row-start-1 grid grid-flow-col auto-cols-auto px-4">
+          <div className="relative w-4/5 h-full row-start-1 grid grid-flow-col auto-cols-auto place-self-center px-4">
             {type === "image/png" ||
             type === "image/gif" ||
             type === "image/webp" ||
