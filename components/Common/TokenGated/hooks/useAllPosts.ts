@@ -443,7 +443,7 @@ const useAllPosts = () => {
       const index = (feedSwitch ? feedDispatch : timelineDispatch)?.findIndex(
         (feed) => feed.id === feedId.value
       );
-      if (index > 0) {
+      if (index !== -1) {
         if (feedSwitch) {
           dispatch(
             setIndividualFeedCount({
@@ -606,7 +606,7 @@ const useAllPosts = () => {
 
   const refetchComments = () => {
     const index = comments?.findIndex((comment) => comment.id === feedId.value);
-    if (index > 0) {
+    if (index !== -1) {
       dispatch(
         setCommentFeedCount({
           actionLike:
