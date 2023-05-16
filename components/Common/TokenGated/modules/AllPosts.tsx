@@ -127,8 +127,6 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
   postDescription,
   handlePostDescription,
   handleGifPost,
-  gifOpenPost,
-  setGifOpenPost,
   textPostElement,
   postLoading,
   caretCoordPost,
@@ -138,14 +136,11 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
   handleMentionClickPost,
   handleSetGifPost,
   handleKeyDownDeletePost,
-  handleRemoveImagePost,
   videoLoadingPost,
   imageLoadingPost,
   setAudienceTypePost,
   mappedFeaturedFilesPost,
-  collectOpenPost,
   valuePost,
-  enabledCurrenciesPost,
   audienceTypePost,
   audienceDropDownPost,
   setAudienceDropDownPost,
@@ -175,8 +170,18 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
   referralPost,
   setReferralPost,
   collectiblePost,
-  audienceTypesPost,
-  resultsPost
+  resultsPost,
+  setMappedFeatureFilesComment,
+  setMappedFeatureFilesPost,
+  uploadImagesComment,
+  uploadImagesPost,
+  setVideoLoadingComment,
+  setVideoLoadingPost,
+  setImageLoadingComment,
+  setImageLoadingPost,
+  collections,
+  setTokenIds,
+  tokenIds,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-fit flex flex-col items-start justify-start gap-4">
@@ -205,6 +210,9 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
       </div>
       <div className="relative w-full h-full flex flex-col xl:flex-row items-start justify-end gap-8">
         <MakePost
+          setTokenIds={setTokenIds}
+          tokenIds={tokenIds}
+          collections={collections}
           tokenGatePost={tokenGatePost}
           postDescription={postDescription}
           textElement={textPostElement}
@@ -218,50 +226,51 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
           handleGif={handleGifPost}
           results={resultsPost}
           handleSetGif={handleSetGifPost}
-          gifOpen={gifOpenPost}
-          setGifOpen={setGifOpenPost}
           handleKeyDownDelete={handleKeyDownDeletePost}
-          handleRemoveImage={handleRemoveImagePost}
+          handleRemoveImage={handleRemoveImage}
           videoLoading={videoLoadingPost}
           uploadImages={uploadImages}
           uploadVideo={uploadVideo}
-          imageLoading={imageLoading}
-          mappedFeaturedFiles={mappedFeaturedFiles}
-          collectOpen={collectOpen}
+          imageLoading={imageLoadingPost}
+          mappedFeaturedFiles={mappedFeaturedFilesPost}
           enabledCurrencies={enabledCurrencies}
-          audienceDropDown={audienceDropDown}
-          audienceType={audienceType}
-          setAudienceDropDown={setAudienceDropDown}
-          setAudienceType={setAudienceType}
-          value={value}
-          setChargeCollect={setChargeCollect}
-          setChargeCollectDropDown={setChargeCollectDropDown}
-          setCollectible={setCollectible}
-          setCollectibleDropDown={setCollectibleDropDown}
-          setCurrencyDropDown={setCurrencyDropDown}
-          setEnabledCurrency={setEnabledCurrency}
-          setLimit={setLimit}
-          setLimitedDropDown={setLimitedDropDown}
-          setLimitedEdition={setLimitedEdition}
-          setReferral={setReferral}
-          setTimeLimit={setTimeLimit}
-          setTimeLimitDropDown={setTimeLimitDropDown}
-          setValue={setValue}
-          enabledCurrency={enabledCurrency}
-          chargeCollect={chargeCollect}
-          chargeCollectDropDown={chargeCollectDropDown}
-          limit={limit}
-          limitedDropDown={limitedDropDown}
-          limitedEdition={limitedEdition}
-          timeLimit={timeLimit}
-          timeLimitDropDown={timeLimitDropDown}
+          audienceDropDown={audienceDropDownPost}
+          audienceType={audienceTypePost}
+          setAudienceDropDown={setAudienceDropDownPost}
+          setAudienceType={setAudienceTypePost}
+          value={valuePost}
+          setChargeCollect={setChargeCollectPost}
+          setChargeCollectDropDown={setChargeCollectDropDownPost}
+          setCollectible={setCollectiblePost}
+          setCollectibleDropDown={setCollectibleDropDownPost}
+          setCurrencyDropDown={setCurrencyDropDownPost}
+          setEnabledCurrency={setEnabledCurrencyPost}
+          setLimit={setLimitPost}
+          setLimitedDropDown={setLimitedDropDownPost}
+          setLimitedEdition={setLimitedEditionPost}
+          setReferral={setReferralPost}
+          setTimeLimit={setTimeLimitPost}
+          setTimeLimitDropDown={setTimeLimitDropDownPost}
+          setValue={setValuePost}
+          enabledCurrency={enabledCurrencyPost}
+          chargeCollect={chargeCollectPost}
+          chargeCollectDropDown={chargeCollectDropDownPost}
+          limit={limitPost}
+          limitedDropDown={limitedDropDownPost}
+          limitedEdition={limitedEditionPost}
+          timeLimit={timeLimitPost}
+          timeLimitDropDown={timeLimitDropDownPost}
           audienceTypes={audienceTypes}
-          referral={referral}
-          collectible={collectible}
-          collectibleDropDown={collectibleDropDown}
-          currencyDropDown={currencyDropDown}
+          referral={referralPost}
+          collectible={collectiblePost}
+          collectibleDropDown={collectibleDropDownPost}
+          currencyDropDown={currencyDropDownPost}
           dispatch={dispatch}
-          postImagesDispatched={postImagesDispatched}
+          postImagesDispatched={postImagesDispatchedPost}
+          uploadImagesPost={uploadImagesPost}
+          setMappedFeatureFilesPost={setMappedFeatureFilesPost}
+          setVideoLoadingPost={setVideoLoadingPost}
+          setImageLoadingPost={setImageLoadingPost}
         />
         {feedType.value !== "" ? (
           <Individual
@@ -357,6 +366,10 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
             currencyDropDown={currencyDropDown}
             postImagesDispatched={postImagesDispatched}
             individualAmounts={individualAmounts}
+            uploadImagesComment={uploadImagesComment}
+            setMappedFeatureFilesComment={setMappedFeatureFilesComment}
+            setVideoLoadingComment={setVideoLoadingComment}
+            setImageLoadingComment={setImageLoadingComment}
           />
         ) : postsLoading ? (
           <div className="relative w-full h-auto flex flex-col gap-4 overflow-y-scroll">
@@ -528,6 +541,12 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
                           currencyDropDown={currencyDropDown}
                           dispatch={dispatch}
                           postImagesDispatched={postImagesDispatched}
+                          uploadImagesComment={uploadImagesComment}
+                          setMappedFeatureFilesComment={
+                            setMappedFeatureFilesComment
+                          }
+                          setVideoLoadingComment={setVideoLoadingComment}
+                          setImageLoadingComment={setImageLoadingComment}
                         />
                       )}
                     </div>

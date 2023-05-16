@@ -12,19 +12,29 @@ import { setPostImages } from "@/redux/reducers/postImageSlice";
 import lodash from "lodash";
 import videoLimitAlert from "@/lib/helpers/videoLimitAlert";
 import compressImageFiles from "@/lib/helpers/compressImageFiles";
+import { setPostGateImages } from "@/redux/reducers/postGatedImageSlice";
 
 const useImageUpload = () => {
   const dispatch = useDispatch();
   const [mainImage, setMainImage] = useState<string>("");
-  const [imageLoading, setImageLoading] = useState<boolean>(false);
-  const [videoLoading, setVideoLoading] = useState<boolean>(false);
-  const [mappedFeaturedFiles, setMappedFeaturedFiles] = useState<
+  const [imageLoadingComment, setImageLoadingComment] =
+    useState<boolean>(false);
+  const [videoLoadingComment, setVideoLoadingComment] =
+    useState<boolean>(false);
+  const [mappedFeaturedFilesComment, setMappedFeaturedFilesComment] = useState<
+    UploadedMedia[]
+  >([]);
+  const [imageLoadingPost, setImageLoadingPost] = useState<boolean>(false);
+  const [videoLoadingPost, setVideoLoadingPost] = useState<boolean>(false);
+  const [mappedFeaturedFilesPost, setMappedFeaturedFilesPost] = useState<
     UploadedMedia[]
   >([]);
   const imagesUploaded = useSelector(
     (state: RootState) => state.app.postImageReducer.value
   );
-
+  const imagesUploadedPost = useSelector(
+    (state: RootState) => state.app.postGatedImageReducer.value
+  );
   const dropValues = useSelector(
     (state: RootState) => state.app.dropDetailsReducer
   );
@@ -98,7 +108,12 @@ const useImageUpload = () => {
     }
   }, [mainImage]);
 
-  const uploadVideo = async (e: FormEvent) => {
+  const uploadVideo = async (
+    e: FormEvent,
+    setVideoLoading: (e: boolean) => void,
+    setMappedFeaturedFiles: (e: UploadedMedia[]) => void,
+    uploadImages: UploadedMedia[]
+  ) => {
     try {
       if ((e as any).target.files.length < 1) {
         return;
@@ -107,13 +122,14 @@ const useImageUpload = () => {
         return;
       }
       setVideoLoading(true);
+
       const response = await fetch("/api/ipfs", {
         method: "POST",
         body: (e.target as HTMLFormElement).files[0],
       });
       let cid = await response.json();
       let newArr = [
-        ...(imagesUploaded as any),
+        ...uploadImages,
         { cid: String(cid?.cid), type: MediaType.Video },
       ];
       setMappedFeaturedFiles(newArr);
@@ -123,9 +139,13 @@ const useImageUpload = () => {
     setVideoLoading(false);
   };
 
-  const handleRemoveImage = (image: UploadedMedia): void => {
+  const handleRemoveImage = (
+    image: UploadedMedia,
+    setMappedFeaturedFiles: (e: UploadedMedia[]) => void,
+    uploadImages: UploadedMedia[]
+  ): void => {
     const cleanedArray = lodash.filter(
-      imagesUploaded,
+      uploadImages,
       (uploaded) => uploaded.cid !== image.cid
     );
     setMappedFeaturedFiles(cleanedArray);
@@ -133,88 +153,92 @@ const useImageUpload = () => {
 
   const uploadImages = async (
     e: FormEvent | File,
-    canvas?: boolean
+    setImageLoading: (e: boolean) => void,
+    setMappedFeaturedFiles: (e: UploadedMedia[]) => void,
+    uploadedImages: UploadedMedia[]
   ): Promise<void> => {
-    if (!canvas) {
-      if ((e as any)?.target?.files?.length < 1) {
-        return;
-      }
-    }
     let finalImages: UploadedMedia[] = [];
-    setImageLoading(true);
-    if (canvas) {
-      try {
-        const compressedImage = await compressImageFiles(e as File);
-        const response = await fetch("/api/ipfs", {
-          method: "POST",
-          body: compressedImage as any,
-        });
-        let cid = await response.json();
-        finalImages.push({
-          cid: String(cid?.cid),
-          type: MediaType.Image,
-        });
-        setMappedFeaturedFiles([...finalImages]);
-      } catch (err: any) {
-        console.error(err.message);
-      }
-      setImageLoading(false);
-    } else {
-      if (fileLimitAlert((e as any).target.files[0])) {
-        setImageLoading(false);
-        return;
-      }
-      Array.from(((e as FormEvent).target as HTMLFormElement)?.files).map(
-        async (_, index: number) => {
-          try {
-            const compressedImage = await compressImageFiles(
-              (e as any).target.files[index] as File
-            );
-            const response = await fetch("/api/ipfs", {
-              method: "POST",
-              body: compressedImage as any,
-            });
-            if (response.status !== 200) {
-              setImageLoading(false);
-            } else {
-              let cid = await response.json();
-              finalImages.push({
-                cid: String(cid?.cid),
-                type: MediaType.Image,
-              });
-              if (
-                finalImages?.length ===
-                ((e as FormEvent).target as HTMLFormElement).files?.length
-              ) {
-                let newArr = [...(imagesUploaded as any), ...finalImages];
-                setMappedFeaturedFiles(newArr);
-              }
-            }
-          } catch (err: any) {
-            console.error(err.message);
-          }
-        }
-      );
+    if ((e as any).target.files.length < 1) {
+      return;
     }
+    setImageLoading(true);
+
+    if (fileLimitAlert((e as any).target.files[0])) {
+      setImageLoading(false);
+      return;
+    }
+    Array.from(((e as FormEvent).target as HTMLFormElement)?.files).map(
+      async (_, index: number) => {
+        try {
+          const compressedImage = await compressImageFiles(
+            (e as any).target.files[index] as File
+          );
+          const response = await fetch("/api/ipfs", {
+            method: "POST",
+            body: compressedImage as any,
+          });
+          if (response.status !== 200) {
+            setImageLoading(false);
+          } else {
+            let cid = await response.json();
+            finalImages.push({
+              cid: String(cid?.cid),
+              type: MediaType.Image,
+            });
+            if (
+              finalImages?.length ===
+              ((e as FormEvent).target as HTMLFormElement).files?.length
+            ) {
+              let newArr = [...(uploadedImages as any), ...finalImages];
+
+              setMappedFeaturedFiles(newArr);
+              setImageLoading(false);
+            }
+          }
+        } catch (err: any) {
+          console.error(err.message);
+        }
+      }
+    );
   };
 
   useEffect(() => {
-    if (mappedFeaturedFiles.length > 3) {
-      setMappedFeaturedFiles(mappedFeaturedFiles.slice(0, 4));
-      dispatch(setPostImages(mappedFeaturedFiles.slice(0, 4)));
+    if (mappedFeaturedFilesComment.length > 3) {
+      setMappedFeaturedFilesComment(mappedFeaturedFilesComment.slice(0, 4));
+      dispatch(setPostImages(mappedFeaturedFilesComment.slice(0, 4)));
     } else {
-      dispatch(setPostImages(mappedFeaturedFiles));
+      dispatch(setPostImages(mappedFeaturedFilesComment));
     }
-  }, [mappedFeaturedFiles]);
+  }, [mappedFeaturedFilesComment]);
+
+  useEffect(() => {
+    if (mappedFeaturedFilesPost.length > 3) {
+      setMappedFeaturedFilesPost(mappedFeaturedFilesPost.slice(0, 4));
+      dispatch(setPostGateImages(mappedFeaturedFilesPost.slice(0, 4)));
+    } else {
+      dispatch(setPostGateImages(mappedFeaturedFilesPost));
+    }
+  }, [mappedFeaturedFilesPost]);
 
   return {
     uploadImage,
     handleRemoveImage,
-    imageLoading,
-    videoLoading,
+    imageLoadingComment,
+    videoLoadingComment,
     uploadVideo,
     uploadImages,
-    mappedFeaturedFiles,
+    mappedFeaturedFilesComment,
+    videoLoadingPost,
+    imageLoadingPost,
+    mappedFeaturedFilesPost,
+    setMappedFeaturedFilesComment,
+    setMappedFeaturedFilesPost,
+    imagesUploaded,
+    imagesUploadedPost,
+    setImageLoadingPost,
+    setVideoLoadingPost,
+    setImageLoadingComment,
+    setVideoLoadingComment,
   };
 };
 

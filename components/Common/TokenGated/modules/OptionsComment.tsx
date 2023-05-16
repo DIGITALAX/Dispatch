@@ -1,9 +1,8 @@
 import { INFURA_GATEWAY } from "@/lib/constants";
-import { RootState } from "@/redux/store";
+
 import Image from "next/image";
 import { FormEvent, FunctionComponent } from "react";
 import { AiOutlineLoading } from "react-icons/ai";
-import { useSelector } from "react-redux";
 import { setCollectOpen } from "@/redux/reducers/collectOpenSlice";
 import { OptionsCommentProps } from "../types/allPosts.types";
 
@@ -17,15 +16,17 @@ const OptionsComment: FunctionComponent<OptionsCommentProps> = ({
   setGifOpen,
   collectOpen,
   dispatch,
+  setVideoLoading,
+  setMappedFeatureFiles,
+  uploadedImages,
+  setImageLoading,
+  imagesRedux
 }): JSX.Element => {
-  const postImages = useSelector(
-    (state: RootState) => state.app.postImageReducer.value
-  );
   return (
     <div className="relative w-fit h-fit flex flex-row gap-2 pl-2">
       <div
         className={`relative w-4 h-4 items-center flex cursor-pointer ${
-          postImages?.length === 4 && "opacity-20"
+          imagesRedux?.length === 4 && "opacity-20"
         }`}
         onClick={() => {
           dispatch(setCollectOpen(false));
@@ -43,13 +44,21 @@ const OptionsComment: FunctionComponent<OptionsCommentProps> = ({
         className={`relative w-4 h-4 items-center flex ${
           !commentLoading &&
           !imageLoading &&
-          (!postImages || (postImages as any)?.length < 4) &&
+          (!imagesRedux || (imagesRedux as any)?.length < 4) &&
           "cursor-pointer active:scale-95"
         } ${imageLoading && "animate-spin"} ${
-          postImages?.length === 4 && "opacity-20"
+          imagesRedux?.length === 4 && "opacity-20"
         }`}
         onChange={(e: FormEvent) => {
-          !commentLoading ? uploadImages(e) : {};
+          !commentLoading
+            ? uploadImages(
+                e,
+                setImageLoading,
+                setMappedFeatureFiles,
+                uploadedImages,
+                
+              )
+            : {};
         }}
       >
         {!imageLoading ? (
@@ -72,7 +81,7 @@ const OptionsComment: FunctionComponent<OptionsCommentProps> = ({
           name="images"
           className="caret-transparent"
           disabled={
-            imageLoading || commentLoading || postImages?.length === 4
+            imageLoading || commentLoading || imagesRedux?.length === 4
               ? true
               : false
           }
@@ -82,13 +91,21 @@ const OptionsComment: FunctionComponent<OptionsCommentProps> = ({
         className={`relative w-4 h-4 items-center flex ${
           !commentLoading &&
           !videoLoading &&
-          (!postImages || (postImages as any)?.length < 4) &&
+          (!imagesRedux || (imagesRedux as any)?.length < 4) &&
           "cursor-pointer active:scale-95"
         } ${videoLoading && "animate-spin"} ${
-          postImages?.length === 4 && "opacity-20"
+          imagesRedux?.length === 4 && "opacity-20"
         }`}
         onChange={(e: FormEvent) => {
-          !commentLoading ? uploadVideo(e) : {};
+          !commentLoading
+            ? uploadVideo(
+                e,
+                setVideoLoading,
+                setMappedFeatureFiles,
+                uploadedImages,
+                
+              )
+            : {};
         }}
       >
         {!videoLoading ? (
@@ -111,7 +128,7 @@ const OptionsComment: FunctionComponent<OptionsCommentProps> = ({
           name="video"
           className="caret-transparent"
           disabled={
-            videoLoading || commentLoading || postImages?.length === 4
+            videoLoading || commentLoading || imagesRedux?.length === 4
               ? true
               : false
           }

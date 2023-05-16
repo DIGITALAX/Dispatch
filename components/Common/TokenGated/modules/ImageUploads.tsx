@@ -8,15 +8,20 @@ const ImageUploads: FunctionComponent<ImageUploadsProps> = ({
   handleRemoveImage,
   commentLoading,
   postImagesDispatched,
+  setMappedFeatureFiles,
+  uploadImages,
+  size,
 }): JSX.Element => {
   return (
-    <div className="relative w-full h-fit grid grid-flow-col auto-cols-auto">
+    <div className={`relative w-full grid grid-flow-col auto-cols-auto  h-fit`}>
       <div className="relative w-fit h-full overflow-x-scroll grid grid-flow-col auto-cols-auto gap-2">
         {postImagesDispatched?.map((image: UploadedMedia, index: number) => {
           return (
             <div
               key={index}
-              className={`relative w-8 h-8 border-2 border-black rounded-lg bg-spots grid grid-flow-col auto-cols-auto col-start-${
+              className={`relative ${
+                size ? `w-32 h-32` : "w-8 h-8"
+              } border-2 border-black rounded-lg bg-spots grid grid-flow-col auto-cols-auto col-start-${
                 index + 1
               }`}
             >
@@ -53,7 +58,13 @@ const ImageUploads: FunctionComponent<ImageUploadsProps> = ({
                     !commentLoading && "cursor-pointer active:scale-95"
                   }`}
                   onClick={() => {
-                    !commentLoading ? handleRemoveImage(image) : {};
+                    !commentLoading
+                      ? handleRemoveImage(
+                          image,
+                          setMappedFeatureFiles,
+                          uploadImages
+                        )
+                      : {};
                   }}
                 >
                   <RiCloseCircleFill color="white" size={20} />

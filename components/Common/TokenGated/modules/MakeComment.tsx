@@ -10,6 +10,7 @@ import { MakeCommentProps } from "../types/allPosts.types";
 import CollectButton from "../../Miscellaneous/modules/CollectButton";
 import CollectInput from "../../Miscellaneous/modules/CollectInput";
 import OptionsComment from "./OptionsComment";
+import { setCollectOpen } from "@/redux/reducers/collectOpenSlice";
 
 const MakeComment: FunctionComponent<MakeCommentProps> = ({
   authStatus,
@@ -76,17 +77,22 @@ const MakeComment: FunctionComponent<MakeCommentProps> = ({
   handleKeyDownDelete,
   commentId,
   canComment,
+  setMappedFeatureFilesComment,
+  uploadImagesComment,
+  setVideoLoadingComment,
+  setImageLoadingComment,
 }): JSX.Element => {
-  
   return (
-    <div className="relative w-full h-60 flex flex-col ">
-      <div className="relative w-full h-full rounded-br-2xl rounded-tr-2xl border-2 border-black bg-gradient-to-r from-offBlack via-gray-600 to-black p-4 flex flex-col gap-3">
+    <div className="relative w-full h-60 flex flex-col">
+      <div className="relative w-full h-full rounded-2xl border-2 border-black bg-gradient-to-r from-offBlack via-gray-600 to-black p-4 flex flex-col gap-3">
         {(mappedFeaturedFiles?.length !== 0 ||
           postImagesDispatched?.length !== 0) && (
           <ImageUploads
             handleRemoveImage={handleRemoveImage}
             commentLoading={commentLoading}
             postImagesDispatched={postImagesDispatched}
+            setMappedFeatureFiles={setMappedFeatureFilesComment}
+            uploadImages={uploadImagesComment}
           />
         )}
         {gifOpen ? (
@@ -346,6 +352,12 @@ const MakeComment: FunctionComponent<MakeCommentProps> = ({
               gifOpen={gifOpen}
               collectOpen={collectOpen}
               dispatch={dispatch}
+              setMappedFeatureFiles={setMappedFeatureFilesComment}
+              uploadedImages={uploadImagesComment}
+              setVideoLoading={setVideoLoadingComment}
+              setImageLoading={setImageLoadingComment}
+              imagesRedux={postImagesDispatched}
+              setCollectOpen={setCollectOpen}
             />
           </div>
           <div className="relative w-full h-fit justify-end flex flex-row gap-2 items-center">

@@ -1,5 +1,6 @@
 import {
   CHROMADIN_COLLECTION_CONTRACT,
+  CHROMADIN_NFT_CONTRACT,
   LENS_HUB_PROXY_ADDRESS_MATIC,
 } from "@/lib/constants";
 import { FormEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
@@ -26,7 +27,6 @@ import { setIndexModal } from "@/redux/reducers/indexModalSlice";
 import getPostHTML from "@/lib/helpers/commentHTML";
 import { Profile } from "@/components/Home/types/lens.types";
 import getCaretPos from "@/lib/helpers/getCaretPos";
-import { setPostImages } from "@/redux/reducers/postImageSlice";
 import { waitForTransaction } from "@wagmi/core";
 import { MediaType, UploadedMedia } from "../types/allPosts.types";
 import { searchProfile } from "@/graphql/lens/queries/searchProfile";
@@ -49,7 +49,6 @@ const useMakePost = () => {
     x: 0,
     y: 0,
   });
-  const [gifOpen, setGifOpen] = useState<boolean>(false);
   const [profilesOpen, setProfilesOpen] = useState<boolean>(false);
   const textElement = useRef<HTMLTextAreaElement>(null);
   const [mentionProfiles, setMentionProfiles] = useState<Profile[]>([]);
@@ -57,13 +56,13 @@ const useMakePost = () => {
   const [gifs, setGifs] = useState<UploadedMedia[]>(
     JSON.parse(getPostData() || "{}").images || []
   );
-  const [searchGif, setSearchGif] = useState<boolean>(false);
+  const [searchGif, setSearchGif] = useState<string>("");
   const [postHTML, setPostHTML] = useState<string>("");
   const [tokenIds, setTokenIds] = useState<string[]>([]);
   const { signTypedDataAsync } = useSignTypedData();
   const dispatch = useDispatch();
   const profileId = useSelector(
-    (state: RootState) => state.app.lensProfileReducer.profile?.id
+    (state: RootState) => state.app.lensProfileReducer.profile
   );
   const dispatcher = useSelector(
     (state: RootState) => state.app.dispatcherReducer.value
@@ -73,6 +72,9 @@ const useMakePost = () => {
   );
   const collectModuleType = useSelector(
     (state: RootState) => state?.app?.collectValueTypeReducer?.type
+  );
+  const collections = useSelector(
+    (state: RootState) => state.app.allCollectionsReducer.value
   );
 
   const { config, isSuccess } = usePrepareContractWrite({
@@ -228,8 +230,9 @@ const useMakePost = () => {
     setPostLoading(false);
     setPostDescription("");
     setPostHTML("");
+    setTokenIds([]);
     setGifs([]);
-    dispatch(setPostGateImages(undefined));
+    dispatch(setPostGateImages([]));
     // (document as any).querySelector("#highlighted-content").innerHTML = "";
     removePostData();
     dispatch(
@@ -243,8 +246,12 @@ const useMakePost = () => {
   const uploadMetadataHandler = async (
     data: EncryptedMetadata
   ): Promise<string> => {
-    // Upload the encrypted metadata to your server and return a publicly accessible url
-    return Promise.resolve("test");
+    const response = await fetch("/api/ipfs", {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+    let responseJSON = await response.json();
+    return Promise.resolve("ipfs://" + responseJSON.cid);
   };
 
   const tokenGatePost = async (): Promise<void> => {
@@ -262,12 +269,12 @@ const useMakePost = () => {
       const sdk = await LensGatedSDK.create({
         provider: new Web3Provider(window?.ethereum as any),
         signer: signer as Signer,
-        env: LensEnvironment.Mumbai,
+        env: LensEnvironment.Polygon,
       });
 
       await sdk.connect({
-        address: profileId,
-        env: LensEnvironment.Mumbai,
+        address: profileId?.ownedBy,
+        env: LensEnvironment.Polygon,
       });
 
       const contentURIValue = await uploadPostContent(
@@ -278,114 +285,121 @@ const useMakePost = () => {
         true
       );
 
-      const { contentURI, encryptedMetadata } = await sdk.gated.encryptMetadata(
-        contentURIValue,
-        profileId,
-        {
-          nft: {
-            contractAddress: CHROMADIN_COLLECTION_CONTRACT,
-            chainID: 137,
-            contractType: ContractType.Erc721,
-            tokenIds: tokenIds,
-          },
-        },
-        uploadMetadataHandler
-      );
-
-      if (dispatcher) {
-        result = await createDispatcherPostData({
-          profileId: profileId,
-          contentURI: contentURI,
-          collectModule: collectModuleType,
-          referenceModule: {
-            followerOnlyReferenceModule: false,
-          },
-          gated: {
+      const { contentURI, encryptedMetadata } =
+        await sdk.gated.encryptMetadata(
+          contentURIValue,
+          profileId?.id,
+          {
             nft: {
-              contractAddress: CHROMADIN_COLLECTION_CONTRACT,
+              contractAddress: CHROMADIN_NFT_CONTRACT,
               chainID: 137,
               contractType: ContractType.Erc721,
-              tokenIds: tokenIds,
+              tokenIds: collections.filter((item) => {
+                return tokenIds.some((tokenId) =>
+                  item.tokenIds.includes(tokenId)
+                );
+              }),
             },
-            encryptedSymmetricKey:
-              encryptedMetadata?.encryptionParams.providerSpecificParams
-                .encryptionKey,
           },
-        });
-        clearPost();
-        setTimeout(async () => {
-          await handleIndexCheck(
-            result?.data?.createPostViaDispatcher?.txHash,
-            dispatch,
-            true
-          );
-        }, 7000);
-      } else {
-        result = await createPostTypedData({
-          profileId: profileId,
-          contentURI: contentURI,
-          collectModule: collectModuleType,
-          referenceModule: {
-            followerOnlyReferenceModule: false,
-          },
-          gated: {
-            nft: {
-              contractAddress: CHROMADIN_COLLECTION_CONTRACT,
-              chainID: 137,
-              contractType: ContractType.Erc721,
-              tokenIds: tokenIds,
-            },
-            encryptedSymmetricKey:
-              encryptedMetadata?.encryptionParams.providerSpecificParams
-                .encryptionKey,
-          },
-        });
+          uploadMetadataHandler
+        );
 
-        const typedData: any = result.data.createPostTypedData.typedData;
+      console.log({ contentURI, encryptedMetadata });
 
-        const signature: any = await signTypedDataAsync({
-          domain: omit(typedData?.domain, ["__typename"]),
-          types: omit(typedData?.types, ["__typename"]) as any,
-          value: omit(typedData?.value, ["__typename"]) as any,
-        });
+      // if (dispatcher) {
+      //   result = await createDispatcherPostData({
+      //     profileId: profileId?.id,
+      //     contentURI: contentURI,
+      //     collectModule: collectModuleType,
+      //     referenceModule: {
+      //       followerOnlyReferenceModule: false,
+      //     },
+      //     gated: {
+      //       nft: {
+      //         contractAddress: CHROMADIN_COLLECTION_CONTRACT,
+      //         chainID: 137,
+      //         contractType: ContractType.Erc721,
+      //         tokenIds: tokenIds,
+      //       },
+      //       encryptedSymmetricKey:
+      //         encryptedMetadata?.encryptionParams.providerSpecificParams
+      //           .encryptionKey,
+      //     },
+      //   });
+      //   clearPost();
+      //   setTimeout(async () => {
+      //     await handleIndexCheck(
+      //       result?.data?.createPostViaDispatcher?.txHash,
+      //       dispatch,
+      //       true
+      //     );
+      //   }, 7000);
+      // } else {
+      //   result = await createPostTypedData({
+      //     profileId: profileId?.id,
+      //     contentURI: contentURI,
+      //     collectModule: collectModuleType,
+      //     referenceModule: {
+      //       followerOnlyReferenceModule: false,
+      //     },
+      //     gated: {
+      //       nft: {
+      //         contractAddress: CHROMADIN_COLLECTION_CONTRACT,
+      //         chainID: 137,
+      //         contractType: ContractType.Erc721,
+      //         tokenIds: tokenIds,
+      //       },
+      //       encryptedSymmetricKey:
+      //         encryptedMetadata?.encryptionParams.providerSpecificParams
+      //           .encryptionKey,
+      //     },
+      //   });
 
-        const broadcastResult: any = await broadcast({
-          id: result?.data?.createPostTypedData?.id,
-          signature,
-        });
+      //   const typedData: any = result.data.createPostTypedData.typedData;
 
-        if (broadcastResult?.data?.broadcast?.__typename !== "RelayerResult") {
-          const { v, r, s } = splitSignature(signature);
+      //   const signature: any = await signTypedDataAsync({
+      //     domain: omit(typedData?.domain, ["__typename"]),
+      //     types: omit(typedData?.types, ["__typename"]) as any,
+      //     value: omit(typedData?.value, ["__typename"]) as any,
+      //   });
 
-          const postArgs = {
-            profileId: typedData.value.profileId,
-            contentURI: typedData.value.contentURI,
-            profileIdPointed: typedData.value.profileIdPointed,
-            pubIdPointed: typedData.value.pubIdPointed,
-            referenceModuleData: typedData.value.referenceModuleData,
-            referenceModule: typedData.value.referenceModule,
-            referenceModuleInitData: typedData.value.referenceModuleInitData,
-            collectModule: typedData.value.collectModule,
-            collectModuleInitData: typedData.value.collectModuleInitData,
-            sig: {
-              v,
-              r,
-              s,
-              deadline: typedData.value.deadline,
-            },
-          };
-          setPostArgs(postArgs);
-        } else {
-          clearPost();
-          setTimeout(async () => {
-            await handleIndexCheck(
-              broadcastResult?.data?.broadcast?.txHash,
-              dispatch,
-              true
-            );
-          }, 7000);
-        }
-      }
+      //   const broadcastResult: any = await broadcast({
+      //     id: result?.data?.createPostTypedData?.id,
+      //     signature,
+      //   });
+
+      //   if (broadcastResult?.data?.broadcast?.__typename !== "RelayerResult") {
+      //     const { v, r, s } = splitSignature(signature);
+
+      //     const postArgs = {
+      //       profileId: typedData.value.profileId,
+      //       contentURI: typedData.value.contentURI,
+      //       profileIdPointed: typedData.value.profileIdPointed,
+      //       pubIdPointed: typedData.value.pubIdPointed,
+      //       referenceModuleData: typedData.value.referenceModuleData,
+      //       referenceModule: typedData.value.referenceModule,
+      //       referenceModuleInitData: typedData.value.referenceModuleInitData,
+      //       collectModule: typedData.value.collectModule,
+      //       collectModuleInitData: typedData.value.collectModuleInitData,
+      //       sig: {
+      //         v,
+      //         r,
+      //         s,
+      //         deadline: typedData.value.deadline,
+      //       },
+      //     };
+      //     setPostArgs(postArgs);
+      //   } else {
+      //     clearPost();
+      //     setTimeout(async () => {
+      //       await handleIndexCheck(
+      //         broadcastResult?.data?.broadcast?.txHash,
+      //         dispatch,
+      //         true
+      //       );
+      //     }, 7000);
+      //   }
+      // }
     } catch (err: any) {
       console.error(err.message);
     }
@@ -454,15 +468,21 @@ const useMakePost = () => {
   }, []);
 
   useEffect(() => {
-    dispatch(setPostImages(gifs));
+    dispatch(setPostGateImages(gifs));
   }, [gifs]);
+
+  useEffect(() => {
+    if (searchGif === "" || searchGif === " ") {
+      setResults([]);
+    }
+  }, [searchGif]);
 
   useEffect(() => {
     if (document.querySelector("#highlighted-content")) {
       document.querySelector("#highlighted-content")!.innerHTML =
         postHTML.length === 0 ? "Have something to say?" : postHTML;
     }
-  }, [postHTML, gifOpen]);
+  }, [postHTML]);
 
   return {
     tokenGatePost,
@@ -479,9 +499,9 @@ const useMakePost = () => {
     results,
     gifs,
     handleSetGif,
-    gifOpen,
-    setGifOpen,
     handleKeyDownDelete,
+    tokenIds,
+    setTokenIds,
   };
 };
 

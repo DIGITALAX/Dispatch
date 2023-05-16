@@ -99,6 +99,11 @@ const Individual: FunctionComponent<IndividualProps> = ({
   canComment,
   postImagesDispatched,
   individualAmounts,
+  setMappedFeatureFilesComment,
+  uploadImagesComment,
+  setVideoLoadingComment,
+  setImageLoadingComment,
+
 }): JSX.Element => {
   return (
     <div className="relative flex flex-col items-start justify-start gap-3 h-full w-full min-w-230">
@@ -212,6 +217,10 @@ const Individual: FunctionComponent<IndividualProps> = ({
               currencyDropDown={currencyDropDown}
               dispatch={dispatch}
               postImagesDispatched={postImagesDispatched}
+              setImageLoadingComment={setImageLoadingComment}
+              setMappedFeatureFilesComment={setMappedFeatureFilesComment}
+              setVideoLoadingComment={setVideoLoadingComment}
+              uploadImagesComment={uploadImagesComment}
             />
           )}
         </div>

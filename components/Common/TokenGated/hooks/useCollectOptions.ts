@@ -14,6 +14,7 @@ const useCollectOptions = () => {
   const collectOpen = useSelector(
     (state: RootState) => state.app.collectOpenReducer.value
   );
+  const page = useSelector((state: RootState) => state.app.pageReducer.value);
   const [enabledCurrencies, setEnabledCurrencies] = useState<Erc20[]>([]);
   const [audienceType, setAudienceType] = useState<string>("everyone");
   const [enabledCurrency, setEnabledCurrency] = useState<string>();
@@ -35,28 +36,52 @@ const useCollectOptions = () => {
   const { address } = useAccount();
   const audienceTypes: string[] = ["followers", "everyone"];
   const [collectNotif, setCollectNotif] = useState<string>("");
+  const [audienceTypePost, setAudienceTypePost] = useState<string>("everyone");
+  const [enabledCurrencyPost, setEnabledCurrencyPost] = useState<string>();
+  const [chargeCollectDropDownPost, setChargeCollectDropDownPost] =
+    useState<boolean>(false);
+  const [audienceDropDownPost, setAudienceDropDownPost] =
+    useState<boolean>(false);
+  const [currencyDropDownPost, setCurrencyDropDownPost] =
+    useState<boolean>(false);
+  const [limitedDropDownPost, setLimitedDropDownPost] =
+    useState<boolean>(false);
+  const [limitedEditionPost, setLimitedEditionPost] = useState<string>("no");
+  const [collectibleDropDownPost, setCollectibleDropDownPost] =
+    useState<boolean>(false);
+  const [timeLimitPost, setTimeLimitPost] = useState<string>("no");
+  const [timeLimitDropDownPost, setTimeLimitDropDownPost] =
+    useState<boolean>(false);
+  const [chargeCollectPost, setChargeCollectPost] = useState<string>("no");
+  const [collectiblePost, setCollectiblePost] = useState<string>("yes");
+  const [limitPost, setLimitPost] = useState<number>(1);
+  const [valuePost, setValuePost] = useState<number>(0);
+  const [referralPost, setReferralPost] = useState<number>(0);
+  const [collectNotifPost, setCollectNotifPost] = useState<string>("");
 
   useMemo(() => {
-    if (collectOpen) {
-      try {
-        availableCurrencies(setEnabledCurrencies, setEnabledCurrency);
-      } catch (err) {
-        console.error(err);
-      }
+    try {
+      availableCurrencies(
+        setEnabledCurrencies,
+        setEnabledCurrency,
+        setEnabledCurrencyPost
+      );
+    } catch (err) {
+      console.error(err);
     }
-  }, [collectOpen]);
+  }, [collectOpen, page]);
 
-  const handleCollectValues = (): void => {
+  const handleCollectValuesComment = (): void => {
     if (value <= 0 && chargeCollect === "yes") {
-      setCollectNotif("Please set a Creator Award Value for your comment!");
+      setCollectNotifPost("Please set a Creator Award Value for your comment!");
       return;
     } else if (limitedEdition && limit < 1 && chargeCollect === "yes") {
-      setCollectNotif(
+      setCollectNotifPost(
         "A limited edition comment must have at least an amount of 1!"
       );
       return;
     } else {
-      setCollectNotif("");
+      setCollectNotifPost("");
     }
 
     handleSetCollectValues(
@@ -75,9 +100,64 @@ const useCollectOptions = () => {
     );
   };
 
+  const handleCollectValuesPost = (): void => {
+    if (value <= 0 && chargeCollect === "yes") {
+      setCollectNotif("Please set a Creator Award Value for your comment!");
+      return;
+    } else if (limitedEdition && limit < 1 && chargeCollect === "yes") {
+      setCollectNotif(
+        "A limited edition comment must have at least an amount of 1!"
+      );
+      return;
+    } else {
+      setCollectNotif("");
+    }
+
+    handleSetCollectValues(
+      valuePost,
+      chargeCollectPost,
+      dispatch,
+      limitPost,
+      enabledCurrencyPost,
+      enabledCurrencies,
+      collectiblePost,
+      audienceTypePost,
+      timeLimitPost,
+      limitedEditionPost,
+      referralPost,
+      address as string
+    );
+  };
+
   useEffect(() => {
     if (address && profileId) {
-      handleCollectValues();
+      handleCollectValuesPost();
+    }
+  }, [
+    valuePost,
+    chargeCollectPost,
+    limitPost,
+    enabledCurrencyPost,
+    collectiblePost,
+    audienceTypePost,
+    timeLimitPost,
+    limitedEditionPost,
+    referralPost,
+    setValuePost,
+    setLimitPost,
+    setLimitedEditionPost,
+    setTimeLimitPost,
+    setEnabledCurrencyPost,
+    setReferralPost,
+    setChargeCollectPost,
+    setCollectiblePost,
+    setAudienceTypePost,
+    collectNotifPost,
+  ]);
+
+  useEffect(() => {
+    if (address && profileId) {
+      handleCollectValuesComment();
     }
   }, [
     value,
@@ -103,7 +183,6 @@ const useCollectOptions = () => {
   ]);
 
   return {
-    handleCollectValues,
     collectNotif,
     referral,
     setCollectible,
@@ -137,6 +216,36 @@ const useCollectOptions = () => {
     setEnabledCurrency,
     value,
     setValue,
+    setValuePost,
+    valuePost,
+    setEnabledCurrencyPost,
+    referralPost,
+    setCollectiblePost,
+    collectibleDropDownPost,
+    setCollectibleDropDownPost,
+    collectiblePost,
+    setAudienceDropDownPost,
+    audienceTypePost,
+    chargeCollectPost,
+    limitPost,
+    limitedEditionPost,
+    audienceDropDownPost,
+    setAudienceTypePost,
+    setTimeLimitPost,
+    timeLimitPost,
+    timeLimitDropDownPost,
+    setTimeLimitDropDownPost,
+    setLimitedEditionPost,
+    limitedDropDownPost,
+    setLimitedDropDownPost,
+    setReferralPost,
+    setLimitPost,
+    setChargeCollectPost,
+    setCurrencyDropDownPost,
+    chargeCollectDropDownPost,
+    setChargeCollectDropDownPost,
+    enabledCurrencyPost,
+    currencyDropDownPost,
   };
 };
 

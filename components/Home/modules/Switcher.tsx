@@ -10,8 +10,8 @@ const Switcher: FunctionComponent = (): JSX.Element => {
   const pages = useSelector((state: RootState) => state.app.pageReducer.value);
 
   switch (pages) {
-    // case "token gated":
-    //   return <TokenGatedSwitcher />;
+    case "token gated":
+      return <TokenGatedSwitcher />;
 
     case "drops":
       return <DropsSwitcher />;

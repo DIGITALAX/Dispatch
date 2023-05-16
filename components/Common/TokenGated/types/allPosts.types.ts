@@ -10,6 +10,7 @@ import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
 import { NextRouter } from "next/router";
 import { FormEvent, KeyboardEvent, Ref } from "react";
 import { AnyAction, Dispatch } from "redux";
+import { Collection } from "../../Collections/types/collections.types";
 
 export enum MediaType {
   Video,
@@ -159,6 +160,9 @@ export type ReactionProps = {
 };
 
 export type AllPostsProps = {
+  setTokenIds: (e: string[]) => void;
+  tokenIds: string[];
+  collections: Collection[];
   dispatch: Dispatch<AnyAction>;
   followerOnly: boolean[];
   feedDispatch: Publication[];
@@ -248,10 +252,24 @@ export type AllPostsProps = {
   setGifOpen: (e: boolean) => void;
   videoLoading: boolean;
   imageLoading: boolean;
-  uploadImages: (e: FormEvent) => Promise<void>;
-  uploadVideo: (e: FormEvent) => Promise<void>;
-  handleRemoveImage: (e: UploadedMedia) => void;
-  postImagesDispatched?: UploadedMedia[];
+  uploadImages: (
+    e: FormEvent | File,
+    setImageLoading: (e: boolean) => void,
+    setMappedFeaturedFiles: (e: UploadedMedia[]) => void,
+    uploadedImages: UploadedMedia[]
+  ) => Promise<void>;
+  uploadVideo: (
+    e: FormEvent,
+    setVideoLoading: (e: boolean) => void,
+    setMappedFeaturedFiles: (e: UploadedMedia[]) => void,
+    uploadImages: UploadedMedia[]
+  ) => Promise<void>;
+  handleRemoveImage: (
+    image: UploadedMedia,
+    setMappedFeaturedFiles: (e: UploadedMedia[]) => void,
+    uploadImages: UploadedMedia[]
+  ) => void;
+  postImagesDispatched: UploadedMedia[];
   mappedFeaturedFiles: UploadedMedia[];
   collectOpen: boolean;
   enabledCurrencies: Erc20[];
@@ -302,8 +320,6 @@ export type AllPostsProps = {
   postDescription: string;
   handlePostDescription: (e: FormEvent<Element>) => Promise<void>;
   handleGifPost: (e: FormEvent) => void;
-  gifOpenPost: boolean;
-  setGifOpenPost: (e: boolean) => void;
   textPostElement: Ref<HTMLTextAreaElement>;
   postLoading: boolean;
   caretCoordPost: {
@@ -316,16 +332,12 @@ export type AllPostsProps = {
   handleMentionClickPost: (user: any) => void;
   handleSetGifPost: (e: UploadedMedia) => void;
   handleKeyDownDeletePost: (e: KeyboardEvent<Element>) => void;
-  handleRemoveImagePost: (e: UploadedMedia) => void;
   videoLoadingPost: boolean;
   imageLoadingPost: boolean;
   setAudienceTypePost: (e: string) => void;
   mappedFeaturedFilesPost: UploadedMedia[];
-  collectOpenPost: boolean;
   valuePost: number;
-  enabledCurrenciesPost: Erc20[];
   audienceTypePost: string;
-  audienceTypesPost: string[];
   resultsPost: any[];
   audienceDropDownPost: boolean;
   setAudienceDropDownPost: (e: boolean) => void;
@@ -336,7 +348,7 @@ export type AllPostsProps = {
   setEnabledCurrencyPost: (e: string) => void;
   setCurrencyDropDownPost: (e: boolean) => void;
   setLimitPost: (e: number) => void;
-  postImagesDispatchedPost?: UploadedMedia[];
+  postImagesDispatchedPost: UploadedMedia[];
   setLimitedDropDownPost: (e: boolean) => void;
   setLimitedEditionPost: (e: string) => void;
   limitedDropDownPost: boolean;
@@ -355,6 +367,14 @@ export type AllPostsProps = {
   timeLimitDropDownPost: boolean;
   referralPost: number;
   collectiblePost: string;
+  uploadImagesPost: UploadedMedia[];
+  setMappedFeatureFilesPost: (e: UploadedMedia[]) => void;
+  uploadImagesComment: UploadedMedia[];
+  setMappedFeatureFilesComment: (e: UploadedMedia[]) => void;
+  setVideoLoadingComment: (e: boolean) => void;
+  setVideoLoadingPost: (e: boolean) => void;
+  setImageLoadingComment: (e: boolean) => void;
+  setImageLoadingPost: (e: boolean) => void;
 };
 
 export interface ApprovalArgs {
@@ -479,10 +499,24 @@ export type IndividualProps = {
   setGifOpen: (e: boolean) => void;
   videoLoading: boolean;
   imageLoading: boolean;
-  uploadImages: (e: FormEvent) => Promise<void>;
-  uploadVideo: (e: FormEvent) => Promise<void>;
-  handleRemoveImage: (e: UploadedMedia) => void;
-  postImagesDispatched?: UploadedMedia[];
+  uploadImages: (
+    e: FormEvent | File,
+    setImageLoading: (e: boolean) => void,
+    setMappedFeaturedFiles: (e: UploadedMedia[]) => void,
+    uploadedImages: UploadedMedia[]
+  ) => Promise<void>;
+  uploadVideo: (
+    e: FormEvent,
+    setVideoLoading: (e: boolean) => void,
+    setMappedFeaturedFiles: (e: UploadedMedia[]) => void,
+    uploadImages: UploadedMedia[]
+  ) => Promise<void>;
+  handleRemoveImage: (
+    image: UploadedMedia,
+    setMappedFeaturedFiles: (e: UploadedMedia[]) => void,
+    uploadImages: UploadedMedia[]
+  ) => void;
+  postImagesDispatched: UploadedMedia[];
   mappedFeaturedFiles: UploadedMedia[];
   collectOpen: boolean;
   enabledCurrencies: Erc20[];
@@ -524,6 +558,10 @@ export type IndividualProps = {
   handleLensSignIn: () => Promise<void>;
   handleConnect: () => void;
   individualAmounts: IndividualFeedCountState;
+  setMappedFeatureFilesComment: (e: UploadedMedia[]) => void;
+  uploadImagesComment: UploadedMedia[];
+  setVideoLoadingComment: (e: boolean) => void;
+  setImageLoadingComment: (e: boolean) => void;
 };
 
 export type CommentsProps = {
@@ -578,10 +616,24 @@ export type CommentsProps = {
   handleMentionClick: (user: any) => void;
   videoLoading: boolean;
   imageLoading: boolean;
-  uploadImages: (e: FormEvent) => Promise<void>;
-  uploadVideo: (e: FormEvent) => Promise<void>;
-  handleRemoveImage: (e: UploadedMedia) => void;
-  postImagesDispatched?: UploadedMedia[];
+  uploadImages: (
+    e: FormEvent | File,
+    setImageLoading: (e: boolean) => void,
+    setMappedFeaturedFiles: (e: UploadedMedia[]) => void,
+    uploadedImages: UploadedMedia[]
+  ) => Promise<void>;
+  uploadVideo: (
+    e: FormEvent,
+    setVideoLoading: (e: boolean) => void,
+    setMappedFeaturedFiles: (e: UploadedMedia[]) => void,
+    uploadImages: UploadedMedia[]
+  ) => Promise<void>;
+  handleRemoveImage: (
+    image: UploadedMedia,
+    setMappedFeaturedFiles: (e: UploadedMedia[]) => void,
+    uploadImages: UploadedMedia[]
+  ) => void;
+  postImagesDispatched: UploadedMedia[];
   mappedFeaturedFiles: UploadedMedia[];
   handleGifSubmit: () => Promise<void>;
   handleGif: (e: FormEvent) => void;
@@ -686,12 +738,22 @@ export interface CollectValueType {
 }
 
 export type ImageUploadsProps = {
-  handleRemoveImage: (e: UploadedMedia) => void;
+  handleRemoveImage: (
+    image: UploadedMedia,
+    setMappedFeaturedFiles: (e: UploadedMedia[]) => void,
+    uploadImages: UploadedMedia[]
+  ) => void;
   commentLoading: boolean;
-  postImagesDispatched?: UploadedMedia[];
+  postImagesDispatched: UploadedMedia[];
+  setMappedFeatureFiles: (e: UploadedMedia[]) => void;
+  uploadImages: UploadedMedia[];
+  size?: boolean
 };
 
 export type MakePostProps = {
+  collections: Collection[];
+  setTokenIds: (e: string[]) => void;
+  tokenIds: string[];
   tokenGatePost: () => Promise<void>;
   postDescription: string;
   postLoading: boolean;
@@ -706,18 +768,29 @@ export type MakePostProps = {
   handleMentionClick: (user: any) => void;
   videoLoading: boolean;
   imageLoading: boolean;
-  uploadImages: (e: FormEvent) => Promise<void>;
-  uploadVideo: (e: FormEvent) => Promise<void>;
-  handleRemoveImage: (e: UploadedMedia) => void;
-  postImagesDispatched?: UploadedMedia[];
+  uploadImages: (
+    e: FormEvent | File,
+    setImageLoading: (e: boolean) => void,
+    setMappedFeaturedFiles: (e: UploadedMedia[]) => void,
+    uploadedImages: UploadedMedia[]
+  ) => Promise<void>;
+  uploadVideo: (
+    e: FormEvent,
+    setVideoLoading: (e: boolean) => void,
+    setMappedFeaturedFiles: (e: UploadedMedia[]) => void,
+    uploadImages: UploadedMedia[]
+  ) => Promise<void>;
+  handleRemoveImage: (
+    image: UploadedMedia,
+    setMappedFeaturedFiles: (e: UploadedMedia[]) => void,
+    uploadImages: UploadedMedia[]
+  ) => void;
+  postImagesDispatched: UploadedMedia[];
   mappedFeaturedFiles: UploadedMedia[];
   handleGifSubmit: () => Promise<void>;
   handleGif: (e: FormEvent) => void;
   results: any[];
   handleSetGif: (result: any) => void;
-  setGifOpen: (e: boolean) => void;
-  gifOpen: boolean;
-  collectOpen: boolean;
   enabledCurrencies: Erc20[];
   audienceTypes: string[];
   setAudienceType: (e: string) => void;
@@ -752,6 +825,10 @@ export type MakePostProps = {
   setTimeLimitDropDown: (e: boolean) => void;
   dispatch: Dispatch<AnyAction>;
   handleKeyDownDelete: (e: KeyboardEvent<Element>) => void;
+  uploadImagesPost: UploadedMedia[];
+  setMappedFeatureFilesPost: (e: UploadedMedia[]) => void;
+  setVideoLoadingPost: (e: boolean) => void;
+  setImageLoadingPost: (e: boolean) => void;
 };
 
 export type MakeCommentProps = {
@@ -773,10 +850,24 @@ export type MakeCommentProps = {
   handleMentionClick: (user: any) => void;
   videoLoading: boolean;
   imageLoading: boolean;
-  uploadImages: (e: FormEvent) => Promise<void>;
-  uploadVideo: (e: FormEvent) => Promise<void>;
-  handleRemoveImage: (e: UploadedMedia) => void;
-  postImagesDispatched?: UploadedMedia[];
+  uploadImages: (
+    e: FormEvent | File,
+    setImageLoading: (e: boolean) => void,
+    setMappedFeaturedFiles: (e: UploadedMedia[]) => void,
+    uploadedImages: UploadedMedia[]
+  ) => Promise<void>;
+  uploadVideo: (
+    e: FormEvent,
+    setVideoLoading: (e: boolean) => void,
+    setMappedFeaturedFiles: (e: UploadedMedia[]) => void,
+    uploadImages: UploadedMedia[]
+  ) => Promise<void>;
+  handleRemoveImage: (
+    image: UploadedMedia,
+    setMappedFeaturedFiles: (e: UploadedMedia[]) => void,
+    uploadImages: UploadedMedia[]
+  ) => void;
+  postImagesDispatched: UploadedMedia[];
   mappedFeaturedFiles: UploadedMedia[];
   handleGifSubmit: () => Promise<void>;
   handleGif: (e: FormEvent) => void;
@@ -822,18 +913,38 @@ export type MakeCommentProps = {
   handleKeyDownDelete: (e: KeyboardEvent<Element>) => void;
   commentId: string;
   canComment: boolean;
+  setMappedFeatureFilesComment: (e: UploadedMedia[]) => void;
+  uploadImagesComment: UploadedMedia[];
+  setVideoLoadingComment: (e: boolean) => void;
+  setImageLoadingComment: (e: boolean) => void;
 };
 
 export type OptionsCommentProps = {
   videoLoading: boolean;
   imageLoading: boolean;
   commentLoading: boolean;
-  uploadImages: (e: FormEvent) => Promise<void>;
-  uploadVideo: (e: FormEvent) => Promise<void>;
+  uploadImages: (
+    e: FormEvent | File,
+    setImageLoading: (e: boolean) => void,
+    setMappedFeaturedFiles: (e: UploadedMedia[]) => void,
+    uploadedImages: UploadedMedia[]
+  ) => Promise<void>;
+  uploadVideo: (
+    e: FormEvent,
+    setVideoLoading: (e: boolean) => void,
+    setMappedFeaturedFiles: (e: UploadedMedia[]) => void,
+    uploadImages: UploadedMedia[]
+  ) => Promise<void>;
   setGifOpen: (e: boolean) => void;
   gifOpen: boolean;
   collectOpen: boolean;
   dispatch: Dispatch<AnyAction>;
+  setVideoLoading: (e: boolean) => void;
+  setMappedFeatureFiles: (e: UploadedMedia[]) => void;
+  uploadedImages: UploadedMedia[];
+  setImageLoading: (e: boolean) => void;
+  imagesRedux: UploadedMedia[];
+  setCollectOpen: ActionCreatorWithPayload<boolean>;
 };
 
 export interface CollectValueType {
@@ -880,3 +991,9 @@ export interface CollectValueType {
     followerOnly: boolean;
   };
 }
+
+export type GatedOptionsProps = {
+  collections: Collection[];
+  setTokenIds: (e: string[]) => void;
+  tokenIds: string[];
+};

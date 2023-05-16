@@ -37,6 +37,7 @@ const uploadPostContent = async (
     version: "2.0.0",
     metadata_id: uuidv4(),
     description:
+    gated ? "Collect " :
       postDescription.length < 0 || postDescription.trim().length < 0
         ? null
         : postDescription,
@@ -57,17 +58,10 @@ const uploadPostContent = async (
         ? "ARTICLE"
         : "TEXT_ONLY",
     contentWarning: null,
-    attributes: [
-      {
-        traitType: "string",
-        key: "date",
-        date: Date.now(),
-      },
-    ],
+    attributes: [],
     media: newImages,
     locale: "en",
     tags: null,
-    createdOn: new Date(),
     appId: "chromadin",
   };
 

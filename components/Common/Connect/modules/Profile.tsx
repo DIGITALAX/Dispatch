@@ -25,7 +25,10 @@ const Profile: FunctionComponent<ProfileProps> = ({
         )}
       </div>
       <div className="relative w-fit h-fit text-sm sm:text-xs lg:text-sm text-pesa">
-        @{profile?.handle?.split(".lens")[0] || ""}
+        @
+        {profile?.handle?.split(".lens")[0].length > 10
+          ? profile?.handle?.split(".lens")[0].split(0, 10) + "..."
+          : profile?.handle?.split(".lens")[0] || ""}
       </div>
     </div>
   );

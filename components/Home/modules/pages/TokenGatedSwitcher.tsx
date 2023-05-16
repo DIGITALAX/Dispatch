@@ -53,6 +53,9 @@ const TokenGatedSwitcher: FunctionComponent = (): JSX.Element => {
   const collectOpen = useSelector(
     (state: RootState) => state.app.collectOpenReducer.value
   );
+  const collections = useSelector(
+    (state: RootState) => state.app.allCollectionsReducer.value
+  );
   const profileId = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile?.id
   );
@@ -65,7 +68,9 @@ const TokenGatedSwitcher: FunctionComponent = (): JSX.Element => {
   const individualAmounts = useSelector(
     (state: RootState) => state.app.individualFeedCountReducer
   );
-  const postGateImagesDispatched = useSelector((state :RootState) => state.app.postGatedImageReducer.value)
+  const postGateImagesDispatched = useSelector(
+    (state: RootState) => state.app.postGatedImageReducer.value
+  );
 
   const dispatch = useDispatch();
   const { handleLensSignIn, handleConnect } = useConnect();
@@ -167,14 +172,55 @@ const TokenGatedSwitcher: FunctionComponent = (): JSX.Element => {
     setEnabledCurrency,
     value,
     setValue,
+    setAudienceDropDownPost,
+    setAudienceTypePost,
+    setChargeCollectDropDownPost,
+    setChargeCollectPost,
+    valuePost,
+    setValuePost,
+    enabledCurrencyPost,
+    audienceDropDownPost,
+    audienceTypePost,
+    chargeCollectDropDownPost,
+    chargeCollectPost,
+    collectibleDropDownPost,
+    collectiblePost,
+    currencyDropDownPost,
+    limitPost,
+    limitedDropDownPost,
+    limitedEditionPost,
+    referralPost,
+    setCollectibleDropDownPost,
+    setCollectiblePost,
+    setEnabledCurrencyPost,
+    setCurrencyDropDownPost,
+    setLimitPost,
+    setLimitedDropDownPost,
+    setLimitedEditionPost,
+    setReferralPost,
+    setTimeLimitDropDownPost,
+    setTimeLimitPost,
+    timeLimitDropDownPost,
+    timeLimitPost,
   } = useCollectOptions();
   const {
-    videoLoading,
-    imageLoading,
+    videoLoadingComment,
+    imageLoadingComment,
     uploadImages,
     uploadVideo,
     handleRemoveImage,
-    mappedFeaturedFiles,
+    mappedFeaturedFilesComment,
+    videoLoadingPost,
+    imageLoadingPost,
+    mappedFeaturedFilesPost,
+    setMappedFeaturedFilesComment,
+    setMappedFeaturedFilesPost,
+    imagesUploaded,
+    imagesUploadedPost,
+    setVideoLoadingComment,
+    setVideoLoadingPost,
+    setImageLoadingComment,
+    setImageLoadingPost,
   } = useImageUpload();
 
   const {
@@ -187,186 +233,191 @@ const TokenGatedSwitcher: FunctionComponent = (): JSX.Element => {
     handleKeyDownDelete: handleKeyDownDeletePost,
     handleMentionClick: handleMentionClickPost,
     handleSetGif: handleSetGifPost,
-    setGifOpen: setGifOpenPost,
-    gifOpen: gifOpenPost,
     caretCoord: caretCoordPost,
     textElement: textPostElement,
     mentionProfiles: mentionProfilesPost,
     profilesOpen: profilesOpenPost,
     results: resultsPost,
+    tokenIds,
+    setTokenIds
   } = useMakePost();
 
   switch (auth) {
     case true:
-      return ( <div></div>
-        // <AllPosts
-        //   feedType={feedType}
-        //   dispatch={dispatch}
-        //   feedDispatch={feedDispatch}
-        //   postsLoading={postsLoading}
-        //   followerOnly={followerOnly}
-        //   hasMore={hasMore}
-        //   fetchMore={fetchMore}
-        //   address={address!}
-        //   collectPost={collectPost}
-        //   reactPost={reactPost}
-        //   mirrorPost={mirrorPost}
-        //   reactLoading={reactFeedLoading}
-        //   collectLoading={collectFeedLoading}
-        //   mirrorLoading={mirrorFeedLoading}
-        //   reactionAmounts={reactionAmounts}
-        //   feedSwitch={feedSwitch}
-        //   setFeedSwitch={setFeedSwitchRedux}
-        //   timelineDispatch={timelineDispatch}
-        //   timelineFollowerOnly={followerOnlyTimeline}
-        //   reactTimelineLoading={reactTimelineLoading}
-        //   mirrorTimelineLoading={mirrorTimelineLoading}
-        //   collectTimelineLoading={collectTimelineLoading}
-        //   fetchMoreTimeline={fetchMoreTimeline}
-        //   hasMoreTimeline={hasMoreTimeline}
-        //   reactionTimelineAmounts={reactionTimelineAmounts}
-        //   mainPost={mainPost!}
-        //   followerOnlyMain={followerOnlyMain}
-        //   mainPostLoading={mainPostLoading}
-        //   hasMoreComments={hasMoreComments}
-        //   getMorePostComments={getMorePostComments}
-        //   commentors={commentors}
-        //   commentsLoading={commentsLoading}
-        //   reactCommentLoading={reactCommentLoading}
-        //   mirrorCommentLoading={mirrorCommentLoading}
-        //   collectCommentLoading={collectCommentLoading}
-        //   followerOnlyComments={followerOnlyComments}
-        //   commentAmounts={commentAmounts}
-        //   collectPostLoading={collectPostLoading}
-        //   mirrorPostLoading={mirrorPostLoading}
-        //   reactPostLoading={reactPostLoading}
-        //   setMirrorCommentLoading={setMirrorCommentLoading}
-        //   setCollectCommentLoading={setCollectCommentLoading}
-        //   setReactCommentLoading={setReactCommentLoading}
-        //   setCollectPostLoading={setCollectPostLoading}
-        //   setMirrorPostLoading={setMirrorPostLoading}
-        //   setReactPostLoading={setReactPostLoading}
-        //   commentPost={commentPost}
-        //   commentDescription={commentDescription}
-        //   textElement={textElement}
-        //   handleCommentDescription={handleCommentDescription}
-        //   commentLoading={commentLoading}
-        //   caretCoord={caretCoord}
-        //   mentionProfiles={mentionProfiles}
-        //   profilesOpen={profilesOpen}
-        //   handleMentionClick={handleMentionClick}
-        //   handleGifSubmit={handleGifSubmit}
-        //   handleGif={handleGif}
-        //   results={results}
-        //   handleSetGif={handleSetGif}
-        //   gifOpen={gifOpen}
-        //   setGifOpen={setGifOpen}
-        //   handleKeyDownDelete={handleKeyDownDelete}
-        //   commentOpen={commentOpen}
-        //   handleLensSignIn={handleLensSignIn}
-        //   handleConnect={handleConnect}
-        //   handleRemoveImage={handleRemoveImage}
-        //   authStatus={authStatus}
-        //   profileId={profileId}
-        //   videoLoading={videoLoading}
-        //   uploadImages={uploadImages}
-        //   uploadVideo={uploadVideo}
-        //   imageLoading={imageLoading}
-        //   mappedFeaturedFiles={mappedFeaturedFiles}
-        //   collectOpen={collectOpen}
-        //   enabledCurrencies={enabledCurrencies}
-        //   audienceDropDown={audienceDropDown}
-        //   audienceType={audienceType}
-        //   setAudienceDropDown={setAudienceDropDown}
-        //   setAudienceType={setAudienceType}
-        //   value={value}
-        //   setChargeCollect={setChargeCollect}
-        //   setChargeCollectDropDown={setChargeCollectDropDown}
-        //   setCollectible={setCollectible}
-        //   setCollectibleDropDown={setCollectibleDropDown}
-        //   setCurrencyDropDown={setCurrencyDropDown}
-        //   setEnabledCurrency={setEnabledCurrency}
-        //   setLimit={setLimit}
-        //   setLimitedDropDown={setLimitedDropDown}
-        //   setLimitedEdition={setLimitedEdition}
-        //   setReferral={setReferral}
-        //   setTimeLimit={setTimeLimit}
-        //   setTimeLimitDropDown={setTimeLimitDropDown}
-        //   setValue={setValue}
-        //   enabledCurrency={enabledCurrency}
-        //   chargeCollect={chargeCollect}
-        //   chargeCollectDropDown={chargeCollectDropDown}
-        //   limit={limit}
-        //   limitedDropDown={limitedDropDown}
-        //   limitedEdition={limitedEdition}
-        //   timeLimit={timeLimit}
-        //   timeLimitDropDown={timeLimitDropDown}
-        //   audienceTypes={audienceTypes}
-        //   referral={referral}
-        //   canComment={canComment}
-        //   collectNotif={collectNotif}
-        //   collectible={collectible}
-        //   collectibleDropDown={collectibleDropDown}
-        //   currencyDropDown={currencyDropDown}
-        //   postImagesDispatched={postImagesDispatched}
-        //   setScrollPos={setScrollPos}
-        //   scrollPos={scrollPos}
-        //   individualAmounts={individualAmounts}
-        //   tokenGatePost={tokenGatePost}
-        //   postDescription={postDescription}
-        //   textPostElement={textPostElement}
-        //   handlePostDescription={handlePostDescription}
-        //   postLoading={postLoading}
-        //   caretCoordPost={caretCoordPost}
-        //   mentionProfilesPost={mentionProfilesPost}
-        //   profilesOpenPost={profilesOpenPost}
-        //   handleMentionClickPost={handleMentionClickPost}
-        //   handleGifSubmitPost={handleGifSubmitPost}
-        //   handleGifPost={handleGifPost}
-        //   resultsPost={resultsPost}
-        //   handleSetGifPost={handleSetGifPost}
-        //   gifOpenPost={gifOpenPost}
-        //   setGifOpenPost={setGifOpenPost}
-        //   handleKeyDownDeletePost={handleKeyDownDeletePost}
-        //   // handleRemoveImagePost={handleRemoveImagePost}
-        //   // videoLoadingPost={videoLoadingPost}
-        //   // imageLoadingPost={imageLoadingPost}
-        //   // mappedFeaturedFilesPost={mappedFeaturedFilesPost}
-        //   // collectOpenPost={collectOpenPost}
-        //   // enabledCurrenciesPost={enabledCurrenciesPost}
-        //   // audienceDropDownPost={audienceDropDownPost}
-        //   // audienceTypePost={audienceTypePost}
-        //   // setAudienceDropDownPost={setAudienceDropDownPost}
-        //   // setAudienceTypePost={setAudienceTypePost}
-        //   // valuePost={valuePost}
-        //   // setChargeCollectPost={setChargeCollectPost}
-        //   // setChargeCollectDropDownPost={setChargeCollectDropDownPost}
-        //   // setCollectiblePost={setCollectiblePost}
-        //   // setCollectibleDropDownPost={setCollectibleDropDownPost}
-        //   // setCurrencyDropDownPost={setCurrencyDropDownPost}
-        //   // setEnabledCurrencyPost={setEnabledCurrencyPost}
-        //   // setLimitPost={setLimitPost}
-        //   // setLimitedDropDownPost={setLimitedDropDownPost}
-        //   // setLimitedEditionPost={setLimitedEditionPost}
-        //   // setReferralPost={setReferralPost}
-        //   // setTimeLimitPost={setTimeLimitPost}
-        //   // setTimeLimitDropDownPost={setTimeLimitDropDownPost}
-        //   // setValuePost={setValuePost}
-        //   // enabledCurrencyPost={enabledCurrencyPost}
-        //   // chargeCollectPost={chargeCollectPost}
-        //   // chargeCollectDropDownPost={chargeCollectDropDownPost}
-        //   // limitPost={limitPost}
-        //   // limitedDropDownPost={limitedDropDownPost}
-        //   // limitedEditionPost={limitedEditionPost}
-        //   // timeLimitPost={timeLimitPost}
-        //   // timeLimitDropDownPost={timeLimitDropDownPost}
-        //   // audienceTypesPost={audienceTypesPost}
-        //   // referralPost={referralPost}
-        //   // collectiblePost={collectiblePost}
-        //   // collectibleDropDownPost={collectibleDropDownPost}
-        //   // currencyDropDownPost={currencyDropDownPost}
-        //   // postImagesDispatchedPost={postGateImagesDispatched}
-        // />
+      return (
+        <AllPosts
+          tokenIds={tokenIds}
+          setTokenIds={setTokenIds}
+          feedType={feedType}
+          dispatch={dispatch}
+          feedDispatch={feedDispatch}
+          postsLoading={postsLoading}
+          followerOnly={followerOnly}
+          hasMore={hasMore}
+          fetchMore={fetchMore}
+          address={address!}
+          collectPost={collectPost}
+          reactPost={reactPost}
+          mirrorPost={mirrorPost}
+          reactLoading={reactFeedLoading}
+          collectLoading={collectFeedLoading}
+          mirrorLoading={mirrorFeedLoading}
+          reactionAmounts={reactionAmounts}
+          feedSwitch={feedSwitch}
+          setFeedSwitch={setFeedSwitchRedux}
+          timelineDispatch={timelineDispatch}
+          timelineFollowerOnly={followerOnlyTimeline}
+          reactTimelineLoading={reactTimelineLoading}
+          mirrorTimelineLoading={mirrorTimelineLoading}
+          collectTimelineLoading={collectTimelineLoading}
+          fetchMoreTimeline={fetchMoreTimeline}
+          hasMoreTimeline={hasMoreTimeline}
+          reactionTimelineAmounts={reactionTimelineAmounts}
+          mainPost={mainPost!}
+          followerOnlyMain={followerOnlyMain}
+          mainPostLoading={mainPostLoading}
+          hasMoreComments={hasMoreComments}
+          getMorePostComments={getMorePostComments}
+          commentors={commentors}
+          commentsLoading={commentsLoading}
+          reactCommentLoading={reactCommentLoading}
+          mirrorCommentLoading={mirrorCommentLoading}
+          collectCommentLoading={collectCommentLoading}
+          followerOnlyComments={followerOnlyComments}
+          commentAmounts={commentAmounts}
+          collectPostLoading={collectPostLoading}
+          mirrorPostLoading={mirrorPostLoading}
+          reactPostLoading={reactPostLoading}
+          setMirrorCommentLoading={setMirrorCommentLoading}
+          setCollectCommentLoading={setCollectCommentLoading}
+          setReactCommentLoading={setReactCommentLoading}
+          setCollectPostLoading={setCollectPostLoading}
+          setMirrorPostLoading={setMirrorPostLoading}
+          setReactPostLoading={setReactPostLoading}
+          commentPost={commentPost}
+          commentDescription={commentDescription}
+          textElement={textElement}
+          handleCommentDescription={handleCommentDescription}
+          commentLoading={commentLoading}
+          caretCoord={caretCoord}
+          mentionProfiles={mentionProfiles}
+          profilesOpen={profilesOpen}
+          handleMentionClick={handleMentionClick}
+          handleGifSubmit={handleGifSubmit}
+          handleGif={handleGif}
+          results={results}
+          handleSetGif={handleSetGif}
+          gifOpen={gifOpen}
+          setGifOpen={setGifOpen}
+          handleKeyDownDelete={handleKeyDownDelete}
+          commentOpen={commentOpen}
+          handleLensSignIn={handleLensSignIn}
+          handleConnect={handleConnect}
+          handleRemoveImage={handleRemoveImage}
+          authStatus={authStatus}
+          profileId={profileId}
+          videoLoading={videoLoadingComment}
+          uploadImages={uploadImages}
+          uploadVideo={uploadVideo}
+          imageLoading={imageLoadingComment}
+          mappedFeaturedFiles={mappedFeaturedFilesComment}
+          collectOpen={collectOpen}
+          enabledCurrencies={enabledCurrencies}
+          audienceDropDown={audienceDropDown}
+          audienceType={audienceType}
+          setAudienceDropDown={setAudienceDropDown}
+          setAudienceType={setAudienceType}
+          value={value}
+          setChargeCollect={setChargeCollect}
+          setChargeCollectDropDown={setChargeCollectDropDown}
+          setCollectible={setCollectible}
+          setCollectibleDropDown={setCollectibleDropDown}
+          setCurrencyDropDown={setCurrencyDropDown}
+          setEnabledCurrency={setEnabledCurrency}
+          setLimit={setLimit}
+          setLimitedDropDown={setLimitedDropDown}
+          setLimitedEdition={setLimitedEdition}
+          setReferral={setReferral}
+          setTimeLimit={setTimeLimit}
+          setTimeLimitDropDown={setTimeLimitDropDown}
+          setValue={setValue}
+          enabledCurrency={enabledCurrency}
+          chargeCollect={chargeCollect}
+          chargeCollectDropDown={chargeCollectDropDown}
+          limit={limit}
+          limitedDropDown={limitedDropDown}
+          limitedEdition={limitedEdition}
+          timeLimit={timeLimit}
+          timeLimitDropDown={timeLimitDropDown}
+          audienceTypes={audienceTypes}
+          referral={referral}
+          canComment={canComment}
+          collectNotif={collectNotif}
+          collectible={collectible}
+          collectibleDropDown={collectibleDropDown}
+          currencyDropDown={currencyDropDown}
+          postImagesDispatched={postImagesDispatched}
+          setScrollPos={setScrollPos}
+          scrollPos={scrollPos}
+          individualAmounts={individualAmounts}
+          tokenGatePost={tokenGatePost}
+          postDescription={postDescription}
+          textPostElement={textPostElement}
+          handlePostDescription={handlePostDescription}
+          postLoading={postLoading}
+          caretCoordPost={caretCoordPost}
+          mentionProfilesPost={mentionProfilesPost}
+          profilesOpenPost={profilesOpenPost}
+          handleMentionClickPost={handleMentionClickPost}
+          handleGifSubmitPost={handleGifSubmitPost}
+          handleGifPost={handleGifPost}
+          resultsPost={resultsPost}
+          handleSetGifPost={handleSetGifPost}
+          handleKeyDownDeletePost={handleKeyDownDeletePost}
+          videoLoadingPost={videoLoadingPost}
+          imageLoadingPost={imageLoadingPost}
+          mappedFeaturedFilesPost={mappedFeaturedFilesPost}
+          audienceDropDownPost={audienceDropDownPost}
+          audienceTypePost={audienceTypePost}
+          setAudienceDropDownPost={setAudienceDropDownPost}
+          setAudienceTypePost={setAudienceTypePost}
+          valuePost={valuePost}
+          setChargeCollectPost={setChargeCollectPost}
+          setChargeCollectDropDownPost={setChargeCollectDropDownPost}
+          setCollectiblePost={setCollectiblePost}
+          setCollectibleDropDownPost={setCollectibleDropDownPost}
+          setCurrencyDropDownPost={setCurrencyDropDownPost}
+          setEnabledCurrencyPost={setEnabledCurrencyPost}
+          setLimitPost={setLimitPost}
+          setLimitedDropDownPost={setLimitedDropDownPost}
+          setLimitedEditionPost={setLimitedEditionPost}
+          setReferralPost={setReferralPost}
+          setTimeLimitPost={setTimeLimitPost}
+          setTimeLimitDropDownPost={setTimeLimitDropDownPost}
+          setValuePost={setValuePost}
+          enabledCurrencyPost={enabledCurrencyPost}
+          chargeCollectPost={chargeCollectPost}
+          chargeCollectDropDownPost={chargeCollectDropDownPost}
+          limitPost={limitPost}
+          limitedDropDownPost={limitedDropDownPost}
+          limitedEditionPost={limitedEditionPost}
+          timeLimitPost={timeLimitPost}
+          timeLimitDropDownPost={timeLimitDropDownPost}
+          referralPost={referralPost}
+          collectiblePost={collectiblePost}
+          collectibleDropDownPost={collectibleDropDownPost}
+          currencyDropDownPost={currencyDropDownPost}
+          postImagesDispatchedPost={postGateImagesDispatched}
+          setMappedFeatureFilesComment={setMappedFeaturedFilesComment}
+          setMappedFeatureFilesPost={setMappedFeaturedFilesPost}
+          uploadImagesComment={imagesUploaded}
+          uploadImagesPost={imagesUploadedPost}
+          setVideoLoadingComment={setVideoLoadingComment}
+          setVideoLoadingPost={setVideoLoadingPost}
+          setImageLoadingComment={setImageLoadingComment}
+          setImageLoadingPost={setImageLoadingPost}
+          collections={collections}
+        />
       );
 
     default:

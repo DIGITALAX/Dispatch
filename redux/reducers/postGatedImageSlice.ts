@@ -2,18 +2,18 @@ import { UploadedMedia } from "@/components/Common/TokenGated/types/allPosts.typ
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface PostGateImagesState {
-  value?: UploadedMedia[];
+  value: UploadedMedia[];
 }
 
 const initialPostGateImagesState: PostGateImagesState = {
-  value: undefined,
+  value: [],
 };
 
 export const postGateImagesSlice = createSlice({
   name: "postGateImages",
   initialState: initialPostGateImagesState,
   reducers: {
-    setPostGateImages: (state: PostGateImagesState, action: PayloadAction<UploadedMedia[] | undefined>) => {
+    setPostGateImages: (state: PostGateImagesState, action: PayloadAction<UploadedMedia[]>) => {
       state.value = action.payload;
     },
   },
