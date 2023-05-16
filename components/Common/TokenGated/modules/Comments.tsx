@@ -89,6 +89,10 @@ const Comments: FunctionComponent<CommentsProps> = ({
   commentId,
   canComment,
   openComment,
+  uploadImagesComment,
+  setVideoLoadingComment,
+  setMappedFeatureFilesComment,
+  setImageLoadingComment,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full flex min-w-full">
@@ -214,6 +218,12 @@ const Comments: FunctionComponent<CommentsProps> = ({
                       currencyDropDown={currencyDropDown}
                       dispatch={dispatch}
                       postImagesDispatched={postImagesDispatched}
+                      setImageLoadingComment={setImageLoadingComment}
+                      setMappedFeatureFilesComment={
+                        setMappedFeatureFilesComment
+                      }
+                      setVideoLoadingComment={setVideoLoadingComment}
+                      uploadImagesComment={uploadImagesComment}
                     />
                   )}
                 </div>

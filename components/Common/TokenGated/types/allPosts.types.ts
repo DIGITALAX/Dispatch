@@ -679,6 +679,10 @@ export type CommentsProps = {
   commentId: string;
   canComment: boolean;
   openComment: string;
+  setMappedFeatureFilesComment: (e: UploadedMedia[]) => void;
+  uploadImagesComment: UploadedMedia[];
+  setVideoLoadingComment: (e: boolean) => void;
+  setImageLoadingComment: (e: boolean) => void;
 };
 
 export interface UploadedMedia {
@@ -747,7 +751,7 @@ export type ImageUploadsProps = {
   postImagesDispatched: UploadedMedia[];
   setMappedFeatureFiles: (e: UploadedMedia[]) => void;
   uploadImages: UploadedMedia[];
-  size?: boolean
+  size?: boolean;
 };
 
 export type MakePostProps = {
