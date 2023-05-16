@@ -1,5 +1,6 @@
 import useAddCollection from "@/components/Common/Collections/hooks/useAddCollection";
 import useAllCollections from "@/components/Common/Collections/hooks/useAllCollections";
+import useEditCollection from "@/components/Common/Collections/hooks/useEditCollection";
 import AddCollection from "@/components/Common/Collections/modules/AddCollection";
 import AllCollections from "@/components/Common/Collections/modules/AllCollections";
 import useImageUpload from "@/components/Common/Inputs/hooks/useImageUpload";
@@ -17,6 +18,9 @@ const CollectionsSwitcher: FunctionComponent = (): JSX.Element => {
   const collectionDetails = useSelector(
     (state: RootState) => state.app.collectionDetailsReducer
   );
+  const canEditCollection = useSelector(
+    (state: RootState) => state.app.canEditCollectionReducer.value
+  );
 
   const dispatch = useDispatch();
   const { allCollections, collectionsLoading } = useAllCollections();
@@ -32,8 +36,9 @@ const CollectionsSwitcher: FunctionComponent = (): JSX.Element => {
     addCollection,
     price,
     setPrice,
-    deleteCollection,
   } = useAddCollection();
+
+  const { deleteCollection, deleteCollectionLoading } = useEditCollection();
 
   switch (collectionSwitcher) {
     case "add":
@@ -53,6 +58,8 @@ const CollectionsSwitcher: FunctionComponent = (): JSX.Element => {
           setPrice={setPrice}
           price={price}
           deleteCollection={deleteCollection}
+          deleteCollectionLoading={deleteCollectionLoading}
+          canEditCollection={canEditCollection}
         />
       );
 

@@ -28,6 +28,8 @@ export type AddCollectionProps = {
   setPrice: (e: { value: number; currency: string }) => void;
   price: { value: number; currency: string } | undefined;
   deleteCollection: () => Promise<void>;
+  deleteCollectionLoading: boolean;
+  canEditCollection: boolean;
 };
 
 export type CollectionPreviewProps = {
@@ -40,6 +42,7 @@ export type CollectionPricesProps = {
   collectionDetails: CollectionDetailsState;
   handleCollectionPrices: (e: FormEvent, address: string) => void;
   loader: boolean;
+  canEditCollection: boolean;
 };
 
 export interface Collection {

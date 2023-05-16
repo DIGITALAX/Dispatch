@@ -11,6 +11,9 @@ export interface CollectionDetailsState {
   fileType: string;
   type: string;
   id: number;
+  soldTokens: any[];
+  tokenIds: any[];
+  live: boolean;
 }
 
 const initialCollectionDetailsState: CollectionDetailsState = {
@@ -24,6 +27,9 @@ const initialCollectionDetailsState: CollectionDetailsState = {
   fileType: "",
   type: "add",
   id: 0,
+  soldTokens: [],
+  tokenIds: [],
+  live: false,
 };
 
 export const collectionDetailsSlice = createSlice({
@@ -44,6 +50,9 @@ export const collectionDetailsSlice = createSlice({
           actionFileType,
           actionType,
           actionId,
+          actionSoldTokens,
+          actionTokenIds,
+          actionLive,
         },
       }
     ) => {
@@ -57,6 +66,9 @@ export const collectionDetailsSlice = createSlice({
       state.fileType = actionFileType;
       state.type = actionType;
       state.id = actionId;
+      state.soldTokens = actionSoldTokens;
+      state.tokenIds = actionTokenIds;
+      state.live = actionLive;
     },
   },
 });

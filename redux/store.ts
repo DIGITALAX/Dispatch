@@ -47,6 +47,9 @@ import commentsReducer from "./reducers/commentsSlice";
 import paginatedReducer from "./reducers/paginatedSlice";
 import scrollPosReducer from "./reducers/scrollPosSlice";
 import individualFeedCountReducer from "./reducers/individualFeedCountSlice";
+import postGatedImageReducer from "./reducers/postGatedImageSlice";
+import canEditCollectionReducer from "./reducers/canEditCollectionSlice";
+import updateCollectionReducer from "./reducers/updateCollectionSlice";
 
 const reducer = combineReducers({
   lensProfileReducer,
@@ -96,6 +99,9 @@ const reducer = combineReducers({
   paginatedReducer,
   scrollPosReducer,
   individualFeedCountReducer,
+  postGatedImageReducer,
+  canEditCollectionReducer,
+  updateCollectionReducer,
 });
 
 export const store = configureStore({

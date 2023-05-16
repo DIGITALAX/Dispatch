@@ -31,6 +31,9 @@ const AllCollections: FunctionComponent<AllCollectionsProps> = ({
                 actionFileType: "",
                 actionType: "add",
                 actionId: 0,
+                actionSoldTokens: [],
+                actionTokenIds: [],
+                actionLive: false
               })
             );
             dispatch(setCollectionSwitcher("add"));
@@ -80,6 +83,9 @@ const AllCollections: FunctionComponent<AllCollectionsProps> = ({
                       actionFileType: value.fileType,
                       actionType: "delete",
                       actionId: value.collectionId,
+                      actionSoldTokens: value?.soldTokens,
+                      actionTokenIds: value?.tokenIds,
+                      actionLive: value?.drop?.name ? true: false
                     })
                   );
                   dispatch(setCollectionSwitcher("add"));

@@ -15,6 +15,8 @@ import { useAccount } from "wagmi";
 import useConnect from "../../Connect/hooks/useConnect";
 import useFollowers from "../../TokenGated/hooks/useFollowers";
 import FollowerOnly from "./FollowerOnly";
+import UpdateCollection from "./UpdateCollection";
+import useEditCollection from "../../Collections/hooks/useEditCollection";
 
 const Modals = () => {
   const dispatch = useDispatch();
@@ -41,11 +43,17 @@ const Modals = () => {
   const dispatchVideos = useSelector(
     (state: RootState) => state.app.channelsReducer.value
   );
+  const collectionDetails = useSelector(
+    (state: RootState) => state.app.collectionDetailsReducer
+  );
   const imageViewer = useSelector(
     (state: RootState) => state.app.imageViewerReducer
   );
   const reaction = useSelector(
     (state: RootState) => state.app.reactionStateReducer
+  );
+  const updateCollection = useSelector(
+    (state: RootState) => state.app.updateCollectionReducer
   );
   const purchase = useSelector((state: RootState) => state.app.purchaseReducer);
   const collectModuleValues = useSelector(
@@ -87,6 +95,8 @@ const Modals = () => {
     approveCurrency,
     collectPost,
   } = useReactions();
+  const { updateCollection: handleUpdateCollection, updateCollectionLoading } =
+    useEditCollection();
   const { address } = useAccount();
   const { handleLensSignIn } = useConnect();
   return (
@@ -165,6 +175,14 @@ const Modals = () => {
           dispatchVideos={dispatchVideos}
           videoSync={videoSync}
           videoRef={videoRef}
+        />
+      )}
+      {updateCollection.open && (
+        <UpdateCollection
+          updateCollectionLoading={updateCollectionLoading}
+          updateCollection={handleUpdateCollection}
+          collectionValues={collectionDetails}
+          dispatch={dispatch}
         />
       )}
       {errorModal.open && (

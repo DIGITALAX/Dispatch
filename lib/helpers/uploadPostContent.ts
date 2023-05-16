@@ -8,9 +8,10 @@ import { v4 as uuidv4 } from "uuid";
 const uploadPostContent = async (
   postImages: UploadedMedia[] | undefined,
   postDescription: string,
-  setContentURI: (e: string | undefined) => void,
-  contentURI: string | undefined
-): Promise<string | undefined> => {
+  setContentURI?: (e: string | undefined) => void,
+  contentURI?: string | undefined,
+  gated?: boolean
+): Promise<string | undefined | any> => {
   let newImages: PostImage[] = [];
   postImages?.forEach((image) => {
     newImages.push({
@@ -70,6 +71,10 @@ const uploadPostContent = async (
     appId: "chromadin",
   };
 
+  if (gated) {
+    return data;
+  }
+
   try {
     const response = await fetch("/api/ipfs", {
       method: "POST",
@@ -78,7 +83,7 @@ const uploadPostContent = async (
     if (response.status !== 200) {
     } else {
       let responseJSON = await response.json();
-      setContentURI(responseJSON.cid);
+      setContentURI && setContentURI(responseJSON.cid);
       return responseJSON.cid;
     }
   } catch (err: any) {

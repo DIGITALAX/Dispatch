@@ -41,3 +41,10 @@ export const LENS_CREATORS: string[] = [
   "0x01c96b",
   "0x01befb",
 ];
+
+export const AVAILABLE_TOKENS = [
+  ["WMATIC", "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270"],
+  ["WETH", "0x7ceb23fd6bc0add59e62ac25578270cff1b9f619"],
+  ["USDT", "0xc2132d05d31c914a87c6611c10748aeb04b58e8f"],
+  ["MONA", "0x6968105460f67c3bf751be7c15f92f5286fd0ce5"],
+];

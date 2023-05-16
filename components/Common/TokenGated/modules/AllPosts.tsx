@@ -122,7 +122,61 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
   postImagesDispatched,
   setScrollPos,
   scrollPos,
-  individualAmounts
+  individualAmounts,
+  tokenGatePost,
+  postDescription,
+  handlePostDescription,
+  handleGifPost,
+  gifOpenPost,
+  setGifOpenPost,
+  textPostElement,
+  postLoading,
+  caretCoordPost,
+  mentionProfilesPost,
+  handleGifSubmitPost,
+  profilesOpenPost,
+  handleMentionClickPost,
+  handleSetGifPost,
+  handleKeyDownDeletePost,
+  handleRemoveImagePost,
+  videoLoadingPost,
+  imageLoadingPost,
+  setAudienceTypePost,
+  mappedFeaturedFilesPost,
+  collectOpenPost,
+  valuePost,
+  enabledCurrenciesPost,
+  audienceTypePost,
+  audienceDropDownPost,
+  setAudienceDropDownPost,
+  setChargeCollectPost,
+  setChargeCollectDropDownPost,
+  setCollectiblePost,
+  setCollectibleDropDownPost,
+  setEnabledCurrencyPost,
+  setCurrencyDropDownPost,
+  setLimitPost,
+  postImagesDispatchedPost,
+  setLimitedDropDownPost,
+  setLimitedEditionPost,
+  limitedDropDownPost,
+  limitedEditionPost,
+  setTimeLimitDropDownPost,
+  setTimeLimitPost,
+  currencyDropDownPost,
+  collectibleDropDownPost,
+  setValuePost,
+  enabledCurrencyPost,
+  chargeCollectPost,
+  chargeCollectDropDownPost,
+  limitPost,
+  timeLimitPost,
+  timeLimitDropDownPost,
+  referralPost,
+  setReferralPost,
+  collectiblePost,
+  audienceTypesPost,
+  resultsPost
 }): JSX.Element => {
   return (
     <div className="relative w-full h-fit flex flex-col items-start justify-start gap-4">
@@ -150,7 +204,65 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
         </div>
       </div>
       <div className="relative w-full h-full flex flex-col xl:flex-row items-start justify-end gap-8">
-        <MakePost />
+        <MakePost
+          tokenGatePost={tokenGatePost}
+          postDescription={postDescription}
+          textElement={textPostElement}
+          handlePostDescription={handlePostDescription}
+          postLoading={postLoading}
+          caretCoord={caretCoordPost}
+          mentionProfiles={mentionProfilesPost}
+          profilesOpen={profilesOpenPost}
+          handleMentionClick={handleMentionClickPost}
+          handleGifSubmit={handleGifSubmitPost}
+          handleGif={handleGifPost}
+          results={resultsPost}
+          handleSetGif={handleSetGifPost}
+          gifOpen={gifOpenPost}
+          setGifOpen={setGifOpenPost}
+          handleKeyDownDelete={handleKeyDownDeletePost}
+          handleRemoveImage={handleRemoveImagePost}
+          videoLoading={videoLoadingPost}
+          uploadImages={uploadImages}
+          uploadVideo={uploadVideo}
+          imageLoading={imageLoading}
+          mappedFeaturedFiles={mappedFeaturedFiles}
+          collectOpen={collectOpen}
+          enabledCurrencies={enabledCurrencies}
+          audienceDropDown={audienceDropDown}
+          audienceType={audienceType}
+          setAudienceDropDown={setAudienceDropDown}
+          setAudienceType={setAudienceType}
+          value={value}
+          setChargeCollect={setChargeCollect}
+          setChargeCollectDropDown={setChargeCollectDropDown}
+          setCollectible={setCollectible}
+          setCollectibleDropDown={setCollectibleDropDown}
+          setCurrencyDropDown={setCurrencyDropDown}
+          setEnabledCurrency={setEnabledCurrency}
+          setLimit={setLimit}
+          setLimitedDropDown={setLimitedDropDown}
+          setLimitedEdition={setLimitedEdition}
+          setReferral={setReferral}
+          setTimeLimit={setTimeLimit}
+          setTimeLimitDropDown={setTimeLimitDropDown}
+          setValue={setValue}
+          enabledCurrency={enabledCurrency}
+          chargeCollect={chargeCollect}
+          chargeCollectDropDown={chargeCollectDropDown}
+          limit={limit}
+          limitedDropDown={limitedDropDown}
+          limitedEdition={limitedEdition}
+          timeLimit={timeLimit}
+          timeLimitDropDown={timeLimitDropDown}
+          audienceTypes={audienceTypes}
+          referral={referral}
+          collectible={collectible}
+          collectibleDropDown={collectibleDropDown}
+          currencyDropDown={currencyDropDown}
+          dispatch={dispatch}
+          postImagesDispatched={postImagesDispatched}
+        />
         {feedType.value !== "" ? (
           <Individual
             dispatch={dispatch}

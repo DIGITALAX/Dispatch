@@ -1,7 +1,9 @@
 import {
+  AVAILABLE_TOKENS,
   CHROMADIN_COLLECTION_CONTRACT,
   MUMBAI_COLLECTION,
 } from "@/lib/constants";
+import { setCanEdit } from "@/redux/reducers/canEditCollectionSlice";
 import { setCollectionDetails } from "@/redux/reducers/collectionDetailsSlice";
 import { setCollectionSwitcher } from "@/redux/reducers/collectionSwitcherSlice";
 import { setIndexModal } from "@/redux/reducers/indexModalSlice";
@@ -15,12 +17,6 @@ import { useContractWrite, usePrepareContractWrite } from "wagmi";
 
 const useAddCollection = () => {
   const dispatch = useDispatch();
-  const availableTokens = [
-    ["WMATIC", "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270"],
-    ["WETH", "0x7ceb23fd6bc0add59e62ac25578270cff1b9f619"],
-    ["USDT", "0xc2132d05d31c914a87c6611c10748aeb04b58e8f"],
-    ["MONA", "0x6968105460f67c3bf751be7c15f92f5286fd0ce5"],
-  ];
   const [imageLoading, setImageLoading] = useState<boolean>(false);
   const [addCollectionLoading, setAddCollectionLoading] =
     useState<boolean>(false);
@@ -84,25 +80,6 @@ const useAddCollection = () => {
 
   const { writeAsync } = useContractWrite(config);
 
-  const { config: burnConfig } = usePrepareContractWrite({
-    address: CHROMADIN_COLLECTION_CONTRACT,
-    abi: [
-      {
-        inputs: [
-          { internalType: "uint256", name: "_collectionId", type: "uint256" },
-        ],
-        name: "burnCollection",
-        outputs: [],
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-    ],
-    functionName: "burnCollection",
-    args: [collectionValues?.id as any],
-  });
-
-  const { writeAsync: burnWriteAsync } = useContractWrite(burnConfig);
-
   const handleCollectionTitle = (e: FormEvent): void => {
     dispatch(
       setCollectionDetails({
@@ -112,10 +89,13 @@ const useAddCollection = () => {
         actionAmount: collectionValues?.amount,
         actionAcceptedTokens: collectionValues?.acceptedTokens,
         actionTokenPrices: collectionValues?.tokenPrices,
-        actionDisabled: false,
+        actionDisabled: collectionValues?.disabled,
         actionFileType: collectionValues.fileType,
         actionType: collectionValues?.type,
         actionId: collectionValues.id,
+        actionSoldTokens: collectionValues?.soldTokens,
+        actionTokenIds: collectionValues?.tokenIds,
+        actionLive: collectionValues?.live,
       })
     );
   };
@@ -129,10 +109,13 @@ const useAddCollection = () => {
         actionAmount: collectionValues?.amount,
         actionAcceptedTokens: collectionValues?.acceptedTokens,
         actionTokenPrices: collectionValues?.tokenPrices,
-        actionDisabled: false,
+        actionDisabled: collectionValues?.disabled,
         actionFileType: collectionValues.fileType,
         actionType: collectionValues?.type,
         actionId: collectionValues.id,
+        actionSoldTokens: collectionValues?.soldTokens,
+        actionTokenIds: collectionValues?.tokenIds,
+        actionLive: collectionValues?.live,
       })
     );
   };
@@ -146,10 +129,13 @@ const useAddCollection = () => {
         actionAmount: Number((e.target as HTMLFormElement).value),
         actionAcceptedTokens: collectionValues?.acceptedTokens,
         actionTokenPrices: collectionValues?.tokenPrices,
-        actionDisabled: false,
+        actionDisabled: collectionValues?.disabled,
         actionFileType: collectionValues.fileType,
         actionType: collectionValues?.type,
         actionId: collectionValues.id,
+        actionSoldTokens: collectionValues?.soldTokens,
+        actionTokenIds: collectionValues?.tokenIds,
+        actionLive: collectionValues?.live,
       })
     );
   };
@@ -182,6 +168,8 @@ const useAddCollection = () => {
       }
     }
 
+    console.log(acceptedTokens, tokenPrices)
+
     dispatch(
       setCollectionDetails({
         actionTitle: collectionValues?.title,
@@ -190,10 +178,13 @@ const useAddCollection = () => {
         actionAmount: collectionValues?.amount,
         actionAcceptedTokens: acceptedTokens,
         actionTokenPrices: tokenPrices,
-        actionDisabled: false,
+        actionDisabled: collectionValues?.disabled,
         actionFileType: collectionValues.fileType,
         actionType: collectionValues?.type,
         actionId: collectionValues.id,
+        actionSoldTokens: collectionValues?.soldTokens,
+        actionTokenIds: collectionValues?.tokenIds,
+        actionLive: collectionValues?.live,
       })
     );
   };
@@ -236,7 +227,8 @@ const useAddCollection = () => {
         collectionValues?.acceptedTokens as any,
         collectionValues?.tokenPrices.map((price, i: number) => {
           if (
-            i === collectionValues.acceptedTokens.indexOf(availableTokens[2][1])
+            i ===
+            collectionValues.acceptedTokens.indexOf(AVAILABLE_TOKENS[2][1])
           ) {
             return (BigInt(price) * BigInt(10 ** 6)).toString();
           } else if (Number.isInteger(price)) {
@@ -298,6 +290,9 @@ const useAddCollection = () => {
           actionFileType: "",
           actionType: "",
           actionId: 0,
+          actionSoldTokens: [],
+          actionTokenIds: [],
+          actionLive: false,
         })
       );
     } catch (err: any) {
@@ -317,67 +312,6 @@ const useAddCollection = () => {
         );
       }, 4000);
     }
-    setAddCollectionLoading(false);
-  };
-
-  const deleteCollection = async (): Promise<void> => {
-    setAddCollectionLoading(true);
-    try {
-      dispatch(
-        setIndexModal({
-          actionValue: true,
-          actionMessage: "Deleting Collection",
-        })
-      );
-      const tx = await burnWriteAsync?.();
-      await tx?.wait();
-      dispatch(
-        setIndexModal({
-          actionValue: false,
-          actionMessage: "",
-        })
-      );
-      dispatch(
-        setSuccessModal({
-          actionOpen: true,
-          actionMedia: collectionValues.image,
-          actionLink: "",
-          actionMessage: "Collection Burned! Your Collection has been burned.",
-        })
-      );
-      dispatch(setCollectionSwitcher("collections"));
-      dispatch(
-        setCollectionDetails({
-          actionTitle: "",
-          actionDescription: "",
-          actionImage: "",
-          actionAmount: 1,
-          actionAcceptedTokens: [],
-          actionTokenPrices: [],
-          actionDisabled: false,
-          actionFileType: "",
-          actionType: "",
-          actionId: 0,
-        })
-      );
-    } catch (err: any) {
-      console.error(err.message);
-      dispatch(
-        setIndexModal({
-          actionValue: true,
-          actionMessage: "Unsuccessful. Please Try Again.",
-        })
-      );
-      setTimeout(() => {
-        dispatch(
-          setIndexModal({
-            actionValue: false,
-            actionMessage: "",
-          })
-        );
-      }, 4000);
-    }
-
     setAddCollectionLoading(false);
   };
 
@@ -393,7 +327,7 @@ const useAddCollection = () => {
       editingIndex !== undefined
     ) {
       const currencyAddress = collectionValues?.acceptedTokens[editingIndex];
-      const matchingToken = availableTokens.find(
+      const matchingToken = AVAILABLE_TOKENS.find(
         (token) => token[1] === currencyAddress
       );
       if (matchingToken) {
@@ -408,7 +342,7 @@ const useAddCollection = () => {
       } else if (collectionValues?.acceptedTokens?.length > 0) {
         const lastCurrencyAddress =
           collectionValues?.acceptedTokens.slice(-1)[0];
-        const lastMatchingToken = availableTokens.find(
+        const lastMatchingToken = AVAILABLE_TOKENS.find(
           (token) => token[1] === lastCurrencyAddress
         );
         if (lastMatchingToken) {
@@ -425,6 +359,17 @@ const useAddCollection = () => {
     }
   }, [collectionValues.tokenPrices, editingIndex]);
 
+  useEffect(() => {
+    if (
+      collectionValues?.soldTokens?.length === 0 ||
+      !collectionValues?.soldTokens
+    ) {
+      dispatch(setCanEdit(true));
+    } else {
+      dispatch(setCanEdit(false));
+    }
+  }, [collectionValues.id]);
+
   return {
     imageLoading,
     setImageLoading,
@@ -436,7 +381,6 @@ const useAddCollection = () => {
     handleCollectionPrices,
     price,
     setPrice,
-    deleteCollection,
   };
 };
 

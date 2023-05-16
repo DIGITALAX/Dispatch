@@ -101,7 +101,7 @@ const AddDrop: FunctionComponent<AddDropProps> = ({
             <div className="relative flex flex-col gap-2 w-fit h-fit justify-start items-center">
               <ButtonAdd
                 text={dropDetails.disabled ? "Add More" : "Add Drop"}
-                functionAdd={dropDetails.disabled ? addMore : addDrop}
+                functionAdd={dropDetails.disabled ? () => addMore() :  () => addDrop()}
                 loader={addDropLoading}
                 width={"28"}
               />
@@ -110,7 +110,7 @@ const AddDrop: FunctionComponent<AddDropProps> = ({
               {dropDetails.type === "delete" && (
                 <ButtonAdd
                   text={"Delete Drop"}
-                  functionAdd={deleteDrop as any}
+                  functionAdd={() => deleteDrop() as any}
                   loader={deleteDropLoading}
                   width={"36"}
                 />
@@ -153,7 +153,9 @@ const AddDrop: FunctionComponent<AddDropProps> = ({
                         actionDisabled: true,
                         actionFileType: value.fileType,
                         actionId: value.collectionId,
-                       
+                        actionSoldTokens: value?.soldTokens,
+                        actionTokenIds: value?.tokenIds,
+                        actionLive: value?.drop?.name ? true: false
                       })
                     );
                     dispatch(setCollectionSwitcher("add"));

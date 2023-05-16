@@ -39,7 +39,8 @@ const Success: FunctionComponent<SuccessProps> = ({
                   {message}
                 </div>
                 {!message.includes("Collection Burned!") &&
-                  !message.includes("Drop Deleted!") && (
+                  !message.includes("Drop Deleted!") &&
+                  !message.includes("Collection Updated!") && (
                     <div
                       className="relative px-2 py-1.5 w-fit h-fit rounded-lg bg-ama text-black border border-white font-earl text-sm cursor-pointer active:scale-95"
                       onClick={

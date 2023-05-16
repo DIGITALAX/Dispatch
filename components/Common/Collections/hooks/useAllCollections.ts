@@ -24,10 +24,7 @@ const useAllCollections = () => {
     try {
       const colls = await getAllCollections(address);
       const drops = await getAllDrops(address);
-      const collections = await collectionGetter(
-        colls,
-        drops,
-      );
+      const collections = await collectionGetter(colls, drops);
       setAllCollections(collections ? collections : []);
       dispatch(setAllCollectionsRedux(collections ? collections : []));
     } catch (err: any) {
@@ -43,7 +40,11 @@ const useAllCollections = () => {
   }, []);
 
   useEffect(() => {
-    if (successModal.message.includes("Collection Minted!")) {
+    if (
+      successModal.message.includes("Collection Minted!") ||
+      successModal.message.includes("Collection Updated!") ||
+      successModal.message.includes("Collection Burned!")
+    ) {
       setTimeout(() => {
         getCollectionsAll();
       }, 5000);

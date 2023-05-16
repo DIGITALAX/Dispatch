@@ -8,6 +8,7 @@ const CollectionPrices: FunctionComponent<CollectionPricesProps> = ({
   collectionDetails,
   handleCollectionPrices,
   loader,
+  canEditCollection,
 }): JSX.Element => {
   return (
     <div className="relative flex flex-col gap-2 w-full h-fit font-earl">
@@ -33,7 +34,7 @@ const CollectionPrices: FunctionComponent<CollectionPricesProps> = ({
           "0x6968105460f67c3bf751be7c15f92f5286fd0ce5",
         ],
       ])
-        .map((item: string[], index: number) => {
+        .map((item: string[]) => {
           if (
             collectionDetails?.acceptedTokens?.includes(item[2].toLowerCase())
           ) {
@@ -59,9 +60,9 @@ const CollectionPrices: FunctionComponent<CollectionPricesProps> = ({
           return (
             <div
               key={index}
-              className="relative w-full h-fit flex flex-row gap-3 items-center justify-start"
+              className="relative w-full h-fit flex flex-col preG:flex-row gap-3 items-center justify-start"
             >
-              <div className="relative w-7 h-10 flex rounded-full flex-col items-center justify-center">
+              <div className="relative w-7 h-10 hidden preG:flex rounded-full flex-col items-center justify-center">
                 <Image
                   src={`${INFURA_GATEWAY}/ipfs/${value[0]}`}
                   draggable={false}
@@ -87,7 +88,7 @@ const CollectionPrices: FunctionComponent<CollectionPricesProps> = ({
                 }
                 defaultValue={(value as any).price}
                 loader={loader}
-                disabled={collectionDetails?.disabled}
+                disabled={!canEditCollection && collectionDetails?.disabled}
               />
               <div className="relative w-fit h-fit flex items-center justify-center text-xs">
                 {value[1]}

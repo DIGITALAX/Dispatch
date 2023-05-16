@@ -1,5 +1,4 @@
 import fileLimitAlert from "@/lib/helpers/fileLimitAlert";
-import { getCommentData, setCommentData } from "@/lib/lens/utils";
 import { setCollectionDetails } from "@/redux/reducers/collectionDetailsSlice";
 import { setDropDetails } from "@/redux/reducers/dropDetailsSlice";
 import { RootState } from "@/redux/store";
@@ -21,7 +20,7 @@ const useImageUpload = () => {
   const [videoLoading, setVideoLoading] = useState<boolean>(false);
   const [mappedFeaturedFiles, setMappedFeaturedFiles] = useState<
     UploadedMedia[]
-  >(JSON.parse(getCommentData() || "{}").images || []);
+  >([]);
   const imagesUploaded = useSelector(
     (state: RootState) => state.app.postImageReducer.value
   );
@@ -87,9 +86,12 @@ const useImageUpload = () => {
             actionAmount: collectionValues?.amount,
             actionAcceptedTokens: collectionValues?.acceptedTokens,
             actionTokenPrices: collectionValues?.tokenPrices,
-            actionDisabled: false,
+            actionDisabled: collectionValues?.disabled,
             actionFileType: fileType,
             actionId: collectionValues?.id,
+            actionSoldTokens: collectionValues?.soldTokens,
+            actionTokenIds: collectionValues?.tokenIds,
+            actionLive: collectionValues?.live,
           })
         );
       }
@@ -115,13 +117,6 @@ const useImageUpload = () => {
         { cid: String(cid?.cid), type: MediaType.Video },
       ];
       setMappedFeaturedFiles(newArr);
-      const postStorage = JSON.parse(getCommentData() || "{}");
-      setCommentData(
-        JSON.stringify({
-          ...postStorage,
-          images: newArr,
-        })
-      );
     } catch (err: any) {
       console.error(err.message);
     }
@@ -134,13 +129,6 @@ const useImageUpload = () => {
       (uploaded) => uploaded.cid !== image.cid
     );
     setMappedFeaturedFiles(cleanedArray);
-    const postStorage = JSON.parse(getCommentData() || "{}");
-    setCommentData(
-      JSON.stringify({
-        ...postStorage,
-        images: cleanedArray,
-      })
-    );
   };
 
   const uploadImages = async (
@@ -200,14 +188,6 @@ const useImageUpload = () => {
               ) {
                 let newArr = [...(imagesUploaded as any), ...finalImages];
                 setMappedFeaturedFiles(newArr);
-                const postStorage = JSON.parse(getCommentData() || "{}");
-                setCommentData(
-                  JSON.stringify({
-                    ...postStorage,
-                    images: newArr,
-                  })
-                );
-                setImageLoading(false);
               }
             }
           } catch (err: any) {

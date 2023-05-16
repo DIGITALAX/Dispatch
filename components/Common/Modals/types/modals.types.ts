@@ -1,4 +1,5 @@
 import { Profile, Publication } from "@/components/Home/types/lens.types";
+import { CollectionDetailsState } from "@/redux/reducers/collectionDetailsSlice";
 import { MainVideoState } from "@/redux/reducers/mainVideoSlice";
 import { PostCollectValuesState } from "@/redux/reducers/postCollectSlice";
 import { VideoSyncState } from "@/redux/reducers/videoSyncSlice";
@@ -90,4 +91,11 @@ export type WhoProps = {
   dispatch: Dispatch<AnyAction>;
   hasMore: boolean;
   type: number;
+};
+
+export type UpdateCollectionProps = {
+  updateCollection: () => Promise<void>;
+  updateCollectionLoading: boolean;
+  collectionValues: CollectionDetailsState
+  dispatch: Dispatch<AnyAction>;
 };

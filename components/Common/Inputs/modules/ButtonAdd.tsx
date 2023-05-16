@@ -14,7 +14,7 @@ const ButtonAdd: FunctionComponent<ButtonAddProps> = ({
       className={`relative w-${width} h-10 bg-marip border border-black font-earl text-center text-lunar rounded-tl-lg rounded-br-lg flex items-center justify-center px-4 py-1.5 text-sm ${
         !loader && !disabled && "cursor-pointer active:scale-95"
       }`}
-      onClick={loader || disabled ? () => {} : () => functionAdd()}
+      onClick={loader || disabled ? () => {} : functionAdd}
     >
       <div
         className={`relative w-fit h-fit flex items-center justify-center ${

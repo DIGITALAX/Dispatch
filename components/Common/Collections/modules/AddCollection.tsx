@@ -7,6 +7,7 @@ import { AddCollectionProps } from "../types/collections.types";
 import { setCollectionSwitcher } from "@/redux/reducers/collectionSwitcherSlice";
 import CollectionPreview from "./CollectionPreview";
 import CollectionPrices from "./CollectionPrices";
+import { setUpdateCollection } from "@/redux/reducers/updateCollectionSlice";
 
 const AddCollection: FunctionComponent<AddCollectionProps> = ({
   imageLoading,
@@ -23,6 +24,8 @@ const AddCollection: FunctionComponent<AddCollectionProps> = ({
   setPrice,
   price,
   deleteCollection,
+  deleteCollectionLoading,
+  canEditCollection,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full flex flex-col justify-start items-start text-white gap-4">
@@ -53,7 +56,7 @@ const AddCollection: FunctionComponent<AddCollectionProps> = ({
               width="full"
               defaultValue={collectionDetails?.title}
               loader={addCollectionLoading}
-              disabled={collectionDetails?.disabled}
+              disabled={!canEditCollection && collectionDetails?.disabled}
             />
           </div>
           <div className="relative flex flex-col gap-2 w-full h-fit">
@@ -66,7 +69,7 @@ const AddCollection: FunctionComponent<AddCollectionProps> = ({
               width="full"
               defaultValue={collectionDetails?.description}
               loader={addCollectionLoading}
-              disabled={collectionDetails?.disabled}
+              disabled={!canEditCollection && collectionDetails?.disabled}
             />
           </div>
           <div className="relative flex flex-col new:flex-row w-full h-full items-start justify-start gap-5 new:gap-10 new:pb-0 pb-5">
@@ -82,7 +85,7 @@ const AddCollection: FunctionComponent<AddCollectionProps> = ({
                   loaderGeneral={addCollectionLoading}
                   setImageLoading={setImageLoading}
                   type="collection"
-                  disabled={collectionDetails.disabled}
+                  disabled={!canEditCollection && collectionDetails.disabled}
                   fileType={collectionDetails.fileType}
                 />
               </div>
@@ -112,16 +115,50 @@ const AddCollection: FunctionComponent<AddCollectionProps> = ({
                 collectionDetails={collectionDetails}
                 handleCollectionPrices={handleCollectionPrices}
                 loader={addCollectionLoading}
+                canEditCollection={canEditCollection}
               />
             </div>
           </div>
-          <div className="relative flex flex-col gap-2 w-fit h-fit justify-start items-center">
-            <ButtonAdd
-              text={"Mint Collection"}
-              width={"40"}
-              functionAdd={addCollection}
-              loader={addCollectionLoading}
-            />
+          <div
+            className={`relative flex flex-row gap-2 w-fit h-fit justify-start items-center flex-wrap preG:flex-nowrap`}
+          >
+            <div
+              className={`relative w-fit h-fit ${
+                collectionDetails.disabled && !canEditCollection
+                  ? "hidden"
+                  : "flex"
+              }
+            `}
+            >
+              <ButtonAdd
+                text={
+                  collectionDetails.disabled && canEditCollection
+                    ? "Update Collection"
+                    : "Mint Collection"
+                }
+                width={"40"}
+                functionAdd={
+                  collectionDetails.disabled && canEditCollection
+                    ? () => dispatch(setUpdateCollection(true))
+                    : () => addCollection()
+                }
+                loader={addCollectionLoading}
+              />
+            </div>
+            <div
+              className={`relative w-fit h-fit ${
+                collectionDetails.disabled && collectionDetails.live
+                  ? "flex"
+                  : "hidden"
+              }`}
+            >
+              <ButtonAdd
+                text={"Delete Collection"}
+                width={"40"}
+                functionAdd={() => deleteCollection()}
+                loader={deleteCollectionLoading}
+              />
+            </div>
           </div>
         </div>
         <div className="relative w-full h-full flex mode:order-2 order-1">

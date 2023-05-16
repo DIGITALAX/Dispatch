@@ -3,6 +3,7 @@ import refresh from "../../graphql/lens/mutations/refresh";
 const AUTH_STORAGE_KEY = "LH_STORAGE_KEY_DISPATCH";
 const ADDRESS_DISPATCH = "ADDRESS_DISPATCH";
 const COMMENT_STORAGE_KEY = "COMMENT_STORAGE_DISPATCH";
+const POST_STORAGE_KEY = "POST_STORAGE_DISPATCH";
 
 interface authToken {
   token: {
@@ -98,23 +99,23 @@ export const getAddress = () => {
   }
 };
 
-export const setCommentData = (post: string) => {
+export const setPostData = (post: string) => {
   if (typeof window !== "undefined") {
-    localStorage.setItem(COMMENT_STORAGE_KEY, post);
+    localStorage.setItem(POST_STORAGE_KEY, post);
     return;
   }
 };
 
-export const getCommentData = () => {
+export const getPostData = () => {
   if (typeof window !== "undefined") {
-    const data = localStorage.getItem(COMMENT_STORAGE_KEY);
+    const data = localStorage.getItem(POST_STORAGE_KEY);
     if (!data) return null;
     return data;
   }
 };
 
-export const removeCommentData = () => {
+export const removePostData = () => {
   if (typeof window !== "undefined") {
-    localStorage.removeItem(COMMENT_STORAGE_KEY);
+    localStorage.removeItem(POST_STORAGE_KEY);
   }
 };

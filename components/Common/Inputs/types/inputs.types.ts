@@ -12,7 +12,7 @@ export type FillInProps = {
 
 export type ButtonAddProps = {
   text: string;
-  functionAdd: () => Promise<void>;
+  functionAdd: () => any;
   loader: boolean;
   width: string;
   disabled?: boolean;
