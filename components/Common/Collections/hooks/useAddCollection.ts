@@ -168,8 +168,6 @@ const useAddCollection = () => {
       }
     }
 
-    console.log(acceptedTokens, tokenPrices)
-
     dispatch(
       setCollectionDetails({
         actionTitle: collectionValues?.title,

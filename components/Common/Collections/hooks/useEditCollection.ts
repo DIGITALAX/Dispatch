@@ -110,8 +110,6 @@ const useEditCollection = () => {
     ],
   });
 
-  console.log({ collectionValues });
-
   const { writeAsync: basePricesConfigWriteAsync } =
     useContractWrite(basePricesConfig);
 
@@ -188,7 +186,6 @@ const useEditCollection = () => {
         }),
       });
       const responseJSON = await response.json();
-      console.log(responseJSON.cid);
       setCollectionURIArgs(`ipfs://${responseJSON.cid}`);
     } catch (err: any) {
       console.error(err.message);
