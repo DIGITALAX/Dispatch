@@ -37,7 +37,7 @@ const uploadPostContent = async (
     version: "2.0.0",
     metadata_id: uuidv4(),
     description:
-    gated ? "Collect " :
+    gated ? "align the signs to unlock this gate. ready to collect now on chromadin." :
       postDescription.length < 0 || postDescription.trim().length < 0
         ? null
         : postDescription,

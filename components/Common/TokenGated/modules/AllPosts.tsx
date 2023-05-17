@@ -186,7 +186,7 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
   return (
     <div className="relative w-full h-fit flex flex-col items-start justify-start gap-4">
       <div className="relative w-full h-10 flex flex-row items-center justify-end ml-auto gap-4">
-        <div className="w-fit h-fit text-white font-arcade text-sm">
+        <div className="w-fit h-fit text-white font-arcade text-sm ">
           {feedSwitch ? "Profile Feed" : "Creator Timeline"}
         </div>
         <div
@@ -208,7 +208,7 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
           )}
         </div>
       </div>
-      <div className="relative w-full h-full flex flex-col xl:flex-row items-start justify-end gap-8">
+      <div className="relative w-full h-full flex flex-col xl:flex-row items-start justify-end gap-8 ">
         <MakePost
           setTokenIds={setTokenIds}
           tokenIds={tokenIds}
@@ -399,6 +399,21 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
             onScroll={(e) => setScrollPos(e)}
             initialScrollY={feedSwitch ? scrollPos.feed : scrollPos.timeline}
           >
+            {feedDispatch?.length === 0 ? (
+              <div className="relative w-full h-fit justify-center items-start text-white font-earl flex flex-col text-center">
+                <div className="relative w-full h-fit flex justify-center items-start text-center">
+                  No Encrypted Posts Yet.
+                </div>
+              </div>
+            ) : (
+              timelineDispatch?.length === 0 && (
+                <div className="relative w-full h-fit justify-center items-start text-white font-earl flex flex-col text-center">
+                  <div className="relative w-full h-fit flex justify-center items-start text-center">
+                    Nothing in your feed? Follow Chromadin Curated Creators.
+                  </div>
+                </div>
+              )
+            )}
             <div className="w-full xl:max-w-230 h-full relative flex flex-col gap-4 pb-3">
               {(feedSwitch ? feedDispatch : timelineDispatch)?.map(
                 (publication: Publication, index: number) => {

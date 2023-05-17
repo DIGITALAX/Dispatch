@@ -256,10 +256,12 @@ const useMakePost = () => {
 
   const tokenGatePost = async (): Promise<void> => {
     if (
-      (!postDescription ||
+      ((!postDescription ||
         postDescription === "" ||
         postDescription.trim()?.length < 0) &&
-      (!postImages?.length || postImages?.length < 1)
+        (!postImages?.length || postImages?.length < 1)) ||
+      tokenIds?.length < 1 ||
+      !tokenIds
     ) {
       return;
     }
@@ -285,24 +287,23 @@ const useMakePost = () => {
         true
       );
 
-      const { contentURI, encryptedMetadata } =
-        await sdk.gated.encryptMetadata(
-          contentURIValue,
-          profileId?.id,
-          {
-            nft: {
-              contractAddress: CHROMADIN_NFT_CONTRACT,
-              chainID: 137,
-              contractType: ContractType.Erc721,
-              tokenIds: collections.filter((item) => {
-                return tokenIds.some((tokenId) =>
-                  item.tokenIds.includes(tokenId)
-                );
-              }),
-            },
+      const { contentURI, encryptedMetadata } = await sdk.gated.encryptMetadata(
+        contentURIValue,
+        profileId?.id,
+        {
+          nft: {
+            contractAddress: CHROMADIN_NFT_CONTRACT,
+            chainID: 137,
+            contractType: ContractType.Erc721,
+            tokenIds: collections.filter((item) => {
+              return tokenIds.some((tokenId) =>
+                item.tokenIds.includes(tokenId)
+              );
+            }),
           },
-          uploadMetadataHandler
-        );
+        },
+        uploadMetadataHandler
+      );
 
       console.log({ contentURI, encryptedMetadata });
 
