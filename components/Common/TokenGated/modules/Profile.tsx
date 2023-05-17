@@ -65,7 +65,7 @@ const Profile: FunctionComponent<ProfileSideBarProps> = ({
             id="crt"
             target="_blank"
             rel="noreferrer"
-            href={`https://lenster.xyz/u/${
+            href={`https://chromadin.xyz/#wavs?option=history&profile=${
               publication?.__typename !== "Mirror"
                 ? publication?.profile?.handle.split(".lens")[0]
                 : publication?.mirrorOf?.profile?.handle.split(".lens")[0]

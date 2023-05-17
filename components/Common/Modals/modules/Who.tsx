@@ -65,7 +65,7 @@ const Who: FunctionComponent<WhoProps> = ({
                               className="relative w-full h-fit p-2 drop-shadow-lg flex flex-row bg-gradient-to-r from-offBlack via-gray-600 to-black auto-cols-auto rounded-lg border border-black font-economica text-white"
                               target="_blank"
                               rel="noreferrer"
-                              href={`https://lenster.xyz/u/${
+                              href={`https://chromadin.xyz/#wavs?option=history&profile=${
                                 (type === 0
                                   ? reacter?.profile
                                   : type === 1
