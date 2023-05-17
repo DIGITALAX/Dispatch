@@ -223,7 +223,7 @@ const AddDrop: FunctionComponent<AddDropProps> = ({
                               ? (event) => {
                                   event.stopPropagation();
                                   window.open(
-                                    `http://www.chromadin.xyz/#collect?option=history?search=${value?.name}`,
+                                    `http://www.chromadin.xyz/#collect?option=history&search=${value?.name}`,
                                     "_blank"
                                   );
                                 }

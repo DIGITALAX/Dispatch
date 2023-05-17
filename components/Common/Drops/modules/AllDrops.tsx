@@ -119,7 +119,7 @@ const AllDrops: FunctionComponent<AllDropsProps> = ({
                           onClick={(event) => {
                             event.stopPropagation();
                             window.open(
-                              `http://www.chromadin.xyz/#collect?option=history?search=${value?.uri?.name}`,
+                              `http://www.chromadin.xyz/#collect?option=history&search=${value?.uri?.name}`,
                               "_blank"
                             );
                           }}
