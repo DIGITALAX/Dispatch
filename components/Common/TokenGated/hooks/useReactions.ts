@@ -142,7 +142,20 @@ const useReactions = () => {
         })
       );
     } catch (err: any) {
-      console.error(err.message);
+      if (
+        err.message.includes(
+          "You have already reacted to this publication with action UPVOTE"
+        )
+      ) {
+        dispatch(
+          setFeedReactId({
+            actionValue: id,
+            actionType: 0,
+          })
+        );
+      } else {
+        console.error(err.message);
+      }
     }
     if (inputIndex === undefined || inputIndex === null) {
       (feedSwitch ? setReactFeedLoading : setReactTimelineLoading)((prev) => {

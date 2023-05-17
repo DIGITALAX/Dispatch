@@ -176,6 +176,7 @@ const useComment = () => {
     setCommentLoading(false);
     setCommentDescription("");
     setCommentHTML("");
+    
     setGifs([]);
     dispatch(setPostImages([]));
     // (document as any).querySelector("#highlighted-content").innerHTML = "";

@@ -19,6 +19,8 @@ import { LensEnvironment, LensGatedSDK } from "@lens-protocol/sdk-gated";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useSigner } from "wagmi";
+import { postGateImagesSlice } from "@/redux/reducers/postGatedImageSlice";
+import { getPostData } from "@/lib/lens/utils";
 
 const useAllPosts = () => {
   const { data: signer } = useSigner();
@@ -36,6 +38,9 @@ const useAllPosts = () => {
   );
   const feedId = useSelector(
     (state: RootState) => state.app.feedReactIdReducer
+  );
+  const postImages = useSelector(
+    (state: RootState) => state?.app?.postGatedImageReducer?.value
   );
   const reactionFeedCount = useSelector(
     (state: RootState) => state.app.reactionFeedCountReducer
@@ -122,7 +127,7 @@ const useAllPosts = () => {
               return decrypted;
             }
           } catch (err: any) {
-            console.log(err.message);
+            console.error(err.message);
             return null;
           }
         })
@@ -245,7 +250,7 @@ const useAllPosts = () => {
               return decrypted;
             }
           } catch (err: any) {
-            console.log(err.message);
+            console.error(err.message);
             return null;
           }
         })
@@ -518,25 +523,28 @@ const useAllPosts = () => {
   const refetchInteractions = () => {
     try {
       const index = (feedSwitch ? feedDispatch : timelineDispatch)?.findIndex(
-        (feed) => feed.id === feedId.value
+        (feed) =>
+          (feed.__typename === "Mirror" ? feed.mirrorOf.id : feed.id) ===
+          feedId.value
       );
       if (index !== -1) {
+        dispatch(
+          setIndividualFeedCount({
+            actionLike:
+              feedId.type === 0 ? individual.like + 1 : individual.like,
+            actionMirror:
+              feedId.type === 1 ? individual.mirror + 1 : individual.mirror,
+            actionCollect:
+              feedId.type === 2 ? individual.collect + 1 : individual.collect,
+            actionComment:
+              feedId.type === 3 ? individual.comment + 1 : individual.comment,
+            actionHasLiked: feedId.type === 0 ? true : individual.hasLiked,
+            actionHasMirrored: feedId.type === 1 ? true : individual.mirror,
+            actionHasCollected: feedId.type === 2 ? true : individual.collect,
+          })
+        );
+
         if (feedSwitch) {
-          dispatch(
-            setIndividualFeedCount({
-              actionLike:
-                feedId.type === 0 ? individual.like + 1 : individual.like,
-              actionMirror:
-                feedId.type === 1 ? individual.mirror + 1 : individual.mirror,
-              actionCollect:
-                feedId.type === 2 ? individual.collect + 1 : individual.collect,
-              actionComment:
-                feedId.type === 3 ? individual.comment + 1 : individual.comment,
-              actionHasLiked: feedId.type === 0 ? true : individual.hasLiked,
-              actionHasMirrored: feedId.type === 1 ? true : individual.mirror,
-              actionHasCollected: feedId.type === 2 ? true : individual.collect,
-            })
-          );
           dispatch(
             setReactionFeedCount({
               actionLike:
@@ -590,21 +598,6 @@ const useAllPosts = () => {
             })
           );
         } else {
-          dispatch(
-            setIndividualFeedCount({
-              actionLike:
-                feedId.type === 0 ? individual.like + 1 : individual.like,
-              actionMirror:
-                feedId.type === 1 ? individual.mirror + 1 : individual.mirror,
-              actionCollect:
-                feedId.type === 2 ? individual.collect + 1 : individual.collect,
-              actionComment:
-                feedId.type === 3 ? individual.comment + 1 : individual.comment,
-              actionHasLiked: feedId.type === 0 ? true : individual.hasLiked,
-              actionHasMirrored: feedId.type === 1 ? true : individual.mirror,
-              actionHasCollected: feedId.type === 2 ? true : individual.collect,
-            })
-          );
           dispatch(
             setReactionTimelineCount({
               actionLike:
@@ -683,6 +676,7 @@ const useAllPosts = () => {
 
   const refetchComments = () => {
     const index = comments?.findIndex((comment) => comment.id === feedId.value);
+
     if (index !== -1) {
       dispatch(
         setCommentFeedCount({
@@ -776,6 +770,13 @@ const useAllPosts = () => {
       }
     }
   }, [feedSwitch, auth]);
+
+  useEffect(() => {
+    const comm = getPostData();
+    if (auth && feedSwitch && postImages?.length < 1 && !comm) {
+      getFeed();
+    }
+  }, [postImages]);
 
   return {
     followerOnly,

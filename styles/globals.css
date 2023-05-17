@@ -276,3 +276,29 @@ code::-webkit-scrollbar {
     #f6f7e6
   );
 }
+
+#highlighted-content2 {
+  font-family: "Economica B";
+  font-size: 1rem;
+  line-height: 1.5rem;
+  overflow-y: scroll;
+  scrollbar-width: none;
+}
+
+#highlighted-content2::-webkit-scrollbar {
+  display: none;
+}
+
+#post2 {
+  color: transparent;
+  background: transparent;
+  caret-color: white;
+}
+
+#post2 #highlighting2 * {
+  font-family: "Economica B";
+  font-size: 1rem; /* 16px */
+  line-height: 1.5rem;
+  overflow-y: scroll;
+  white-space: pre-wrap;
+}

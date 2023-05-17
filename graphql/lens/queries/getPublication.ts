@@ -101,6 +101,7 @@ const GET_PUBLICATION = `query Publication($request: PublicationQueryRequest!) {
     totalAmountOfMirrors
     totalAmountOfCollects
     totalAmountOfComments
+    totalUpvotes
   }
   
   fragment MetadataOutputFields on MetadataOutput {

@@ -113,7 +113,7 @@ const pollUntilIndexed = async (txHash: string, success: boolean) => {
       }
     }
     count += 1;
-    await new Promise((resolve) => setTimeout(resolve, 3000));
+    await new Promise((resolve) => setTimeout(resolve, 6000));
   }
 };
 

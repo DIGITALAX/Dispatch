@@ -86,11 +86,11 @@ const MakePost: FunctionComponent<MakePostProps> = ({
           <div className="relative w-full h-full border border-white p-px rounded-md">
             <div className="relative w-full h-44 border border-white p-px rounded-md grid grid-flow-col auto-cols-auto">
               <textarea
-                id="post"
-                onScroll={(e: any) => syncScroll(e, "highlighted-content")}
+                id="post2"
+                onScroll={(e: any) => syncScroll(e, "highlighted-content2")}
                 onInput={(e: FormEvent) => {
                   handlePostDescription(e);
-                  syncScroll(e, "highlighted-content");
+                  syncScroll(e, "highlighted-content2");
                 }}
                 onKeyDown={(e: KeyboardEvent<Element>) =>
                   handleKeyDownDelete(e)
@@ -102,11 +102,11 @@ const MakePost: FunctionComponent<MakePostProps> = ({
                 disabled={postLoading ? true : false}
               ></textarea>
               <pre
-                id="highlighting"
+                id="highlighting2"
                 className={`absolute w-full h-full bg-black font-economicaB text-white p-2 rounded-lg overflow-y-scroll`}
               >
                 <code
-                  id="highlighted-content"
+                  id="highlighted-content2"
                   className={`w-full h-full place-self-center text-left whitespace-pre-wrap overflow-y-scroll z-0`}
                 >
                   {"Make a Token Gated Post"}

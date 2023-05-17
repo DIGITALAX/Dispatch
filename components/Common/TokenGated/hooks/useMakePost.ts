@@ -126,7 +126,7 @@ const useMakePost = () => {
   };
 
   const handleKeyDownDelete = (e: KeyboardEvent<Element>) => {
-    const highlightedContent = document.querySelector("#highlighted-content")!;
+    const highlightedContent = document.querySelector("#highlighted-content2")!;
     const selection = window.getSelection();
     const postStorage = JSON.parse(getPostData() || "{}");
     if (e.key === "Backspace" && selection?.toString() !== "") {
@@ -188,7 +188,7 @@ const useMakePost = () => {
   };
 
   const handlePostDescription = async (e: any): Promise<void> => {
-    let resultElement = document.querySelector("#highlighted-content");
+    let resultElement = document.querySelector("#highlighted-content2");
     const newValue = e.target.value.endsWith("\n")
       ? e.target.value + " "
       : e.target.value;
@@ -305,102 +305,100 @@ const useMakePost = () => {
         uploadMetadataHandler
       );
 
-      console.log({ contentURI, encryptedMetadata });
+      if (dispatcher) {
+        result = await createDispatcherPostData({
+          profileId: profileId?.id,
+          contentURI: contentURI,
+          collectModule: collectModuleType,
+          referenceModule: {
+            followerOnlyReferenceModule: false,
+          },
+          gated: {
+            nft: {
+              contractAddress: CHROMADIN_COLLECTION_CONTRACT,
+              chainID: 137,
+              contractType: ContractType.Erc721,
+              tokenIds: tokenIds,
+            },
+            encryptedSymmetricKey:
+              encryptedMetadata?.encryptionParams.providerSpecificParams
+                .encryptionKey,
+          },
+        });
+        clearPost();
+        setTimeout(async () => {
+          await handleIndexCheck(
+            result?.data?.createPostViaDispatcher?.txHash,
+            dispatch,
+            true
+          );
+        }, 7000);
+      } else {
+        result = await createPostTypedData({
+          profileId: profileId?.id,
+          contentURI: contentURI,
+          collectModule: collectModuleType,
+          referenceModule: {
+            followerOnlyReferenceModule: false,
+          },
+          gated: {
+            nft: {
+              contractAddress: CHROMADIN_COLLECTION_CONTRACT,
+              chainID: 137,
+              contractType: ContractType.Erc721,
+              tokenIds: tokenIds,
+            },
+            encryptedSymmetricKey:
+              encryptedMetadata?.encryptionParams.providerSpecificParams
+                .encryptionKey,
+          },
+        });
 
-      // if (dispatcher) {
-      //   result = await createDispatcherPostData({
-      //     profileId: profileId?.id,
-      //     contentURI: contentURI,
-      //     collectModule: collectModuleType,
-      //     referenceModule: {
-      //       followerOnlyReferenceModule: false,
-      //     },
-      //     gated: {
-      //       nft: {
-      //         contractAddress: CHROMADIN_COLLECTION_CONTRACT,
-      //         chainID: 137,
-      //         contractType: ContractType.Erc721,
-      //         tokenIds: tokenIds,
-      //       },
-      //       encryptedSymmetricKey:
-      //         encryptedMetadata?.encryptionParams.providerSpecificParams
-      //           .encryptionKey,
-      //     },
-      //   });
-      //   clearPost();
-      //   setTimeout(async () => {
-      //     await handleIndexCheck(
-      //       result?.data?.createPostViaDispatcher?.txHash,
-      //       dispatch,
-      //       true
-      //     );
-      //   }, 7000);
-      // } else {
-      //   result = await createPostTypedData({
-      //     profileId: profileId?.id,
-      //     contentURI: contentURI,
-      //     collectModule: collectModuleType,
-      //     referenceModule: {
-      //       followerOnlyReferenceModule: false,
-      //     },
-      //     gated: {
-      //       nft: {
-      //         contractAddress: CHROMADIN_COLLECTION_CONTRACT,
-      //         chainID: 137,
-      //         contractType: ContractType.Erc721,
-      //         tokenIds: tokenIds,
-      //       },
-      //       encryptedSymmetricKey:
-      //         encryptedMetadata?.encryptionParams.providerSpecificParams
-      //           .encryptionKey,
-      //     },
-      //   });
+        const typedData: any = result.data.createPostTypedData.typedData;
 
-      //   const typedData: any = result.data.createPostTypedData.typedData;
+        const signature: any = await signTypedDataAsync({
+          domain: omit(typedData?.domain, ["__typename"]),
+          types: omit(typedData?.types, ["__typename"]) as any,
+          value: omit(typedData?.value, ["__typename"]) as any,
+        });
 
-      //   const signature: any = await signTypedDataAsync({
-      //     domain: omit(typedData?.domain, ["__typename"]),
-      //     types: omit(typedData?.types, ["__typename"]) as any,
-      //     value: omit(typedData?.value, ["__typename"]) as any,
-      //   });
+        const broadcastResult: any = await broadcast({
+          id: result?.data?.createPostTypedData?.id,
+          signature,
+        });
 
-      //   const broadcastResult: any = await broadcast({
-      //     id: result?.data?.createPostTypedData?.id,
-      //     signature,
-      //   });
+        if (broadcastResult?.data?.broadcast?.__typename !== "RelayerResult") {
+          const { v, r, s } = splitSignature(signature);
 
-      //   if (broadcastResult?.data?.broadcast?.__typename !== "RelayerResult") {
-      //     const { v, r, s } = splitSignature(signature);
-
-      //     const postArgs = {
-      //       profileId: typedData.value.profileId,
-      //       contentURI: typedData.value.contentURI,
-      //       profileIdPointed: typedData.value.profileIdPointed,
-      //       pubIdPointed: typedData.value.pubIdPointed,
-      //       referenceModuleData: typedData.value.referenceModuleData,
-      //       referenceModule: typedData.value.referenceModule,
-      //       referenceModuleInitData: typedData.value.referenceModuleInitData,
-      //       collectModule: typedData.value.collectModule,
-      //       collectModuleInitData: typedData.value.collectModuleInitData,
-      //       sig: {
-      //         v,
-      //         r,
-      //         s,
-      //         deadline: typedData.value.deadline,
-      //       },
-      //     };
-      //     setPostArgs(postArgs);
-      //   } else {
-      //     clearPost();
-      //     setTimeout(async () => {
-      //       await handleIndexCheck(
-      //         broadcastResult?.data?.broadcast?.txHash,
-      //         dispatch,
-      //         true
-      //       );
-      //     }, 7000);
-      //   }
-      // }
+          const postArgs = {
+            profileId: typedData.value.profileId,
+            contentURI: typedData.value.contentURI,
+            profileIdPointed: typedData.value.profileIdPointed,
+            pubIdPointed: typedData.value.pubIdPointed,
+            referenceModuleData: typedData.value.referenceModuleData,
+            referenceModule: typedData.value.referenceModule,
+            referenceModuleInitData: typedData.value.referenceModuleInitData,
+            collectModule: typedData.value.collectModule,
+            collectModuleInitData: typedData.value.collectModuleInitData,
+            sig: {
+              v,
+              r,
+              s,
+              deadline: typedData.value.deadline,
+            },
+          };
+          setPostArgs(postArgs);
+        } else {
+          clearPost();
+          setTimeout(async () => {
+            await handleIndexCheck(
+              broadcastResult?.data?.broadcast?.txHash,
+              dispatch,
+              true
+            );
+          }, 7000);
+        }
+      }
     } catch (err: any) {
       console.error(err.message);
     }
@@ -424,7 +422,7 @@ const useMakePost = () => {
 
   const handleMentionClick = (user: any) => {
     setProfilesOpen(false);
-    let resultElement = document.querySelector("#highlighted-content");
+    let resultElement = document.querySelector("#highlighted-content2");
     const newHTMLPost =
       postHTML?.substring(0, postHTML.lastIndexOf("@")) +
       `@${user?.handle}</span>`;
@@ -455,7 +453,7 @@ const useMakePost = () => {
     const savedData = getPostData();
     if (savedData) {
       setPostDescription(JSON.parse(savedData).post);
-      let resultElement = document.querySelector("#highlighted-content");
+      let resultElement = document.querySelector("#highlighted-content2");
       if (
         JSON.parse(savedData).post[JSON.parse(savedData).post?.length - 1] ==
         "\n"
@@ -479,8 +477,8 @@ const useMakePost = () => {
   }, [searchGif]);
 
   useEffect(() => {
-    if (document.querySelector("#highlighted-content")) {
-      document.querySelector("#highlighted-content")!.innerHTML =
+    if (document.querySelector("#highlighted-content2")) {
+      document.querySelector("#highlighted-content2")!.innerHTML =
         postHTML.length === 0 ? "Have something to say?" : postHTML;
     }
   }, [postHTML]);

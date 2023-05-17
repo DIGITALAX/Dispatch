@@ -66,8 +66,8 @@ export default function App({ Component, pageProps }: AppProps) {
         <RainbowKitProvider chains={chains}>
           <div className="relative min-h-screen w-full overflow-x-hidden selection:bg-ama selection:text-moda">
             <Component {...pageProps} />
-            <Video />
             <Modals />
+            <Video />
           </div>
         </RainbowKitProvider>
       </WagmiConfig>

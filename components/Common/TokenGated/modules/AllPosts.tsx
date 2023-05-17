@@ -399,7 +399,7 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
             onScroll={(e) => setScrollPos(e)}
             initialScrollY={feedSwitch ? scrollPos.feed : scrollPos.timeline}
           >
-            {feedDispatch?.length === 0 ? (
+            {feedDispatch?.length === 0 && feedSwitch ? (
               <div className="relative w-full h-fit justify-center items-start text-white font-earl flex flex-col text-center">
                 <div className="relative w-full h-fit flex justify-center items-start text-center">
                   No Encrypted Posts Yet.
