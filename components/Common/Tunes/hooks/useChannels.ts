@@ -67,13 +67,13 @@ const useChannels = (): UseChannelsResults => {
         data = await profilePublicationsAuth({
           profileId: "0x01c6a9",
           publicationTypes: ["POST"],
-          limit: 31,
+          limit: 32,
         });
       } else {
         data = await profilePublications({
           profileId: "0x01c6a9",
           publicationTypes: ["POST"],
-          limit: 31,
+          limit: 32,
         });
       }
       const arr: any[] = [...data?.data.publications?.items];
@@ -100,7 +100,7 @@ const useChannels = (): UseChannelsResults => {
           {
             profileId: "0x01c6a9",
             publicationTypes: ["POST"],
-            limit: 31,
+            limit: 32,
           },
           lensProfile
         );
@@ -145,13 +145,13 @@ const useChannels = (): UseChannelsResults => {
         data = await profilePublicationsAuth({
           profileId: "0x01c6a9",
           publicationTypes: ["POST"],
-          limit: 31,
+          limit: 32,
         });
       } else {
         data = await profilePublications({
           profileId: "0x01c6a9",
           publicationTypes: ["POST"],
-          limit: 31,
+          limit: 32,
         });
       }
       const arr: any[] = [...data?.data.publications?.items];
@@ -162,7 +162,7 @@ const useChannels = (): UseChannelsResults => {
         {
           profileId: "0x01c6a9",
           publicationTypes: ["POST"],
-          limit: 31,
+          limit: 32,
         },
         lensProfile
       );
