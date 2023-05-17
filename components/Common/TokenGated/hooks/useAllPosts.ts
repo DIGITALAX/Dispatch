@@ -19,7 +19,6 @@ import { LensEnvironment, LensGatedSDK } from "@lens-protocol/sdk-gated";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useSigner } from "wagmi";
-import { postGateImagesSlice } from "@/redux/reducers/postGatedImageSlice";
 import { getPostData } from "@/lib/lens/utils";
 
 const useAllPosts = () => {

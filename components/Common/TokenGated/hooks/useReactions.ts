@@ -559,9 +559,12 @@ const useReactions = () => {
     try {
       let pubData: any;
       if (profileId) {
-        const { data } = await getPublicationAuth({
-          publicationId: purchase.id,
-        });
+        const { data } = await getPublicationAuth(
+          {
+            publicationId: purchase.id,
+          },
+          profileId
+        );
         pubData = data;
       } else {
         const { data } = await getPublication({
@@ -569,7 +572,10 @@ const useReactions = () => {
         });
         pubData = data;
       }
-      const collectModule = pubData?.publication?.collectModule;
+      const collectModule =
+        pubData?.publication?.__typename === "Mirror"
+          ? pubData?.publication?.mirrorOf?.collectModule
+          : pubData?.publication?.collectModule;
 
       const approvalData: ApprovedAllowanceAmount | void = await checkApproved(
         collectModule?.amount?.asset?.address,
@@ -600,14 +606,19 @@ const useReactions = () => {
             },
             value: collectModule?.amount?.value,
           },
-          actionCanCollect: pubData?.publication?.hasCollectedByMe,
+          actionCanCollect:
+            pubData?.publication?.__typename === "Mirror"
+              ? pubData?.publication?.mirrorOf?.hasCollectedByMe
+              : pubData?.publication?.hasCollectedByMe,
           actionApproved:
             collectModule?.type === "FreeCollectModule" ||
             isApproved > collectModule?.amount?.value
               ? true
               : false,
           actionTotalCollects:
-            pubData?.publication?.stats?.totalAmountOfCollects,
+            pubData?.publication?.__typename === "Mirror"
+              ? pubData?.publication?.mirrorOf?.stats?.totalAmountOfCollects
+              : pubData?.publication?.stats?.totalAmountOfCollects,
         })
       );
     } catch (err: any) {

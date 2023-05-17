@@ -180,7 +180,9 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
                           "image/webp" ||
                         (image as MediaSet)?.original?.mimeType ===
                           "image/jpg" ||
-                        (image as MediaSet)?.original?.mimeType === "image/jpeg"
+                        (image as MediaSet)?.original?.mimeType ===
+                          "image/jpeg" ||
+                        (image as MediaSet)?.original?.mimeType === "image/gif"
                           ? formattedImageURL
                           : (image as MediaSet)?.original?.url
                       }

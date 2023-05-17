@@ -284,9 +284,12 @@ const useIndividual = () => {
     try {
       let pubData;
       if (lensProfile) {
-        const { data } = await getPublicationAuth({
-          publicationId: feedType,
-        });
+        const { data } = await getPublicationAuth(
+          {
+            publicationId: feedType,
+          },
+          lensProfile
+        );
         pubData = data;
       } else {
         const { data } = await getPublication({
