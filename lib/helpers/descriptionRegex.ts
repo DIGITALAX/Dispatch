@@ -32,7 +32,10 @@ const descriptionRegex = (description: string, messages?: boolean) => {
           word[1] === "t" &&
           word[2] === "t" &&
           word[3] === "p") ||
-        (word[0] && word[1] && word[2] === "w" && word[3] === ".") ||
+        (word[0] === "w" &&
+          word[1] === "w" &&
+          word[2] === "w" &&
+          word[3] === ".") ||
         (word[word.length] === "z" &&
           word[word.length - 1] === "y" &&
           word[word.length - 2] === "x" &&
