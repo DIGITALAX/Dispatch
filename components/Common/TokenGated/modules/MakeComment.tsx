@@ -265,6 +265,7 @@ const MakeComment: FunctionComponent<MakeCommentProps> = ({
                 onScroll={(e: any) => syncScroll(e, preElement, textElement)}
                 onInput={(e: FormEvent) => {
                   handleCommentDescription(e);
+                  syncScroll(e, preElement, textElement);
                 }}
                 onKeyDown={(e: KeyboardEvent<Element>) =>
                   handleKeyDownDelete(e)

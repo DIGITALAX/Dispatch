@@ -92,7 +92,7 @@ const MakePost: FunctionComponent<MakePostProps> = ({
                 onScroll={(e: any) => syncScroll(e, preElement, textElement)}
                 onInput={(e: FormEvent) => {
                   handlePostDescription(e);
-                  // syncScroll(e, "highlighted-content2");
+                  syncScroll(e, preElement, textElement);
                 }}
                 onKeyDown={(e: KeyboardEvent<Element>) =>
                   handleKeyDownDelete(e)
