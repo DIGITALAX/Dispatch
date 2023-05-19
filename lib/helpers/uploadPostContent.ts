@@ -52,7 +52,7 @@ const uploadPostContent = async (
     external_url: "https://www.chromadin.xyz/",
     image: coverImage.length > 0 ? (coverImage[0] as any).item : null,
     imageMimeType: "image/png",
-    name: postDescription ? postDescription?.slice(0, 20) : "The Dial",
+    name: postDescription ? postDescription?.slice(0, 20) : "Chromadin",
     mainContentFocus:
       videos?.length > 0
         ? "VIDEO"

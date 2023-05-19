@@ -304,15 +304,12 @@ const useMakePost = () => {
             contractAddress: CHROMADIN_NFT_CONTRACT,
             chainID: 137,
             contractType: ContractType.Erc721,
-            tokenIds: collections.filter((item) => {
-              return tokenIds.some((tokenId) =>
-                item.tokenIds.includes(tokenId)
-              );
-            }),
+            tokenIds: tokenIds,
           },
         },
         uploadMetadataHandler
       );
+
 
       if (dispatcher) {
         result = await createDispatcherPostData({

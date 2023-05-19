@@ -178,15 +178,18 @@ const MakePost: FunctionComponent<MakePostProps> = ({
                 <div className="text-white preG:text-black font-earl justify-start items-start flex whitespace-nowrap uppercase">
                   Add Media
                 </div>
-                <div className="relative flex flex-row w-full h-fit gap-5">
+                <div className="relative flex flex-row w-full h-fit gap-5 items-center justify-center">
                   <label
-                    className={`relative w-10 h-10 items-center flex  ${
+                    className={`relative w-10 h-10 justify-center items-center flex  ${
                       !postLoading &&
                       !imageLoading &&
                       (!postImagesDispatched ||
                         (postImagesDispatched as any)?.length < 4) &&
                       "cursor-pointer active:scale-95"
-                    } ${postImagesDispatched?.length === 4 && "preG:opacity-20 opacity-60"}`}
+                    } ${
+                      postImagesDispatched?.length === 4 &&
+                      "preG:opacity-20 opacity-60"
+                    }`}
                     onChange={(e: FormEvent) => {
                       !postLoading
                         ? uploadImages(
@@ -212,7 +215,7 @@ const MakePost: FunctionComponent<MakePostProps> = ({
                       />
                     ) : (
                       <div className="relative w-fit h-fit animate-spin flex items-center justify-center">
-                        <AiOutlineLoading color="white" size={10} />
+                        <AiOutlineLoading color="#1A8DE3" size={15} />
                       </div>
                     )}
                     <input
@@ -234,7 +237,7 @@ const MakePost: FunctionComponent<MakePostProps> = ({
                     />
                   </label>
                   <label
-                    className={`relative w-10 h-8 items-center flex ${
+                    className={`relative w-10 h-8 items-center justify-center flex ${
                       !postLoading &&
                       !videoLoading &&
                       (!postImagesDispatched ||
@@ -270,7 +273,7 @@ const MakePost: FunctionComponent<MakePostProps> = ({
                       />
                     ) : (
                       <div className="relative w-fit h-fit animate-spin flex items-center justify-center">
-                        <AiOutlineLoading color="white" size={10} />
+                        <AiOutlineLoading color="#1A8DE3" size={15} />
                       </div>
                     )}
                     <input
@@ -494,13 +497,13 @@ const MakePost: FunctionComponent<MakePostProps> = ({
           <div className="relative w-full h-fit justify-end flex flex-row gap-2 items-center">
             <div className="relative w-32 min-w-fit h-10 bg-white p-1.5 flex items-center cursor-pointer active:scale-95 hover:bg-moda justify-center">
               <div
-                className={`relative w-full h-full flex text-white font-earl bg-black p-1.5 items-center text-center justify-center ${
-                  postLoading && "animate-spin"
+                className={`relative w-full h-full flex text-white font-earl p-1.5 items-center text-center justify-center ${
+                  postLoading ? "animate-spin" : "bg-black"
                 }`}
                 onClick={() => tokenGatePost()}
               >
                 {postLoading ? (
-                  <AiOutlineLoading color="white" size={10} />
+                  <AiOutlineLoading color="black" size={10} />
                 ) : (
                   "ENCRYPT & POST"
                 )}
