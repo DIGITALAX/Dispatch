@@ -1,5 +1,4 @@
 import {
-  CHROMADIN_COLLECTION_CONTRACT,
   CHROMADIN_NFT_CONTRACT,
   LENS_HUB_PROXY_ADDRESS_MATIC,
 } from "@/lib/constants";
@@ -304,12 +303,15 @@ const useMakePost = () => {
             contractAddress: CHROMADIN_NFT_CONTRACT,
             chainID: 137,
             contractType: ContractType.Erc721,
-            tokenIds: tokenIds,
+            tokenIds: collections
+              .filter((collection: Collection) =>
+                tokenIds.includes(collection.collectionId)
+              )
+              .flatMap((collection: Collection) => collection.tokenIds),
           },
         },
         uploadMetadataHandler
       );
-
 
       if (dispatcher) {
         result = await createDispatcherPostData({
@@ -321,10 +323,14 @@ const useMakePost = () => {
           },
           gated: {
             nft: {
-              contractAddress: CHROMADIN_COLLECTION_CONTRACT,
+              contractAddress: CHROMADIN_NFT_CONTRACT,
               chainID: 137,
               contractType: ContractType.Erc721,
-              tokenIds: tokenIds,
+              tokenIds: collections
+                .filter((collection: Collection) =>
+                  tokenIds.includes(collection.collectionId)
+                )
+                .flatMap((collection: Collection) => collection.tokenIds),
             },
             encryptedSymmetricKey:
               encryptedMetadata?.encryptionParams.providerSpecificParams
@@ -349,10 +355,14 @@ const useMakePost = () => {
           },
           gated: {
             nft: {
-              contractAddress: CHROMADIN_COLLECTION_CONTRACT,
+              contractAddress: CHROMADIN_NFT_CONTRACT,
               chainID: 137,
               contractType: ContractType.Erc721,
-              tokenIds: tokenIds,
+              tokenIds: collections
+                .filter((collection: Collection) =>
+                  tokenIds.includes(collection.collectionId)
+                )
+                .flatMap((collection: Collection) => collection.tokenIds),
             },
             encryptedSymmetricKey:
               encryptedMetadata?.encryptionParams.providerSpecificParams
