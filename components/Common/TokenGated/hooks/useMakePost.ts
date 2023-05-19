@@ -479,7 +479,7 @@ const useMakePost = () => {
   useEffect(() => {
     if (document.querySelector("#highlighted-content2")) {
       document.querySelector("#highlighted-content2")!.innerHTML =
-        postHTML.length === 0 ? "Have something to say?" : postHTML;
+        postHTML.length === 0 ? "Make a token gated post" : postHTML;
     }
   }, [postHTML]);
 

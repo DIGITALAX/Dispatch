@@ -9,7 +9,7 @@ export type CollectButtonProps = {
   selectValue: string | undefined;
   selectFunction: (e: string) => void;
   label: string;
-  mixtape?: boolean;
+  gated?: boolean;
 };
 
 export type CollectInputProps = {
@@ -23,4 +23,5 @@ export type CollectInputProps = {
   row?: string;
   label?: string;
   handleValueChange: (e: number) => void;
+  gated?: boolean;
 };

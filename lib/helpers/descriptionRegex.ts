@@ -12,7 +12,7 @@ const descriptionRegex = (description: string, messages?: boolean) => {
       } else if (word[0] === "@") {
         if (messages) {
           return `
-            <a href="${`https://chromadin.xyz/#wavs?option=&profile=${
+            <a href="${`https://chromadin.xyz/#chat?option=&profile=${
               word?.replace("@", "")?.split(".lens")[0]
             }`}" rel="noreferrer" target="_blank" style="margin-right: 4px;">
               <span style="color: #ff494a;">${word}</span>
@@ -20,7 +20,7 @@ const descriptionRegex = (description: string, messages?: boolean) => {
           `;
         } else {
           return `
-            <a href="${`https://chromadin.xyz/#wavs?option=&profile=${
+            <a href="${`https://chromadin.xyz/#chat?option=&profile=${
               word?.replace("@", "")?.split(".lens")[0]
             }`}" target="_blank" rel="noreferrer" style="margin-right: 4px;">
               <span style="color: #81A8F8;">${word?.split(".lens")[0]}</span>

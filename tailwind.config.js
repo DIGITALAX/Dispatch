@@ -44,16 +44,22 @@ module.exports = {
         pos: "#5433FD",
         shame: "#F6F5F0",
         offWhite: "#F2F2F2",
+        vv: "#8AD27C",
+        bb: "#1A8DE3",
+        tt: "#389EAD",
+        orr: "#75FBFD",
       },
       height: {
         100: "27rem",
         128: "32rem",
+        140: "36rem",
         184: "42rem",
         210: "47rem",
       },
       width: {
         100: "27rem",
         128: "32rem",
+        140: "36rem",
         184: "42rem",
         210: "47rem",
         230: "57rem",
@@ -66,6 +72,9 @@ module.exports = {
       backgroundImage: {
         chroma:
           "url('https://chromadin.infura-ipfs.io/ipfs/QmbfVYvza1xVqGRWiremt4LVKkTPDA8bnURdu39cgP71gd')",
+        stat: "url('https://chromadin.infura-ipfs.io/ipfs/QmV4YXMaFNGTVuQ9T8BTZbvcypxLMGBNrD7TbywRW5FnJY')",
+        stat2:
+          "url('https://chromadin.infura-ipfs.io/ipfs/QmW8nMmB7s7j3ckyeRt4FmwUxkPVMH7ZLp4F3mW1uBsVYS')",
       },
       transformOrigin: {
         homeAnim: "0 0",

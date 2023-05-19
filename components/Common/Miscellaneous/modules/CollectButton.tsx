@@ -12,6 +12,7 @@ const CollectButton: FunctionComponent<CollectButtonProps> = ({
   selectValue,
   selectFunction,
   label,
+  gated,
 }): JSX.Element => {
   let newValues: string[] = [];
   if (values) {
@@ -34,8 +35,12 @@ const CollectButton: FunctionComponent<CollectButtonProps> = ({
         {label}
       </div>
       <div
-        className={`relative w-20 px-3 rounded-t-lg bg-white h-10 py-2 ${
-          !openDropdown && "rounded-b-lg"
+        className={`relative ${
+          gated
+            ? "w-24 h-14 rounded-tr-lg rounded-t-lg hover:opacity-80"
+            : "w-20 h-10"
+        } px-3 bg-white h-10 py-2 ${
+          !openDropdown && `${gated ? "rounded-bl-lg" : "rounded-b-lg"} `
         } row-start-2 cursor-pointer flex gap-3`}
         onClick={() => {
           handleOpenDropdown(!openDropdown);
@@ -57,7 +62,9 @@ const CollectButton: FunctionComponent<CollectButtonProps> = ({
               return (
                 <div
                   key={index}
-                  className={`relative w-20 h-10 px-1 ${
+                  className={`relative ${
+                    gated ? "w-24 h-14 hover:opacity-80" : "w-20 h-10"
+                  } px-1 ${
                     index === newValues?.length - 2 && "rounded-b-lg"
                   } ${newValues} col-start-1 bg-white grid grid-flow-col auto-cols-auto gap-3 cursor-pointer justify-self-center`}
                   onClick={() => {

@@ -65,7 +65,7 @@ const Profile: FunctionComponent<ProfileSideBarProps> = ({
             id="crt"
             target="_blank"
             rel="noreferrer"
-            href={`https://chromadin.xyz/#wavs?option=history&profile=${
+            href={`https://chromadin.xyz/#chat?option=history&profile=${
               publication?.__typename !== "Mirror"
                 ? publication?.profile?.handle.split(".lens")[0]
                 : publication?.mirrorOf?.profile?.handle.split(".lens")[0]

@@ -10,7 +10,6 @@ const ImageUploads: FunctionComponent<ImageUploadsProps> = ({
   postImagesDispatched,
   setMappedFeatureFiles,
   uploadImages,
-  size,
 }): JSX.Element => {
   return (
     <div className={`relative w-full grid grid-flow-col auto-cols-auto  h-fit`}>
@@ -19,9 +18,7 @@ const ImageUploads: FunctionComponent<ImageUploadsProps> = ({
           return (
             <div
               key={index}
-              className={`relative ${
-                size ? `w-32 h-32` : "w-8 h-8"
-              } border-2 border-black rounded-lg bg-spots grid grid-flow-col auto-cols-auto col-start-${
+              className={`relative w-8 h-8 border-2 border-black rounded-lg bg-spots grid grid-flow-col auto-cols-auto col-start-${
                 index + 1
               }`}
             >

@@ -237,15 +237,15 @@ input[type="range"]::-moz-range-thumb {
   width: 100%;
 }
 
-code {
+#highlighted-content {
   font-family: "Economica B";
   font-size: 1rem;
   line-height: 1.5rem;
-  overflow-y: scroll;
+  overflow-y: auto;
   scrollbar-width: none;
 }
 
-code::-webkit-scrollbar {
+#highlighted-content::-webkit-scrollbar {
   display: none;
 }
 
@@ -259,7 +259,7 @@ code::-webkit-scrollbar {
   font-family: "Economica B";
   font-size: 1rem; /* 16px */
   line-height: 1.5rem;
-  overflow-y: scroll;
+  overflow-y: auto;
   white-space: pre-wrap;
 }
 
@@ -278,10 +278,10 @@ code::-webkit-scrollbar {
 }
 
 #highlighted-content2 {
-  font-family: "Economica B";
+  font-family: "Earls Revenge";
   font-size: 1rem;
   line-height: 1.5rem;
-  overflow-y: scroll;
+  overflow-y: auto;
   scrollbar-width: none;
 }
 
@@ -292,13 +292,20 @@ code::-webkit-scrollbar {
 #post2 {
   color: transparent;
   background: transparent;
-  caret-color: white;
+  caret-color: black;
 }
 
 #post2 #highlighting2 * {
-  font-family: "Economica B";
+  font-family: "Earls Revenge";
   font-size: 1rem; /* 16px */
   line-height: 1.5rem;
-  overflow-y: scroll;
+  overflow-y: auto;
   white-space: pre-wrap;
+}
+
+#boxBg1 {
+  background: #111313;
+  border: 1px solid #d1539d;
+  outline: 1px solid #dbac2a;
+  outline-offset: -8px;
 }

@@ -12,6 +12,7 @@ const CollectInput: FunctionComponent<CollectInputProps> = ({
   row,
   label,
   handleValueChange,
+  gated
 }): JSX.Element => {
   return (
     <div
@@ -29,7 +30,7 @@ const CollectInput: FunctionComponent<CollectInputProps> = ({
         step={step}
         defaultValue={defaultValue}
         placeholder={placeholder}
-        className={`relative w-20 bg-white text-offBlack h-10 row-start-2 rounded-md p-1.5 font-arcade justify-self-start self-center caret-transparent`}
+        className={`relative ${gated ? "w-24 h-14" : "w-20 h-10"} bg-white text-offBlack row-start-2 rounded-md p-1.5 font-arcade justify-self-start self-center caret-transparent`}
         onChange={(e: FormEvent) =>
           handleValueChange((e?.target as HTMLFormElement)?.value)
         }
