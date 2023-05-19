@@ -110,7 +110,7 @@ const MakePost: FunctionComponent<MakePostProps> = ({
               >
                 <code
                   id="highlighted-content2"
-                  className={`w-full h-full place-self-center text-left whitespace-pre-wrap overflow-y-auto z-0 uppercase`}
+                  className={`w-full h-full place-self-center text-left whitespace-pre-wrap overflow-y-auto z-0`}
                 >
                   {"Make a token gated post"}
                 </code>
