@@ -93,6 +93,7 @@ const Comments: FunctionComponent<CommentsProps> = ({
   setVideoLoadingComment,
   setMappedFeatureFilesComment,
   setImageLoadingComment,
+  preElement,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full flex min-w-full">
@@ -224,6 +225,7 @@ const Comments: FunctionComponent<CommentsProps> = ({
                       }
                       setVideoLoadingComment={setVideoLoadingComment}
                       uploadImagesComment={uploadImagesComment}
+                      preElement={preElement}
                     />
                   )}
                 </div>

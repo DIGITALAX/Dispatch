@@ -9,7 +9,6 @@ import { MakePostProps } from "../types/allPosts.types";
 import CollectButton from "../../Miscellaneous/modules/CollectButton";
 import CollectInput from "../../Miscellaneous/modules/CollectInput";
 import GatedOptions from "./GatedOptions";
-import { ScrollSync, ScrollSyncPane } from "react-scroll-sync";
 
 const MakePost: FunctionComponent<MakePostProps> = ({
   tokenGatePost,
@@ -73,6 +72,7 @@ const MakePost: FunctionComponent<MakePostProps> = ({
   collections,
   tokenIds,
   setTokenIds,
+  preElement,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-[39rem] flex flex-col max-w-full overflow-y-scroll">
@@ -86,82 +86,77 @@ const MakePost: FunctionComponent<MakePostProps> = ({
                 draggable={false}
               />
             </div>
-            <ScrollSync>
-              <div className="relative w-3/5 h-60 p-px grid grid-flow-col auto-cols-auto top-14">
-                <ScrollSyncPane>
-                  <textarea
-                    id="post2"
-                    onScroll={(e: any) => syncScroll(e, "highlighted-content2")}
-                    onInput={(e: FormEvent) => {
-                      handlePostDescription(e);
-                      // syncScroll(e, "highlighted-content2");
-                    }}
-                    onKeyDown={(e: KeyboardEvent<Element>) =>
-                      handleKeyDownDelete(e)
-                    }
-                    style={{ resize: "none" }}
-                    className="relative w-full h-full bg-stat2 bg-cover font-earl text-black p-2 z-1 overflow-y-auto focus:outline-none"
-                    ref={textElement}
-                    value={postDescription}
-                    disabled={postLoading ? true : false}
-                  ></textarea>
-                </ScrollSyncPane>
-                <ScrollSyncPane>
-                  <pre
-                    id="highlighting2"
-                    className={`absolute w-full h-full bg-stat2 bg-cover font-earl text-black p-2 overflow-y-auto`}
-                  >
-                    <code
-                      id="highlighted-content2"
-                      className={`w-full h-full place-self-center text-left whitespace-pre-wrap overflow-y-auto z-0 uppercase`}
-                    >
-                      {"Make a token gated post"}
-                    </code>
-                  </pre>
-                </ScrollSyncPane>
-                {mentionProfiles?.length > 0 && profilesOpen && (
-                  <div
-                    className={`absolute w-44 max-h-28 h-fit flex flex-col overflow-y-scroll items-center justify-center z-2 rounded-lg`}
-                    style={{
-                      top: caretCoord.y + 30,
-                      left: caretCoord.x,
-                    }}
-                  >
-                    {mentionProfiles?.map((user: any, index: number) => {
-                      const profileImage: string = createProfilePicture(user);
-                      return (
-                        <div
-                          key={index}
-                          className={`relative w-full h-fit px-3 py-2 bg-white flex flex-row gap-3 cursor-pointer items-center justify-center border-y border-black hover:bg-rosa/70 z-2`}
-                          onClick={() => handleMentionClick(user)}
-                        >
-                          <div className="relative flex flex-row w-full h-full text-black font-earl lowercase place-self-center gap-2">
-                            <div
-                              className={`relative rounded-full flex bg-white w-3 h-3 items-center justify-center col-start-1`}
-                              id="crt"
-                            >
-                              {profileImage !== "" && (
-                                <Image
-                                  src={profileImage}
-                                  objectFit="cover"
-                                  alt="pfp"
-                                  layout="fill"
-                                  className="relative w-fit h-fit rounded-full items-center justify-center flex"
-                                  draggable={false}
-                                />
-                              )}
-                            </div>
-                            <div className="relative col-start-2 items-center justify-center w-fit h-fit text-xs flex">
-                              @{user?.handle?.split(".lens")[0]}
-                            </div>
+            <div className="relative w-3/5 h-60 p-px grid grid-flow-col auto-cols-auto top-14">
+              <textarea
+                id="post2"
+                onScroll={(e: any) => syncScroll(e, preElement, textElement)}
+                onInput={(e: FormEvent) => {
+                  handlePostDescription(e);
+                  // syncScroll(e, "highlighted-content2");
+                }}
+                onKeyDown={(e: KeyboardEvent<Element>) =>
+                  handleKeyDownDelete(e)
+                }
+                style={{ resize: "none" }}
+                className="relative w-full h-full bg-stat2 bg-cover font-earl text-black p-2 z-1 overflow-y-auto focus:outline-none"
+                ref={textElement}
+                value={postDescription}
+                disabled={postLoading ? true : false}
+              ></textarea>
+              <pre
+                id="highlighting2"
+                className={`absolute w-full h-full bg-stat2 bg-cover font-earl text-black p-2 overflow-y-auto`}
+                ref={preElement}
+              >
+                <code
+                  id="highlighted-content2"
+                  className={`w-full h-full place-self-center text-left whitespace-pre-wrap overflow-y-auto z-0 uppercase`}
+                >
+                  {"Make a token gated post"}
+                </code>
+              </pre>
+              {mentionProfiles?.length > 0 && profilesOpen && (
+                <div
+                  className={`absolute w-44 max-h-28 h-fit flex flex-col overflow-y-scroll items-center justify-center z-2 rounded-lg`}
+                  style={{
+                    top: caretCoord.y + 30,
+                    left: caretCoord.x,
+                  }}
+                >
+                  {mentionProfiles?.map((user: any, index: number) => {
+                    const profileImage: string = createProfilePicture(user);
+                    return (
+                      <div
+                        key={index}
+                        className={`relative w-full h-fit px-3 py-2 bg-white flex flex-row gap-3 cursor-pointer items-center justify-center border-y border-black hover:bg-rosa/70 z-2`}
+                        onClick={() => handleMentionClick(user)}
+                      >
+                        <div className="relative flex flex-row w-full h-full text-black font-earl lowercase place-self-center gap-2">
+                          <div
+                            className={`relative rounded-full flex bg-white w-3 h-3 items-center justify-center col-start-1`}
+                            id="crt"
+                          >
+                            {profileImage !== "" && (
+                              <Image
+                                src={profileImage}
+                                objectFit="cover"
+                                alt="pfp"
+                                layout="fill"
+                                className="relative w-fit h-fit rounded-full items-center justify-center flex"
+                                draggable={false}
+                              />
+                            )}
+                          </div>
+                          <div className="relative col-start-2 items-center justify-center w-fit h-fit text-xs flex">
+                            @{user?.handle?.split(".lens")[0]}
                           </div>
                         </div>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-            </ScrollSync>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
             {(mappedFeaturedFiles?.length !== 0 ||
               postImagesDispatched?.length !== 0) && (
               <div className="relative w-4/5 h-fit flex flex-col gap-2 top-28">

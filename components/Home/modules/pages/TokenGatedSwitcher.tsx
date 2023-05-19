@@ -136,6 +136,7 @@ const TokenGatedSwitcher: FunctionComponent = (): JSX.Element => {
     gifOpen,
     setGifOpen,
     handleKeyDownDelete,
+    preElement,
   } = useComment();
 
   const {
@@ -239,7 +240,8 @@ const TokenGatedSwitcher: FunctionComponent = (): JSX.Element => {
     profilesOpen: profilesOpenPost,
     results: resultsPost,
     tokenIds,
-    setTokenIds
+    setTokenIds,
+    preElement: preElementPost,
   } = useMakePost();
 
   switch (auth) {
@@ -417,6 +419,8 @@ const TokenGatedSwitcher: FunctionComponent = (): JSX.Element => {
           setImageLoadingComment={setImageLoadingComment}
           setImageLoadingPost={setImageLoadingPost}
           collections={collections}
+          preElement={preElement}
+          preElementPost={preElementPost}
         />
       );
 

@@ -182,6 +182,8 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
   collections,
   setTokenIds,
   tokenIds,
+  preElement,
+  preElementPost
 }): JSX.Element => {
   return (
     <div className="relative w-full h-fit flex flex-col items-start justify-start gap-4">
@@ -213,6 +215,7 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
           setTokenIds={setTokenIds}
           tokenIds={tokenIds}
           collections={collections}
+          preElement={preElementPost}
           tokenGatePost={tokenGatePost}
           postDescription={postDescription}
           textElement={textPostElement}
@@ -275,6 +278,7 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
         {feedType.value !== "" ? (
           <Individual
             dispatch={dispatch}
+            preElement={preElement}
             commentors={commentors}
             fetchMoreComments={getMorePostComments}
             commentsLoading={commentsLoading}
@@ -562,6 +566,7 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
                           }
                           setVideoLoadingComment={setVideoLoadingComment}
                           setImageLoadingComment={setImageLoadingComment}
+                          preElement={preElement}
                         />
                       )}
                     </div>
