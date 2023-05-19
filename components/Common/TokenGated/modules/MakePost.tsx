@@ -89,10 +89,10 @@ const MakePost: FunctionComponent<MakePostProps> = ({
             <div className="relative w-3/5 h-60 p-px grid grid-flow-col auto-cols-auto top-14">
               <textarea
                 id="post2"
-                onScroll={(e: any) => syncScroll(e, preElement, textElement)}
+                onScroll={(e: any) => syncScroll(preElement, textElement)}
                 onInput={(e: FormEvent) => {
                   handlePostDescription(e);
-                  syncScroll(e, preElement, textElement);
+                  syncScroll(preElement, textElement);
                 }}
                 onKeyDown={(e: KeyboardEvent<Element>) =>
                   handleKeyDownDelete(e)

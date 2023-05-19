@@ -1,7 +1,6 @@
 import { RefObject } from "react";
 
 const syncScroll = (
-  e: any,
   preRef: RefObject<HTMLPreElement> | null,
   textElement: RefObject<HTMLTextAreaElement>
 ) => {

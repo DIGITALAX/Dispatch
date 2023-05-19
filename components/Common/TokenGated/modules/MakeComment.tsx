@@ -262,10 +262,10 @@ const MakeComment: FunctionComponent<MakeCommentProps> = ({
             <div className="relative w-full h-full p-px rounded-md grid grid-flow-col auto-cols-auto">
               <textarea
                 id="post"
-                onScroll={(e: any) => syncScroll(e, preElement, textElement)}
+                onScroll={(e: any) => syncScroll( preElement, textElement)}
                 onInput={(e: FormEvent) => {
                   handleCommentDescription(e);
-                  syncScroll(e, preElement, textElement);
+                  syncScroll( preElement, textElement);
                 }}
                 onKeyDown={(e: KeyboardEvent<Element>) =>
                   handleKeyDownDelete(e)
