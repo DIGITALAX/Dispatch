@@ -10,7 +10,8 @@ const uploadPostContent = async (
   postDescription: string,
   setContentURI?: (e: string | undefined) => void,
   contentURI?: string | undefined,
-  gated?: boolean
+  gated?: boolean,
+  drops?: string[]
 ): Promise<string | undefined | any> => {
   let newImages: PostImage[] = [];
   postImages?.forEach((image) => {
@@ -37,8 +38,11 @@ const uploadPostContent = async (
     version: "2.0.0",
     metadata_id: uuidv4(),
     description:
-    gated ? "align the signs to unlock this gate. ready to collect now on chromadin." :
-      postDescription.length < 0 || postDescription.trim().length < 0
+      gated && drops
+        ? `align the signs to unlock this gate. ${drops.join(", ")} ${
+            drops?.length > 1 ? "are" : "is"
+          } ready to collect now on chromadin.`
+        : postDescription.length < 0 || postDescription.trim().length < 0
         ? null
         : postDescription,
     content:

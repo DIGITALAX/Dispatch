@@ -39,6 +39,7 @@ import {
 } from "@lens-protocol/sdk-gated";
 import { Signer } from "ethers";
 import { setPostGateImages } from "@/redux/reducers/postGatedImageSlice";
+import { Collection } from "../../Collections/types/collections.types";
 
 const useMakePost = () => {
   const { data: signer } = useSigner();
@@ -280,12 +281,19 @@ const useMakePost = () => {
         env: LensEnvironment.Polygon,
       });
 
+      const matchedCollections = collections.filter((collection: Collection) =>
+        tokenIds.includes(collection.collectionId)
+      );
+
       const contentURIValue = await uploadPostContent(
         postImages,
         postDescription,
         undefined,
         undefined,
-        true
+        true,
+        matchedCollections.map((collection: Collection) =>
+          collection.name.toLowerCase()
+        )
       );
 
       const { contentURI, encryptedMetadata } = await sdk.gated.encryptMetadata(

@@ -29,7 +29,9 @@ const CollectButton: FunctionComponent<CollectButtonProps> = ({
     <div
       className={`relative w-fit h-fit ${col && `col-start-${col}`} ${
         row && `row-start-${row}`
-      } grid grid-flow-row auto-rows-auto grid grid-flow-row auto-rows-auto pr-2 pb-2 gap-2 text-xs`}
+      } grid grid-flow-row auto-rows-auto grid grid-flow-row auto-rows-auto ${
+        !gated ? "pr-2 pb-2" : "preG:pr-3 pb-2"
+      }  gap-2 text-xs`}
     >
       <div className="relative w-fit h-fit row-start-1 font-arcade text-white text-xs whitespace-pre-wrap break-words sm:whitespace-nowrap justify-self-start self-center text-left">
         {label}
@@ -38,7 +40,7 @@ const CollectButton: FunctionComponent<CollectButtonProps> = ({
         className={`relative ${
           gated
             ? "w-24 h-14 rounded-tr-lg rounded-t-lg hover:opacity-80"
-            : "w-20 h-10"
+            : "w-20 h-10 rounded-t-lg"
         } px-3 bg-white h-10 py-2 ${
           !openDropdown && `${gated ? "rounded-bl-lg" : "rounded-b-lg"} `
         } row-start-2 cursor-pointer flex gap-3`}

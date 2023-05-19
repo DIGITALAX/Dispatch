@@ -78,15 +78,15 @@ const MakePost: FunctionComponent<MakePostProps> = ({
     <div className="relative w-full h-[39rem] flex flex-col max-w-full overflow-y-scroll">
       <div className="relative w-full h-fit flex flex-col gap-10">
         <div className="relative gap-2 flex flex-col w-full h-fit">
-          <div className="relative w-full h-100 border border-marip p-px rounded-md bg-stat bg-cover items-center justify-start flex flex-col">
-            <div className="absolute w-[85%] h-140 justify-center flex">
+          <div className="relative w-full h-100 preG:border preG:border-marip p-px rounded-md preG:bg-stat preG:bg-cover items-center justify-start flex flex-col">
+            <div className="absolute w-full sm:w-[85%] h-100 preG:h-140 justify-center flex">
               <Image
                 src={`${INFURA_GATEWAY}/ipfs/QmTR8EvhhdGwPqTt4NR1XQ8wziBCCmBdwR4St3nGpyVpu9`}
                 layout="fill"
                 draggable={false}
               />
             </div>
-            <div className="relative w-3/5 h-60 p-px grid grid-flow-col auto-cols-auto top-14">
+            <div className="relative w-3/5 h-40 preG:h-60 p-px grid grid-flow-col auto-cols-auto top-14">
               <textarea
                 id="post2"
                 onScroll={(e: any) => syncScroll(preElement, textElement)}
@@ -159,7 +159,7 @@ const MakePost: FunctionComponent<MakePostProps> = ({
             </div>
             {(mappedFeaturedFiles?.length !== 0 ||
               postImagesDispatched?.length !== 0) && (
-              <div className="relative w-4/5 h-fit flex flex-col gap-2 top-28">
+              <div className="relative w-full sm:px-0 px-2 sm:w-4/5 h-fit flex flex-col gap-2 top-52 preG:top-28">
                 <ImageUploads
                   handleRemoveImage={handleRemoveImage}
                   commentLoading={postLoading}
@@ -172,15 +172,15 @@ const MakePost: FunctionComponent<MakePostProps> = ({
           </div>
         </div>
         <div className="relative w-full h-fit gap-5 flex flex-col justify-center items-center">
-          <div className="relative w-4/5 justify-center items-center">
-            <div className="relative flex flex-row w-full h-fit gap-12 justify-center pb-3">
+          <div className="relative w-full sm:px-0 px-2 sm:w-4/5 justify-center items-center">
+            <div className="relative flex flex-col preG:flex-row w-full h-fit gap-12 justify-center pb-3">
               <div className="relative w-fit h-fit flex flex-col gap-2">
-                <div className="text-black font-earl justify-start items-start flex whitespace-nowrap uppercase">
+                <div className="text-white preG:text-black font-earl justify-start items-start flex whitespace-nowrap uppercase">
                   Add Media
                 </div>
                 <div className="relative flex flex-row w-full h-fit gap-5">
                   <label
-                    className={`relative w-10 h-10 items-center flex ${
+                    className={`relative w-10 h-10 items-center flex  ${
                       !postLoading &&
                       !imageLoading &&
                       (!postImagesDispatched ||
@@ -200,14 +200,19 @@ const MakePost: FunctionComponent<MakePostProps> = ({
                   >
                     {!imageLoading ? (
                       <Image
-                        src={`${INFURA_GATEWAY}/ipfs/QmSnzdXAPN89Fd5vyzpBRTUNUbyRyRq9skymwHPWJoghMS`}
+                        src={`${INFURA_GATEWAY}/ipfs/${
+                          typeof window !== "undefined" &&
+                          window.innerWidth > 480
+                            ? "QmSnzdXAPN89Fd5vyzpBRTUNUbyRyRq9skymwHPWJoghMS"
+                            : "QmUnS4HobtLoWqgSFyhA1BzK7Vct52W2ZNSH7JtAo3YpQb"
+                        } `}
                         alt="opt"
                         layout="fill"
                         draggable={false}
                       />
                     ) : (
                       <div className="relative w-fit h-fit animate-spin flex items-center justify-center">
-                        <AiOutlineLoading color="white" size={25} />
+                        <AiOutlineLoading color="white" size={10} />
                       </div>
                     )}
                     <input
@@ -249,14 +254,21 @@ const MakePost: FunctionComponent<MakePostProps> = ({
                   >
                     {!videoLoading ? (
                       <Image
-                        src={`${INFURA_GATEWAY}/ipfs/QmPk97A6JDyZcyUBwT3qCa1F3J1QmB8pBt577dafsYbj6d`}
+                        src={`${INFURA_GATEWAY}/ipfs/
+                        ${
+                          typeof window !== "undefined" &&
+                          window.innerWidth > 480
+                            ? "QmbxwFS6YwSg4eYWsbkpFG94FuozWMxxMEQs8zwx6zyhBk"
+                            : "QmPk97A6JDyZcyUBwT3qCa1F3J1QmB8pBt577dafsYbj6d"
+                        }
+                        `}
                         alt="opt"
                         layout="fill"
                         draggable={false}
                       />
                     ) : (
                       <div className="relative w-fit h-fit animate-spin flex items-center justify-center">
-                        <AiOutlineLoading color="white" size={25} />
+                        <AiOutlineLoading color="white" size={10} />
                       </div>
                     )}
                     <input
@@ -280,7 +292,7 @@ const MakePost: FunctionComponent<MakePostProps> = ({
                 </div>
               </div>
               <div className="relative flex flex-col gap-2 w-full h-fit">
-                <div className="text-black font-earl justify-start items-start flex uppercase">
+                <div className="text-white preG:text-black font-earl justify-start items-start flex uppercase">
                   Add Gif
                 </div>
                 <div className="relative w-full h-full grid grid-flow-row auto-rows-auto overflow-y-scroll">
@@ -325,12 +337,12 @@ const MakePost: FunctionComponent<MakePostProps> = ({
           </div>
         </div>
         <div className="relative flex justify-center items-center w-full h-fit pt-4">
-          <div className="relative bg-white flex flex-col gap-2 w-3/5 h-fit justify-center items-center p-2">
+          <div className="relative bg-white flex flex-col gap-2 w-full sm:w-3/5 min-w-fit h-fit justify-center items-center p-2">
             <div className="font-earl justify-center h-fit w-full flex uppercase bg-white text-black">
               Collect Options
             </div>
             <div className="relative w-full h-fit flex items-center justify-center flex-col bg-black">
-              <div className="relative w-full h-full flex flex-wrap gap-10 flex-row py-3">
+              <div className="relative w-full h-full flex flex-wrap gap-10 flex-row py-3 pl-3 pr-1">
                 <div className="relative w-full h-fit flex flex-col flex-wrap gap-3 break-words">
                   <div className="relative flex flex-col preG:flex-row items-center justify-center">
                     <CollectButton
@@ -447,7 +459,7 @@ const MakePost: FunctionComponent<MakePostProps> = ({
                         defaultValue={referral.toString()}
                         placeholder={referral.toString()}
                         id="referral"
-                        label="Mirrored posts (%)"
+                        label="Refferal (%)"
                         name="referral"
                         col={"1"}
                         row={"1"}
@@ -464,7 +476,7 @@ const MakePost: FunctionComponent<MakePostProps> = ({
         </div>
         <div className="relative flex flex-col gap-5 w-full h-fit justify-center items-center">
           <div className="text-white font-earl justify-center flex bg-white p-1.5 w-3/4 h-fit">
-            <div className="relative w-full h-fit py-1.5 bg-black uppercase text-center flex justify-center items-center">
+            <div className="relative w-full h-fit p-1.5 bg-black uppercase text-center flex justify-center items-center">
               Which Collectors Can Decrypt?
             </div>
           </div>
