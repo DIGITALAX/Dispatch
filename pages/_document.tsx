@@ -18,7 +18,7 @@ export default function Document() {
           content="https://dispatch.chromadin.xyz/card.png/"
         />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:site" content="@igitalax_" />
+        <meta name="twitter:site" content="@digitalax_" />
         <meta name="twitter:creator" content="@digitalax_" />
         <meta
           name="twitter:image"
