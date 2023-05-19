@@ -186,7 +186,7 @@ const MakePost: FunctionComponent<MakePostProps> = ({
                       (!postImagesDispatched ||
                         (postImagesDispatched as any)?.length < 4) &&
                       "cursor-pointer active:scale-95"
-                    } ${postImagesDispatched?.length === 4 && "opacity-20"}`}
+                    } ${postImagesDispatched?.length === 4 && "preG:opacity-20 opacity-60"}`}
                     onChange={(e: FormEvent) => {
                       !postLoading
                         ? uploadImages(
@@ -240,7 +240,10 @@ const MakePost: FunctionComponent<MakePostProps> = ({
                       (!postImagesDispatched ||
                         (postImagesDispatched as any)?.length < 4) &&
                       "cursor-pointer active:scale-95"
-                    } ${postImagesDispatched?.length === 4 && "opacity-20"}`}
+                    } ${
+                      postImagesDispatched?.length === 4 &&
+                      `preG:opacity-20 opacity-60`
+                    }`}
                     onChange={(e: FormEvent) => {
                       !postLoading
                         ? uploadVideo(
@@ -254,12 +257,11 @@ const MakePost: FunctionComponent<MakePostProps> = ({
                   >
                     {!videoLoading ? (
                       <Image
-                        src={`${INFURA_GATEWAY}/ipfs/
-                        ${
+                        src={`${INFURA_GATEWAY}/ipfs/${
                           typeof window !== "undefined" &&
                           window.innerWidth > 480
-                            ? "QmbxwFS6YwSg4eYWsbkpFG94FuozWMxxMEQs8zwx6zyhBk"
-                            : "QmPk97A6JDyZcyUBwT3qCa1F3J1QmB8pBt577dafsYbj6d"
+                            ? "QmPk97A6JDyZcyUBwT3qCa1F3J1QmB8pBt577dafsYbj6d"
+                            : "QmbxwFS6YwSg4eYWsbkpFG94FuozWMxxMEQs8zwx6zyhBk "
                         }
                         `}
                         alt="opt"
