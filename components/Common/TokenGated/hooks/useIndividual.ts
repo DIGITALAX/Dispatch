@@ -2,10 +2,7 @@ import {
   whoCommentedPublications,
   whoCommentedPublicationsAuth,
 } from "@/graphql/lens/queries/getVideos";
-import {
-  getPublication,
-  getPublicationAuth,
-} from "@/graphql/lens/queries/getPublication";
+import { getPublicationAuth } from "@/graphql/lens/queries/getPublication";
 import checkPostReactions from "@/lib/helpers/checkPostReactions";
 import checkIfMirrored from "@/lib/helpers/checkIfMirrored";
 import { useEffect, useState } from "react";
@@ -17,9 +14,15 @@ import { setCanComment } from "@/redux/reducers/canCommentSlice";
 import { setCommentFeedCount } from "@/redux/reducers/commentCountSlice";
 import { setCommentsRedux } from "@/redux/reducers/commentsSlice";
 import { setIndividualFeedCount } from "@/redux/reducers/individualFeedCountSlice";
+import { LensEnvironment, LensGatedSDK } from "@lens-protocol/sdk-gated";
+import { Signer } from "ethers";
+import { Web3Provider } from "@ethersproject/providers";
+import { useSigner } from "wagmi";
+import fetchIPFSJSON from "@/lib/helpers/fetchIPFSJSON";
 
 const useIndividual = () => {
   const dispatch = useDispatch();
+  const { data: signer } = useSigner();
   const lensProfile = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile?.id
   );
@@ -282,39 +285,82 @@ const useIndividual = () => {
   const getPostInfo = async () => {
     setMainPostLoading(true);
     try {
-      let pubData;
-      if (lensProfile) {
-        const { data } = await getPublicationAuth(
-          {
-            publicationId: feedType,
-          },
-          lensProfile
-        );
-        pubData = data;
-      } else {
-        const { data } = await getPublication({
+      const { data } = await getPublicationAuth(
+        {
           publicationId: feedType,
-        });
-        pubData = data;
+        },
+        lensProfile
+      );
+
+      const sdk = await LensGatedSDK.create({
+        provider: new Web3Provider(window?.ethereum as any),
+        signer: signer as Signer,
+        env: LensEnvironment.Polygon,
+      });
+
+      let decryptedData: any;
+
+      if (data?.publication.canDecrypt && data?.publication.canDecrypt.result) {
+        try {
+          const value = await fetchIPFSJSON(
+            data?.publication.onChainContentURI
+              ?.split("ipfs://")[1]
+              .replace(/"/g, "")
+              .trim()
+          );
+          const { decrypted, error } = await sdk.gated.decryptMetadata(
+            value.json
+          );
+          if (decrypted) {
+            decryptedData = {
+              ...data?.publication,
+              decrypted,
+            };
+          } else if (error) {
+            return {
+              ...data?.publication,
+              gated: true,
+            };
+          }
+        } catch (err: any) {
+          console.error(err.message);
+          decryptedData = {
+            ...data?.publication,
+            gated: true,
+          };
+        }
+      } else if (
+        data?.publication?.metadata?.content?.includes(
+          "This publication is gated"
+        ) ||
+        (data?.publication?.__typename === "Mirror" &&
+          data?.publication?.mirrorOf.metadata.content.includes(
+            "This publication is gated"
+          ))
+      ) {
+        decryptedData = {
+          ...data?.publication,
+          gated: true,
+        };
+      } else {
+        decryptedData = data?.publication;
       }
-      setMainPost(pubData?.publication);
+
+      setMainPost(decryptedData);
       setFollowerOnly(
-        pubData?.publication.__typename === "Mirror"
-          ? pubData?.publication.mirrorOf.referenceModule?.type ===
+        decryptedData?.__typename === "Mirror"
+          ? decryptedData?.mirrorOf?.referenceModule?.type ===
             "FollowerOnlyReferenceModule"
             ? true
             : false
-          : pubData?.publication.referenceModule?.type ===
+          : decryptedData?.referenceModule?.type ===
             "FollowerOnlyReferenceModule"
           ? true
           : false
       );
       let hasMirroredArr, hasReactedArr;
       if (lensProfile) {
-        hasMirroredArr = await checkIfMirrored(
-          [pubData?.publication],
-          lensProfile
-        );
+        hasMirroredArr = await checkIfMirrored([decryptedData], lensProfile);
         hasReactedArr = await checkPostReactions(
           {
             publicationId: feedType,
@@ -325,13 +371,13 @@ const useIndividual = () => {
       }
       dispatch(
         setIndividualFeedCount({
-          actionLike: pubData?.publication.stats.totalUpvotes,
-          actionMirror: pubData?.publication.stats.totalAmountOfMirrors,
-          actionCollect: pubData?.publication.stats.totalAmountOfCollects,
-          actionComment: pubData?.publication.stats.totalAmountOfComments,
+          actionLike: decryptedData?.stats.totalUpvotes,
+          actionMirror: decryptedData?.stats.totalAmountOfMirrors,
+          actionCollect: decryptedData?.stats.totalAmountOfCollects,
+          actionComment: decryptedData?.stats.totalAmountOfComments,
           actionHasLiked: hasReactedArr ? hasReactedArr?.[0] : false,
           actionHasMirrored: hasMirroredArr ? hasMirroredArr?.[0] : false,
-          actionHasCollected: pubData?.publication.hasCollectedByMe,
+          actionHasCollected: decryptedData?.hasCollectedByMe,
         })
       );
     } catch (err: any) {

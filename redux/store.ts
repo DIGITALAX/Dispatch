@@ -50,6 +50,7 @@ import individualFeedCountReducer from "./reducers/individualFeedCountSlice";
 import postGatedImageReducer from "./reducers/postGatedImageSlice";
 import canEditCollectionReducer from "./reducers/canEditCollectionSlice";
 import updateCollectionReducer from "./reducers/updateCollectionSlice";
+import decryptReducer from "./reducers/decryptSlice";
 
 const reducer = combineReducers({
   lensProfileReducer,
@@ -102,6 +103,7 @@ const reducer = combineReducers({
   postGatedImageReducer,
   canEditCollectionReducer,
   updateCollectionReducer,
+  decryptReducer,
 });
 
 export const store = configureStore({

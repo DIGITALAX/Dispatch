@@ -69,6 +69,7 @@ export type FeedPublicationProps = {
   setReactLoader?: (e: boolean[]) => void;
   setMirrorLoader?: (e: boolean[]) => void;
   openComment: string;
+  allCollections: Collection[];
 };
 
 export type ProfileSideBarProps = {
@@ -565,6 +566,7 @@ export type IndividualProps = {
   uploadImagesComment: UploadedMedia[];
   setVideoLoadingComment: (e: boolean) => void;
   setImageLoadingComment: (e: boolean) => void;
+  allCollections: Collection[];
 };
 
 export type CommentsProps = {
@@ -687,6 +689,7 @@ export type CommentsProps = {
   uploadImagesComment: UploadedMedia[];
   setVideoLoadingComment: (e: boolean) => void;
   setImageLoadingComment: (e: boolean) => void;
+  allCollections: Collection[];
 };
 
 export interface UploadedMedia {

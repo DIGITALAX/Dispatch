@@ -1,7 +1,7 @@
 import { apolloClient, authClient } from "@/lib/lens/client";
 import { ApolloQueryResult, gql } from "@apollo/client";
 
-const GET_PUBLICATION = `query Publication($request: PublicationQueryRequest!, $profileId: ProfileId) {
+const GET_PUBLICATION_AUTH = `query Publication($request: PublicationQueryRequest!, $profileId: ProfileId) {
     publication(request: $request) {
      __typename 
       ... on Post {
@@ -132,6 +132,7 @@ const GET_PUBLICATION = `query Publication($request: PublicationQueryRequest!, $
       profileId: $profileId
     ) {
       result
+      reasons
     }
     id
     profile {
@@ -155,6 +156,7 @@ const GET_PUBLICATION = `query Publication($request: PublicationQueryRequest!, $
     reaction(request: null)
     mirrors(by: null)
     hasCollectedByMe
+    onChainContentURI
   }
   
   fragment MirrorBaseFields on Mirror {
@@ -369,7 +371,7 @@ export const getPublicationAuth = async (
   profileId: any
 ): Promise<ApolloQueryResult<any>> => {
   return apolloClient.query({
-    query: gql(GET_PUBLICATION),
+    query: gql(GET_PUBLICATION_AUTH),
     variables: {
       request,
       profileId,
@@ -378,14 +380,3 @@ export const getPublicationAuth = async (
   });
 };
 
-export const getPublication = async (
-  request: any
-): Promise<ApolloQueryResult<any>> => {
-  return authClient.query({
-    query: gql(GET_PUBLICATION),
-    variables: {
-      request,
-    },
-    fetchPolicy: "no-cache",
-  });
-};

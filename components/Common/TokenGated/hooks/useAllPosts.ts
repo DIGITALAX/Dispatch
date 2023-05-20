@@ -1,6 +1,9 @@
 import { Publication } from "@/components/Home/types/lens.types";
-import feedTimeline from "@/graphql/lens/queries/getTimeline";
-import { profilePublicationsAuth } from "@/graphql/lens/queries/getVideos";
+import { feedTimeline } from "@/graphql/lens/queries/getTimeline";
+import {
+  profilePublicationsAuth,
+  profilePublicationsAuthDecrypt,
+} from "@/graphql/lens/queries/getVideos";
 import { Signer } from "ethers";
 import { Web3Provider } from "@ethersproject/providers";
 import { LENS_CREATORS } from "@/lib/constants";
@@ -20,6 +23,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useSigner } from "wagmi";
 import { getPostData } from "@/lib/lens/utils";
+import fetchIPFSJSON from "@/lib/helpers/fetchIPFSJSON";
 
 const useAllPosts = () => {
   const { data: signer } = useSigner();
@@ -84,11 +88,14 @@ const useAllPosts = () => {
   const getFeed = async (): Promise<void> => {
     setPostsLoading(true);
     try {
-      const data = await profilePublicationsAuth({
-        profileId: lensProfile,
-        publicationTypes: ["POST", "COMMENT", "MIRROR"],
-        limit: 10,
-      });
+      const data = await profilePublicationsAuthDecrypt(
+        {
+          profileId: lensProfile,
+          publicationTypes: ["POST", "COMMENT", "MIRROR"],
+          limit: 10,
+        },
+        lensProfile
+      );
       if (!data || !data?.data || !data?.data?.publications) {
         setPostsLoading(false);
         return;
@@ -98,7 +105,11 @@ const useAllPosts = () => {
         .sort(
           (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
         )
-        .filter((post) => post.canDecrypt && post.canDecrypt.result);
+        .filter(
+          (post) =>
+            (post.canDecrypt && post.canDecrypt.result) ||
+            post?.metadata?.content.includes("This publication is gated")
+        );
       if (sortedArr?.length < 10) {
         setHasMore(false);
       } else {
@@ -118,16 +129,41 @@ const useAllPosts = () => {
 
       const descryptedPosts = await Promise.all(
         sortedArr.map(async (post) => {
-          try {
-            const { decrypted } = await sdk.gated.decryptMetadata(
-              post.metadata
+          if (post.canDecrypt && post.canDecrypt.result) {
+            const data = await fetchIPFSJSON(
+              post.onChainContentURI
+                ?.split("ipfs://")[1]
+                .replace(/"/g, "")
+                .trim()
             );
-            if (decrypted) {
-              return decrypted;
+            try {
+              const { decrypted, error } = await sdk.gated.decryptMetadata(
+                data.json
+              );
+              if (decrypted) {
+                return decrypted;
+              } else if (error) {
+                return {
+                  ...post,
+                  gated: true,
+                };
+              }
+            } catch (err: any) {
+              console.error(err.message);
+              return {
+                ...post,
+                gated: true,
+              };
             }
-          } catch (err: any) {
-            console.error(err.message);
-            return null;
+          } else if (
+            post?.metadata?.content.includes("This publication is gated")
+          ) {
+            return {
+              ...post,
+              gated: true,
+            };
+          } else {
+            return post;
           }
         })
       );
@@ -151,18 +187,18 @@ const useAllPosts = () => {
         lensProfile
       );
       const hasCollectedArr = (descryptedPosts as any).map((obj: Publication) =>
-        obj.__typename === "Mirror"
-          ? obj.mirrorOf.hasCollectedByMe
-          : obj.hasCollectedByMe
+        obj?.__typename === "Mirror"
+          ? obj?.mirrorOf?.hasCollectedByMe
+          : obj?.hasCollectedByMe
       );
       setFollowerOnly(
         (descryptedPosts as any).map((obj: Publication) =>
-          obj.__typename === "Mirror"
-            ? obj.mirrorOf.referenceModule?.type ===
+          obj?.__typename === "Mirror"
+            ? obj?.mirrorOf?.referenceModule?.type ===
               "FollowerOnlyReferenceModule"
               ? true
               : false
-            : obj.referenceModule?.type === "FollowerOnlyReferenceModule"
+            : obj?.referenceModule?.type === "FollowerOnlyReferenceModule"
             ? true
             : false
         )
@@ -171,27 +207,29 @@ const useAllPosts = () => {
       dispatch(
         setReactionFeedCount({
           actionLike: (descryptedPosts as any).map((obj: Publication) =>
-            obj.__typename === "Mirror"
-              ? obj.mirrorOf.stats.totalUpvotes
-              : obj.stats.totalUpvotes
+            obj?.__typename === "Mirror"
+              ? obj?.mirrorOf?.stats?.totalUpvotes
+              : obj?.stats?.totalUpvotes
           ),
           actionMirror: (descryptedPosts as any).map((obj: Publication) =>
-            obj.__typename === "Mirror"
-              ? obj.mirrorOf.stats.totalAmountOfMirrors
-              : obj.stats.totalAmountOfMirrors
+            obj?.__typename === "Mirror"
+              ? obj?.mirrorOf?.stats?.totalAmountOfMirrors
+              : obj?.stats?.totalAmountOfMirrors
           ),
           actionCollect: (descryptedPosts as any).map((obj: Publication) =>
-            obj.__typename === "Mirror"
-              ? obj.mirrorOf.stats.totalAmountOfCollects
-              : obj.stats.totalAmountOfCollects
+            obj?.__typename === "Mirror"
+              ? obj?.mirrorOf?.stats?.totalAmountOfCollects
+              : obj?.stats?.totalAmountOfCollects
           ),
           actionComment: (descryptedPosts as any).map((obj: Publication) =>
-            obj.__typename === "Mirror"
-              ? obj.mirrorOf.stats.totalAmountOfComments
-              : obj.stats.totalAmountOfComments
+            obj?.__typename === "Mirror"
+              ? obj?.mirrorOf?.stats?.totalAmountOfComments
+              : obj?.stats?.totalAmountOfComments
           ),
           actionHasLiked: hasReactedArr.filter(
-            (post: any) => post.canDecrypt && post.canDecrypt.result
+            (post: any) =>
+              (post.canDecrypt && post.canDecrypt.result) ||
+              post?.metadata?.content.includes("This publication is gated")
           ),
           actionHasMirrored: hasMirroredArr,
           actionHasCollected: hasCollectedArr,
@@ -210,19 +248,26 @@ const useAllPosts = () => {
         setHasMore(false);
         return;
       }
-      const data = await profilePublicationsAuth({
-        profileId: lensProfile,
-        publicationTypes: ["POST", "COMMENT", "MIRROR"],
-        limit: 10,
-        cursor: paginated?.paginated?.next,
-      });
+      const data = await profilePublicationsAuthDecrypt(
+        {
+          profileId: lensProfile,
+          publicationTypes: ["POST", "COMMENT", "MIRROR"],
+          limit: 10,
+          cursor: paginated?.paginated?.next,
+        },
+        lensProfile
+      );
 
       const arr: any[] = [...data?.data?.publications?.items];
       const sortedArr = arr
         .sort(
           (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
         )
-        .filter((post) => post.canDecrypt && post.canDecrypt.result);
+        .filter(
+          (post) =>
+            (post.canDecrypt && post.canDecrypt.result) ||
+            post?.metadata?.content.includes("This publication is gated")
+        );
       if (sortedArr?.length < 10) {
         setHasMore(false);
       } else {
@@ -241,16 +286,41 @@ const useAllPosts = () => {
 
       const descryptedPosts = await Promise.all(
         sortedArr.map(async (post) => {
-          try {
-            const { decrypted } = await sdk.gated.decryptMetadata(
-              post.metadata
+          if (post.canDecrypt && post.canDecrypt.result) {
+            const data = await fetchIPFSJSON(
+              post.onChainContentURI
+                ?.split("ipfs://")[1]
+                .replace(/"/g, "")
+                .trim()
             );
-            if (decrypted) {
-              return decrypted;
+            try {
+              const { decrypted, error } = await sdk.gated.decryptMetadata(
+                data.json
+              );
+              if (decrypted) {
+                return decrypted;
+              } else if (error) {
+                return {
+                  ...post,
+                  gated: true,
+                };
+              }
+            } catch (err: any) {
+              console.error(err.message);
+              return {
+                ...post,
+                gated: true,
+              };
             }
-          } catch (err: any) {
-            console.error(err.message);
-            return null;
+          } else if (
+            post?.metadata?.content.includes("This publication is gated")
+          ) {
+            return {
+              ...post,
+              gated: true,
+            };
+          } else {
+            return post;
           }
         })
       );
@@ -276,48 +346,50 @@ const useAllPosts = () => {
         lensProfile
       );
       const hasCollectedArr = (descryptedPosts as any).map((obj: Publication) =>
-        obj.__typename === "Mirror"
-          ? obj.mirrorOf.hasCollectedByMe
-          : obj.hasCollectedByMe
+        obj?.__typename === "Mirror"
+          ? obj?.mirrorOf?.hasCollectedByMe
+          : obj?.hasCollectedByMe
       );
       dispatch(
         setReactionFeedCount({
           actionLike: [
             ...reactionFeedCount.like,
             ...(descryptedPosts as any).map((obj: Publication) =>
-              obj.__typename === "Mirror"
-                ? obj.mirrorOf.stats.totalUpvotes
-                : obj.stats.totalUpvotes
+              obj?.__typename === "Mirror"
+                ? obj?.mirrorOf?.stats?.totalUpvotes
+                : obj?.stats?.totalUpvotes
             ),
           ],
           actionMirror: [
             ...reactionFeedCount.mirror,
             ...(descryptedPosts as any).map((obj: Publication) =>
-              obj.__typename === "Mirror"
-                ? obj.mirrorOf.stats.totalAmountOfMirrors
-                : obj.stats.totalAmountOfMirrors
+              obj?.__typename === "Mirror"
+                ? obj?.mirrorOf?.stats?.totalAmountOfMirrors
+                : obj?.stats?.totalAmountOfMirrors
             ),
           ],
           actionCollect: [
             ...reactionFeedCount.collect,
             ...(descryptedPosts as any).map((obj: Publication) =>
-              obj.__typename === "Mirror"
-                ? obj.mirrorOf.stats.totalAmountOfCollects
-                : obj.stats.totalAmountOfCollects
+              obj?.__typename === "Mirror"
+                ? obj?.mirrorOf?.stats?.totalAmountOfCollects
+                : obj?.stats?.totalAmountOfCollects
             ),
           ],
           actionComment: [
             ...reactionFeedCount.comment,
             ...(descryptedPosts as any).map((obj: Publication) =>
-              obj.__typename === "Mirror"
-                ? obj.mirrorOf.stats.totalAmountOfComments
-                : obj.stats.totalAmountOfComments
+              obj?.__typename === "Mirror"
+                ? obj?.mirrorOf?.stats?.totalAmountOfComments
+                : obj?.stats?.totalAmountOfComments
             ),
           ],
           actionHasLiked: [
             ...reactionFeedCount.hasLiked,
             ...hasReactedArr.filter(
-              (post: any) => post.canDecrypt && post.canDecrypt.result
+              (post: any) =>
+                (post.canDecrypt && post.canDecrypt.result) ||
+                post?.metadata?.content.includes("This publication is gated")
             ),
           ],
           actionHasMirrored: [
@@ -338,11 +410,14 @@ const useAllPosts = () => {
   const getTimeline = async () => {
     setPostsLoading(true);
     try {
-      const data = await feedTimeline({
-        profileIds: LENS_CREATORS,
-        publicationTypes: ["POST", "COMMENT", "MIRROR"],
-        limit: 10,
-      });
+      const data = await feedTimeline(
+        {
+          profileIds: LENS_CREATORS,
+          publicationTypes: ["POST", "COMMENT", "MIRROR"],
+          limit: 10,
+        },
+        lensProfile
+      );
       if (!data || !data?.data || !data?.data?.publications) {
         setPostsLoading(false);
         return;
@@ -357,6 +432,52 @@ const useAllPosts = () => {
       } else {
         setHasMoreTimeline(true);
       }
+
+      const sdk = await LensGatedSDK.create({
+        provider: new Web3Provider(window?.ethereum as any),
+        signer: signer as Signer,
+        env: LensEnvironment.Polygon,
+      });
+
+      const descryptedPosts = await Promise.all(
+        sortedArr.map(async (post) => {
+          if (post.canDecrypt && post.canDecrypt.result) {
+            const data = await fetchIPFSJSON(
+              post.onChainContentURI
+                ?.split("ipfs://")[1]
+                .replace(/"/g, "")
+                .trim()
+            );
+            try {
+              const { decrypted, error } = await sdk.gated.decryptMetadata(data.json);
+              if (decrypted) {
+                return decrypted;
+              } else if (error) {
+                return {
+                  ...post,
+                  gated: true,
+                };
+              }
+            } catch (err: any) {
+              console.error(err.message);
+              return {
+                ...post,
+                gated: true,
+              };
+            }
+          } else if (
+            post?.metadata?.content.includes("This publication is gated")
+          ) {
+            return {
+              ...post,
+              gated: true,
+            };
+          } else {
+            return post;
+          }
+        })
+      );
+
       dispatch(
         setPaginated({
           actionPaginated: paginated.paginated,
@@ -371,46 +492,49 @@ const useAllPosts = () => {
         },
         lensProfile
       );
-      const hasMirroredArr = await checkIfMirrored(sortedArr, lensProfile);
-      const hasCollectedArr = sortedArr.map((obj: Publication) =>
-        obj.__typename === "Mirror"
-          ? obj.mirrorOf.hasCollectedByMe
-          : obj.hasCollectedByMe
+      const hasMirroredArr = await checkIfMirrored(
+        descryptedPosts,
+        lensProfile
+      );
+      const hasCollectedArr = descryptedPosts.map((obj: Publication) =>
+        obj?.__typename === "Mirror"
+          ? obj?.mirrorOf?.hasCollectedByMe
+          : obj?.hasCollectedByMe
       );
       setFollowerOnlyTimeline(
-        sortedArr.map((obj: Publication) =>
-          obj.__typename === "Mirror"
-            ? obj.mirrorOf.referenceModule?.type ===
+        descryptedPosts.map((obj: Publication) =>
+          obj?.__typename === "Mirror"
+            ? obj?.mirrorOf?.referenceModule?.type ===
               "FollowerOnlyReferenceModule"
               ? true
               : false
-            : obj.referenceModule?.type === "FollowerOnlyReferenceModule"
+            : obj?.referenceModule?.type === "FollowerOnlyReferenceModule"
             ? true
             : false
         )
       );
-      dispatch(setTimelinesRedux(sortedArr));
+      dispatch(setTimelinesRedux(descryptedPosts));
       dispatch(
         setReactionTimelineCount({
-          actionLike: sortedArr.map((obj: Publication) =>
-            obj.__typename === "Mirror"
-              ? obj.mirrorOf.stats.totalUpvotes
-              : obj.stats.totalUpvotes
+          actionLike: descryptedPosts.map((obj: Publication) =>
+            obj?.__typename === "Mirror"
+              ? obj?.mirrorOf?.stats?.totalUpvotes
+              : obj?.stats?.totalUpvotes
           ),
-          actionMirror: sortedArr.map((obj: Publication) =>
-            obj.__typename === "Mirror"
-              ? obj.mirrorOf.stats.totalAmountOfMirrors
-              : obj.stats.totalAmountOfMirrors
+          actionMirror: descryptedPosts.map((obj: Publication) =>
+            obj?.__typename === "Mirror"
+              ? obj?.mirrorOf?.stats?.totalAmountOfMirrors
+              : obj?.stats?.totalAmountOfMirrors
           ),
-          actionCollect: sortedArr.map((obj: Publication) =>
-            obj.__typename === "Mirror"
-              ? obj.mirrorOf.stats.totalAmountOfCollects
-              : obj.stats.totalAmountOfCollects
+          actionCollect: descryptedPosts.map((obj: Publication) =>
+            obj?.__typename === "Mirror"
+              ? obj?.mirrorOf?.stats?.totalAmountOfCollects
+              : obj?.stats?.totalAmountOfCollects
           ),
-          actionComment: sortedArr.map((obj: Publication) =>
-            obj.__typename === "Mirror"
-              ? obj.mirrorOf.stats.totalAmountOfComments
-              : obj.stats.totalAmountOfComments
+          actionComment: descryptedPosts.map((obj: Publication) =>
+            obj?.__typename === "Mirror"
+              ? obj?.mirrorOf?.stats?.totalAmountOfComments
+              : obj?.stats?.totalAmountOfComments
           ),
           actionHasLiked: hasReactedArr,
           actionHasMirrored: hasMirroredArr,
@@ -430,12 +554,15 @@ const useAllPosts = () => {
         setHasMoreTimeline(false);
         return;
       }
-      const data = await feedTimeline({
-        profileIds: LENS_CREATORS,
-        publicationTypes: ["POST", "COMMENT", "MIRROR"],
-        limit: 10,
-        cursor: paginated?.paginatedTimeline?.next,
-      });
+      const data = await feedTimeline(
+        {
+          profileIds: LENS_CREATORS,
+          publicationTypes: ["POST", "COMMENT", "MIRROR"],
+          limit: 10,
+          cursor: paginated?.paginatedTimeline?.next,
+        },
+        lensProfile
+      );
 
       const arr: any[] = [...data?.data?.publications?.items];
       const sortedArr = arr.sort(
@@ -447,14 +574,65 @@ const useAllPosts = () => {
       {
         setHasMoreTimeline(true);
       }
-      dispatch(setTimelinesRedux([...timelineDispatch, ...sortedArr]));
+
+      const sdk = await LensGatedSDK.create({
+        provider: new Web3Provider(window?.ethereum as any),
+        signer: signer as Signer,
+        env: LensEnvironment.Polygon,
+      });
+
+      const descryptedPosts = await Promise.all(
+        sortedArr.map(async (post) => {
+          if (post.canDecrypt && post.canDecrypt.result) {
+            try {
+              const data = await fetchIPFSJSON(
+                post.onChainContentURI
+                  ?.split("ipfs://")[1]
+                  .replace(/"/g, "")
+                  .trim()
+              );
+              const { decrypted, error } = await sdk.gated.decryptMetadata(
+                data.json
+              );
+              if (decrypted) {
+                return decrypted;
+              } else if (error) {
+                return {
+                  ...post,
+                  gated: true,
+                };
+              }
+            } catch (err: any) {
+              console.error(err.message);
+              return {
+                ...post,
+                gated: true,
+              };
+            }
+          } else if (
+            post?.metadata?.content.includes("This publication is gated")
+          ) {
+            return {
+              ...post,
+              gated: true,
+            };
+          } else {
+            return post;
+          }
+        })
+      );
+
+      dispatch(setTimelinesRedux([...timelineDispatch, ...descryptedPosts]));
       dispatch(
         setPaginated({
           actionPaginated: paginated.paginated,
           actionPaginatedTimeline: data?.data?.publications?.pageInfo,
         })
       );
-      const hasMirroredArr = await checkIfMirrored(sortedArr, lensProfile);
+      const hasMirroredArr = await checkIfMirrored(
+        descryptedPosts,
+        lensProfile
+      );
       const hasReactedArr = await checkPostReactions(
         {
           profileIds: LENS_CREATORS,
@@ -464,43 +642,43 @@ const useAllPosts = () => {
         },
         lensProfile
       );
-      const hasCollectedArr = sortedArr.map((obj: Publication) =>
-        obj.__typename === "Mirror"
-          ? obj.mirrorOf.hasCollectedByMe
-          : obj.hasCollectedByMe
+      const hasCollectedArr = descryptedPosts.map((obj: Publication) =>
+        obj?.__typename === "Mirror"
+          ? obj?.mirrorOf?.hasCollectedByMe
+          : obj?.hasCollectedByMe
       );
       dispatch(
         setReactionTimelineCount({
           actionLike: [
             ...reactionTimelineCount.like,
-            ...sortedArr.map((obj: Publication) =>
-              obj.__typename === "Mirror"
-                ? obj.mirrorOf.stats.totalUpvotes
-                : obj.stats.totalUpvotes
+            ...descryptedPosts.map((obj: Publication) =>
+              obj?.__typename === "Mirror"
+                ? obj?.mirrorOf?.stats?.totalUpvotes
+                : obj?.stats?.totalUpvotes
             ),
           ],
           actionMirror: [
             ...reactionTimelineCount.mirror,
-            ...sortedArr.map((obj: Publication) =>
-              obj.__typename === "Mirror"
-                ? obj.mirrorOf.stats.totalAmountOfMirrors
-                : obj.stats.totalAmountOfMirrors
+            ...descryptedPosts.map((obj: Publication) =>
+              obj?.__typename === "Mirror"
+                ? obj?.mirrorOf?.stats?.totalAmountOfMirrors
+                : obj?.stats?.totalAmountOfMirrors
             ),
           ],
           actionCollect: [
             ...reactionTimelineCount.collect,
-            ...sortedArr.map((obj: Publication) =>
-              obj.__typename === "Mirror"
-                ? obj.mirrorOf.stats.totalAmountOfCollects
-                : obj.stats.totalAmountOfCollects
+            ...descryptedPosts.map((obj: Publication) =>
+              obj?.__typename === "Mirror"
+                ? obj?.mirrorOf?.stats?.totalAmountOfCollects
+                : obj?.stats?.totalAmountOfCollects
             ),
           ],
           actionComment: [
             ...reactionTimelineCount.comment,
-            ...sortedArr.map((obj: Publication) =>
-              obj.__typename === "Mirror"
-                ? obj.mirrorOf.stats.totalAmountOfComments
-                : obj.stats.totalAmountOfComments
+            ...descryptedPosts.map((obj: Publication) =>
+              obj?.__typename === "Mirror"
+                ? obj?.mirrorOf?.stats?.totalAmountOfComments
+                : obj?.stats?.totalAmountOfComments
             ),
           ],
           actionHasLiked: [...reactionTimelineCount.hasLiked, ...hasReactedArr],

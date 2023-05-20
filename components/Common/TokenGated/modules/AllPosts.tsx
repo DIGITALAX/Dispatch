@@ -183,7 +183,7 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
   setTokenIds,
   tokenIds,
   preElement,
-  preElementPost
+  preElementPost,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-fit flex flex-col items-start justify-start gap-4">
@@ -374,6 +374,7 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
             setMappedFeatureFilesComment={setMappedFeatureFilesComment}
             setVideoLoadingComment={setVideoLoadingComment}
             setImageLoadingComment={setImageLoadingComment}
+            allCollections={collections}
           />
         ) : postsLoading ? (
           <div className="relative w-full h-auto flex flex-col gap-4 overflow-y-scroll">
@@ -410,7 +411,8 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
                 </div>
               </div>
             ) : (
-              timelineDispatch?.length === 0 && (
+              timelineDispatch?.length === 0 &&
+              !feedSwitch && (
                 <div className="relative w-full h-fit justify-center items-start text-white font-earl flex flex-col text-center">
                   <div className="relative w-full h-fit flex justify-center items-start text-center">
                     Nothing in your feed? Follow Chromadin Curated Creators.
@@ -491,6 +493,7 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
                         }
                         feedType={feedType.value}
                         openComment={commentOpen}
+                        allCollections={collections}
                       />
                       {(publication?.__typename === "Mirror"
                         ? publication?.mirrorOf?.id

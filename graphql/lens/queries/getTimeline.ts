@@ -1,7 +1,7 @@
 import { apolloClient } from "@/lib/lens/client";
 import { gql } from "@apollo/client";
 
-const FEED_TIMELINE = `query Publications($request: PublicationsQueryRequest!) {
+const FEED_TIMELINE = `query Publications($request: PublicationsQueryRequest! $profileId: ProfileId) {
   publications(request: $request) {
     items {
       __typename 
@@ -120,6 +120,12 @@ fragment Erc20Fields on Erc20 {
 }
 
 fragment PostFields on Post {
+  canDecrypt(
+    profileId: $profileId
+  ) {
+    result
+    reasons
+  }
   id
   profile {
     ...ProfileFields
@@ -142,6 +148,7 @@ fragment PostFields on Post {
   reaction(request: null)
   mirrors(by: null)
   hasCollectedByMe
+  onChainContentURI
 }
 
 fragment MirrorBaseFields on Mirror {
@@ -352,13 +359,13 @@ fragment ReferenceModuleFields on ReferenceModule {
 
 `;
 
-export const feedTimeline = (request: any) => {
+export const feedTimeline = (request: any, profileId: any) => {
   return apolloClient.query({
     query: gql(FEED_TIMELINE),
     variables: {
-      request: request,
+      request,
+      profileId,
     },
     fetchPolicy: "network-only",
   });
 };
-export default feedTimeline;

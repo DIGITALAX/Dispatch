@@ -103,7 +103,8 @@ const Individual: FunctionComponent<IndividualProps> = ({
   uploadImagesComment,
   setVideoLoadingComment,
   setImageLoadingComment,
-  preElement
+  preElement,
+  allCollections,
 }): JSX.Element => {
   return (
     <div className="relative flex flex-col items-start justify-start gap-3 h-full w-full min-w-230">
@@ -148,6 +149,7 @@ const Individual: FunctionComponent<IndividualProps> = ({
             setMirrorLoader={setMirrorPostLoading}
             setReactLoader={setReactPostLoading}
             openComment={commentOpen}
+            allCollections={allCollections}
           />
           {(mainPost?.__typename === "Mirror"
             ? mainPost?.mirrorOf?.id
@@ -319,6 +321,7 @@ const Individual: FunctionComponent<IndividualProps> = ({
         setVideoLoadingComment={setVideoLoadingComment}
         setMappedFeatureFilesComment={setMappedFeatureFilesComment}
         setImageLoadingComment={setImageLoadingComment}
+        allCollections={allCollections}
       />
     </div>
   );

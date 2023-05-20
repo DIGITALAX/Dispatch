@@ -7,6 +7,7 @@ import { Ref } from "react";
 import ReactPlayer from "react-player";
 import { DispatchProp } from "react-redux";
 import { AnyAction, Dispatch } from "redux";
+import { Collection } from "../../Collections/types/collections.types";
 
 export type ErrorProps = {
   dispatch: Dispatch<AnyAction>;
@@ -98,4 +99,9 @@ export type UpdateCollectionProps = {
   updateCollectionLoading: boolean;
   collectionValues: CollectionDetailsState
   dispatch: Dispatch<AnyAction>;
+};
+
+export type DecryptProps = {
+  dispatch: Dispatch<AnyAction>;
+  collections: Collection[];
 };

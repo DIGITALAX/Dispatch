@@ -17,6 +17,7 @@ import useFollowers from "../../TokenGated/hooks/useFollowers";
 import FollowerOnly from "./FollowerOnly";
 import UpdateCollection from "./UpdateCollection";
 import useEditCollection from "../../Collections/hooks/useEditCollection";
+import Decrypt from "./Decrypt";
 
 const Modals = () => {
   const dispatch = useDispatch();
@@ -46,6 +47,7 @@ const Modals = () => {
   const collectionDetails = useSelector(
     (state: RootState) => state.app.collectionDetailsReducer
   );
+  const decrypt = useSelector((state: RootState) => state.app.decryptReducer);
   const imageViewer = useSelector(
     (state: RootState) => state.app.imageViewerReducer
   );
@@ -184,6 +186,9 @@ const Modals = () => {
           collectionValues={collectionDetails}
           dispatch={dispatch}
         />
+      )}
+      {decrypt.open && (
+        <Decrypt dispatch={dispatch} collections={decrypt.collections} />
       )}
       {errorModal.open && (
         <Error dispatch={dispatch} message={errorModal.message} />
