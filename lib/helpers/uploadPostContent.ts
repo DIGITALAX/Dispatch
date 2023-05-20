@@ -65,7 +65,7 @@ const uploadPostContent = async (
     attributes: [],
     media: newImages,
     locale: "en",
-    tags: null,
+    tags: gated ? ["encrypted", "chromadin", "labyrinth"] : null,
     appId: "chromadin",
   };
 
