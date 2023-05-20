@@ -136,6 +136,7 @@ const useAllPosts = () => {
                 .replace(/"/g, "")
                 .trim()
             );
+            console.log({e:data.json})
             try {
               const { decrypted, error } = await sdk.gated.decryptMetadata(
                 data.json
