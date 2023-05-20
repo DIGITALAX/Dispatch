@@ -93,6 +93,11 @@ const useAllPosts = () => {
           profileId: lensProfile,
           publicationTypes: ["POST", "COMMENT", "MIRROR"],
           limit: 10,
+          metadata: {
+            tags: {
+              all: ["encrypted", "chromadin", "labyrinth"],
+            },
+          },
         },
         lensProfile
       );
@@ -101,15 +106,10 @@ const useAllPosts = () => {
         return;
       }
       const arr: any[] = [...data?.data.publications?.items];
-      const sortedArr = arr
-        .sort(
-          (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
-        )
-        .filter(
-          (post) =>
-            (post.canDecrypt && post.canDecrypt.result) ||
-            post?.metadata?.content.includes("This publication is gated")
-        );
+      const sortedArr = arr.sort(
+        (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
+      );
+
       if (sortedArr?.length < 10) {
         setHasMore(false);
       } else {
@@ -181,6 +181,11 @@ const useAllPosts = () => {
         {
           profileId: lensProfile,
           publicationTypes: ["POST", "COMMENT", "MIRROR"],
+          metadata: {
+            tags: {
+              all: ["encrypted", "chromadin", "labyrinth"],
+            },
+          },
           limit: 10,
         },
         lensProfile
@@ -229,11 +234,7 @@ const useAllPosts = () => {
               ? obj?.mirrorOf?.stats?.totalAmountOfComments
               : obj?.stats?.totalAmountOfComments
           ),
-          actionHasLiked: hasReactedArr.filter(
-            (post: any) =>
-              (post.canDecrypt && post.canDecrypt.result) ||
-              post?.metadata?.content.includes("This publication is gated")
-          ),
+          actionHasLiked: hasReactedArr,
           actionHasMirrored: hasMirroredArr,
           actionHasCollected: hasCollectedArr,
         })
@@ -255,6 +256,11 @@ const useAllPosts = () => {
         {
           profileId: lensProfile,
           publicationTypes: ["POST", "COMMENT", "MIRROR"],
+          metadata: {
+            tags: {
+              all: ["encrypted", "chromadin", "labyrinth"],
+            },
+          },
           limit: 10,
           cursor: paginated?.paginated?.next,
         },
@@ -262,15 +268,10 @@ const useAllPosts = () => {
       );
 
       const arr: any[] = [...data?.data?.publications?.items];
-      const sortedArr = arr
-        .sort(
-          (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
-        )
-        .filter(
-          (post) =>
-            (post.canDecrypt && post.canDecrypt.result) ||
-            post?.metadata?.content.includes("This publication is gated")
-        );
+      const sortedArr = arr.sort(
+        (a: any, b: any) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
+      );
+
       if (sortedArr?.length < 10) {
         setHasMore(false);
       } else {
@@ -346,6 +347,11 @@ const useAllPosts = () => {
         {
           profileId: lensProfile,
           publicationTypes: ["POST", "COMMENT", "MIRROR"],
+          metadata: {
+            tags: {
+              all: ["encrypted", "chromadin", "labyrinth"],
+            },
+          },
           limit: 10,
           cursor: paginated?.paginated?.next,
         },
@@ -390,14 +396,7 @@ const useAllPosts = () => {
                 : obj?.stats?.totalAmountOfComments
             ),
           ],
-          actionHasLiked: [
-            ...reactionFeedCount.hasLiked,
-            ...hasReactedArr.filter(
-              (post: any) =>
-                (post.canDecrypt && post.canDecrypt.result) ||
-                post?.metadata?.content.includes("This publication is gated")
-            ),
-          ],
+          actionHasLiked: [...reactionFeedCount.hasLiked, ...hasReactedArr],
           actionHasMirrored: [
             ...reactionFeedCount.hasMirrored,
             ...hasMirroredArr,
