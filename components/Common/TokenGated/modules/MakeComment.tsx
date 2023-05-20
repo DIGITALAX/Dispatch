@@ -296,7 +296,7 @@ const MakeComment: FunctionComponent<MakeCommentProps> = ({
               </pre>
               {mentionProfiles?.length > 0 && profilesOpen && (
                 <div
-                  className={`absolute w-44 max-h-28 h-fit flex flex-col overflow-y-scroll items-center justify-center z-2 rounded-lg`}
+                  className={`absolute w-44 max-h-28 h-fit flex flex-col overflow-y-scroll items-start justify-center z-2 rounded-lg`}
                   style={{
                     top: caretCoord.y + 30,
                     left: caretCoord.x,
@@ -307,7 +307,7 @@ const MakeComment: FunctionComponent<MakeCommentProps> = ({
                     return (
                       <div
                         key={index}
-                        className={`relative w-full h-fit px-3 py-2 bg-white flex flex-row gap-3 cursor-pointer items-center justify-center border-y border-black hover:bg-rosa/70 z-2`}
+                        className={`relative w-full h-fit px-3 py-2 bg-white flex flex-row gap-3 cursor-pointer items-start justify-center border-y border-black hover:bg-rosa/70 z-2`}
                         onClick={() => {
                           handleMentionClick(user);
                         }}
