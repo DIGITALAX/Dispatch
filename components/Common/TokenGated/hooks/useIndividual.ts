@@ -316,8 +316,8 @@ const useIndividual = () => {
               ...data?.publication,
               decrypted,
             };
-          } else if (error) {
-            return {
+          } else {
+            decryptedData = {
               ...data?.publication,
               gated: true,
             };

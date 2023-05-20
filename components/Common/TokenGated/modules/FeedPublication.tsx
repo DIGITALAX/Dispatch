@@ -135,7 +135,7 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
               dangerouslySetInnerHTML={{
                 __html: descriptionRegex(
                   (publication as any)?.decrypted
-                    ? (publication as any).decrypted?.content
+                    ? (publication as any)?.decrypted?.content
                     : publication?.__typename !== "Mirror"
                     ? !(publication as any)?.gated
                       ? publication?.metadata?.content
@@ -157,77 +157,103 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
               : "row-start-2"
           }`}
         >
-          {(publication as any)?.decrypted
-            ? (publication as any).decrypted?.media
+          {((publication as any)?.decrypted
+            ? (publication as any)?.decrypted?.media
             : !(publication as any)?.gated &&
               !(publication as any)?.mirrorOf?.gated &&
-              (publication?.__typename === "Mirror"
-                ? publication?.mirrorOf?.metadata?.media
-                : publication?.metadata?.media
-              )?.map((image: MediaSet | string, index: number) => {
-                let formattedImageURL: string;
+              publication?.__typename === "Mirror"
+            ? publication?.mirrorOf?.metadata?.media
+            : publication?.metadata?.media
+          )?.map((image: MediaSet | string, index: number) => {
+            let formattedImageURL: string;
 
-                if ((image as MediaSet).original.url.includes("ipfs://")) {
-                  formattedImageURL = `${INFURA_GATEWAY}/ipfs/${
-                    (image as MediaSet).original.url?.split("ipfs://")[1]
-                  }`;
-                } else {
-                  formattedImageURL = (image as MediaSet).original.url;
+            if ((publication as any)?.decrypted) {
+              if ((image as any).item.includes("ipfs://")) {
+                formattedImageURL = `${INFURA_GATEWAY}/ipfs/${
+                  (image as any).item?.split("ipfs://")[1]
+                }`;
+              } else {
+                formattedImageURL = (image as any).item;
+              }
+            } else {
+              if ((image as MediaSet).original.url.includes("ipfs://")) {
+                formattedImageURL = `${INFURA_GATEWAY}/ipfs/${
+                  (image as MediaSet).original.url?.split("ipfs://")[1]
+                }`;
+              } else {
+                formattedImageURL = (image as MediaSet).original.url;
+              }
+            }
+
+            return (
+              <div
+                key={index}
+                className={`relative w-40 h-40 preG:w-60 preG:h-60 border-2 border-black rounded-lg bg-black grid grid-flow-col auto-cols-auto col-start-${
+                  index + 1
+                } cursor-pointer hover:opacity-70 active:scale-95`}
+                onClick={() =>
+                  dispatch(
+                    setImageViewer({
+                      actionType: (publication as any)?.decrypted
+                        ? (image as any).type
+                        : (image as MediaSet).original.mimeType,
+                      actionOpen: true,
+                      actionImage: formattedImageURL,
+                    })
+                  )
                 }
-
-                return (
-                  <div
-                    key={index}
-                    className={`relative w-40 h-40 preG:w-60 preG:h-60 border-2 border-black rounded-lg bg-black grid grid-flow-col auto-cols-auto col-start-${
-                      index + 1
-                    } cursor-pointer hover:opacity-70 active:scale-95`}
-                    onClick={() =>
-                      dispatch(
-                        setImageViewer({
-                          actionType: (image as MediaSet).original.mimeType,
-                          actionOpen: true,
-                          actionImage: formattedImageURL,
-                        })
-                      )
-                    }
-                  >
-                    <div className="relative w-full h-full col-start-1 flex">
-                      {(image as MediaSet)?.original?.mimeType !==
-                      "video/mp4" ? (
-                        <Image
-                          src={
-                            (image as MediaSet)?.original?.mimeType ===
-                              "image/png" ||
-                            (image as MediaSet)?.original?.mimeType ===
-                              "image/webp" ||
-                            (image as MediaSet)?.original?.mimeType ===
-                              "image/jpg" ||
-                            (image as MediaSet)?.original?.mimeType ===
-                              "image/jpeg" ||
-                            (image as MediaSet)?.original?.mimeType ===
-                              "image/gif"
-                              ? formattedImageURL
-                              : (image as MediaSet)?.original?.url
-                          }
-                          layout="fill"
-                          objectFit="cover"
-                          objectPosition={"center"}
-                          className="rounded-md"
-                          draggable={false}
-                        />
-                      ) : (
-                        <video
-                          muted
-                          controls
-                          className="rounded-md absolute w-full h-full object-cover"
-                        >
-                          <source src={formattedImageURL} type="video/mp4" />
-                        </video>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
+              >
+                <div className="relative w-full h-full col-start-1 flex">
+                  {((publication as any)?.decrypted
+                    ? (image as any).type
+                    : (image as MediaSet)?.original?.mimeType) !==
+                  "video/mp4" ? (
+                    <Image
+                      src={
+                        ((publication as any)?.decrypted
+                          ? (image as any).type
+                          : (image as MediaSet)?.original?.mimeType) ===
+                          "image/png" ||
+                        ((publication as any)?.decrypted
+                          ? (image as any).type
+                          : (image as MediaSet)?.original?.mimeType) ===
+                          "image/webp" ||
+                        ((publication as any)?.decrypted
+                          ? (image as any).type
+                          : (image as MediaSet)?.original?.mimeType) ===
+                          "image/jpg" ||
+                        ((publication as any)?.decrypted
+                          ? (image as any).type
+                          : (image as MediaSet)?.original?.mimeType) ===
+                          "image/jpeg" ||
+                        ((publication as any)?.decrypted
+                          ? (image as any).type
+                          : (image as MediaSet)?.original?.mimeType) ===
+                          "image/gif"
+                          ? formattedImageURL
+                          : (publication as any)?.decrypted
+                          ? (image as any).item
+                          : (image as MediaSet)?.original?.url
+                      }
+                      layout="fill"
+                      objectFit="cover"
+                      objectPosition={"center"}
+                      className="rounded-md"
+                      draggable={false}
+                    />
+                  ) : (
+                    <video
+                      muted
+                      controls
+                      className="rounded-md absolute w-full h-full object-cover"
+                    >
+                      <source src={formattedImageURL} type="video/mp4" />
+                    </video>
+                  )}
+                </div>
+              </div>
+            );
+          })}
         </div>
         {(publication as any)?.gated ? (
           <div

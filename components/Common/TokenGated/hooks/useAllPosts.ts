@@ -136,14 +136,16 @@ const useAllPosts = () => {
                 .replace(/"/g, "")
                 .trim()
             );
-            console.log({e:data.json})
             try {
               const { decrypted, error } = await sdk.gated.decryptMetadata(
                 data.json
               );
               if (decrypted) {
-                return decrypted;
-              } else if (error) {
+                return {
+                  ...post,
+                  decrypted,
+                };
+              } else {
                 return {
                   ...post,
                   gated: true,
@@ -299,8 +301,11 @@ const useAllPosts = () => {
                 data.json
               );
               if (decrypted) {
-                return decrypted;
-              } else if (error) {
+                return {
+                  ...post,
+                  decrypted,
+                };
+              } else {
                 return {
                   ...post,
                   gated: true,
@@ -450,10 +455,15 @@ const useAllPosts = () => {
                 .trim()
             );
             try {
-              const { decrypted, error } = await sdk.gated.decryptMetadata(data.json);
+              const { decrypted, error } = await sdk.gated.decryptMetadata(
+                data.json
+              );
               if (decrypted) {
-                return decrypted;
-              } else if (error) {
+                return {
+                  ...post,
+                  decrypted,
+                };
+              } else {
                 return {
                   ...post,
                   gated: true,
@@ -596,8 +606,11 @@ const useAllPosts = () => {
                 data.json
               );
               if (decrypted) {
-                return decrypted;
-              } else if (error) {
+                return {
+                  ...post,
+                  decrypted,
+                };
+              } else {
                 return {
                   ...post,
                   gated: true,
