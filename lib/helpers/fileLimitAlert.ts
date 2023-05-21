@@ -1,20 +1,11 @@
 const fileLimitAlert = (file: File): boolean | void => {
   if (!file) return;
 
-  if (file.type === "image/png") {
-    if (file.size > 4194304) {
-      alert("Maximum File Size of 4MB, Try Reducing It");
-      return true;
-    } else {
-      return false;
-    }
+  if (file.size > 26214400) {
+    alert("Maximum File Size of 25MB, Try Reducing It");
+    return true;
   } else {
-    if (file.size > 15728640) {
-      alert("Maximum File Size of 15MB, Try Reducing It");
-      return true;
-    } else {
-      return false;
-    }
+    return false;
   }
 };
 
