@@ -170,12 +170,12 @@ const useImageUpload = () => {
     Array.from(((e as FormEvent).target as HTMLFormElement)?.files).map(
       async (_, index: number) => {
         try {
-          const compressedImage = await compressImageFiles(
-            (e as any).target.files[index] as File
-          );
+          // const compressedImage = await compressImageFiles(
+          //   (e as any).target.files[index] as File
+          // );
           const response = await fetch("/api/ipfs", {
             method: "POST",
-            body: compressedImage as any,
+            body: (e as any).target.files[index],
           });
           if (response.status !== 200) {
             setImageLoading(false);
