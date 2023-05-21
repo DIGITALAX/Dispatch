@@ -7,40 +7,53 @@ const collectionGetter = async (colls: any, drops: any): Promise<any> => {
       return;
     }
     const collections = await Promise.all(
-     colls?.data?.collectionMinteds
-      .map(async (collection: Collection, index: number) => {
-        let dropjson: any;
-        const json = await fetchIPFSJSON(
-          (collection.uri as any)?.split("ipfs://")[1].replace(/"/g, "").trim()
-        );
-
-        let collectionDrops;
-
-        collectionDrops = drops.data.dropCreateds
-          .filter((drop: any) =>
-            drop.collectionIds.includes(collection.collectionId)
-          )
-          .sort((a: any, b: any) => b.dropId - a.dropId);
-
-        if (collectionDrops?.length > 0) {
-          dropjson = await fetchIPFSJSON(
-            collectionDrops[0]?.dropURI
+      colls?.data?.collectionMinteds.map(
+        async (collection: Collection, index: number) => {
+          let dropjson: any;
+          const json = await fetchIPFSJSON(
+            (collection.uri as any)
               ?.split("ipfs://")[1]
               .replace(/"/g, "")
               .trim()
           );
-        }
 
-        return {
-          ...collection,
-          uri: json.json,
-          drop: {
-            name: dropjson?.json?.name,
-            image: dropjson?.json?.image,
-          },
-          fileType: json.type,
-        };
-      })
+          if (drops && drops.length > 0) {
+            let collectionDrops;
+
+            collectionDrops = drops.data.dropCreateds
+              .filter((drop: any) =>
+                drop.collectionIds.includes(collection.collectionId)
+              )
+              .sort((a: any, b: any) => b.dropId - a.dropId);
+
+            if (collectionDrops?.length > 0) {
+              dropjson = await fetchIPFSJSON(
+                collectionDrops[0]?.dropURI
+                  ?.split("ipfs://")[1]
+                  .replace(/"/g, "")
+                  .trim()
+              );
+            }
+
+            return {
+              ...collection,
+              uri: json.json,
+              drop: {
+                name: dropjson?.json?.name,
+                image: dropjson?.json?.image,
+              },
+              fileType: json.type,
+            };
+          } else {
+            return {
+              ...collection,
+              uri: json.json,
+              drop: {},
+              fileType: json.type,
+            };
+          }
+        }
+      )
     );
 
     return collections;

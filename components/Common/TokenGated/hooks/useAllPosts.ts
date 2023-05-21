@@ -24,6 +24,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { useSigner } from "wagmi";
 import { getPostData } from "@/lib/lens/utils";
 import fetchIPFSJSON from "@/lib/helpers/fetchIPFSJSON";
+import collectionGetter from "@/lib/helpers/collectionGetter";
+import { setDecryptCollectionsAllRedux } from "@/redux/reducers/decryptCollectionsAllSlice";
+import { getCollectionsDecryptAll } from "@/graphql/subgraph/queries/getAllCollections";
 
 const useAllPosts = () => {
   const { data: signer } = useSigner();
@@ -74,6 +77,9 @@ const useAllPosts = () => {
   );
   const scrollPos = useSelector(
     (state: RootState) => state.app.scrollPosReducer
+  );
+  const decryptColls = useSelector(
+    (state: RootState) => state.app.decryptCollectionsAllReducer.value
   );
   const page = useSelector((state: RootState) => state.app.pageReducer.value);
   const dispatch = useDispatch();
@@ -935,6 +941,16 @@ const useAllPosts = () => {
     }
   };
 
+  const getAllCollectionsDecrypted = async () => {
+    try {
+      const colls = await getCollectionsDecryptAll();
+      const collections = await collectionGetter(colls, undefined);
+      dispatch(setDecryptCollectionsAllRedux(collections ? collections : []));
+    } catch (err: any) {
+      console.error(err.message);
+    }
+  };
+
   useEffect(() => {
     if (page === "token gated") {
       if (indexer.message === "Successfully Indexed") {
@@ -967,6 +983,12 @@ const useAllPosts = () => {
       getFeed();
     }
   }, [postImages]);
+
+  useEffect(() => {
+    if (decryptColls?.length < 1 || !decryptColls) {
+      getAllCollectionsDecrypted();
+    }
+  }, []);
 
   return {
     followerOnly,

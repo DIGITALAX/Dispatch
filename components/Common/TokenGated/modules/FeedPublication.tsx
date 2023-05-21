@@ -280,9 +280,9 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
                           )
                             ?.split("gate.")[1]
                             ?.split("are ready to collect")[0]
-                            .split(",")
-                            .map((word: string) => word.trim())
-                            .includes(coll.name.toLowerCase());
+                            ?.split(",")
+                            ?.map((word: string) => word.trim())
+                            ?.includes(coll.name.toLowerCase());
                         }
                       ),
                     })

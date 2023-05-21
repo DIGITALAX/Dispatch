@@ -16,11 +16,26 @@ const COLLECTIONS = `
   }
 `;
 
+const COLLECTIONS_ALL = `
+query {
+  collectionMinteds(orderDirection: desc) {
+    uri
+    acceptedTokens
+    basePrices
+    amount
+    name
+    collectionId
+    soldTokens
+    tokenIds
+  }
+}
+`;
+
 const getAllCollections = async (owner: any): Promise<any> => {
   const queryPromise = graphClient.query({
     query: gql(COLLECTIONS),
     variables: {
-      owner: owner
+      owner: owner,
     },
     fetchPolicy: "no-cache",
     errorPolicy: "all",
@@ -41,3 +56,24 @@ const getAllCollections = async (owner: any): Promise<any> => {
 };
 
 export default getAllCollections;
+
+export const getCollectionsDecryptAll = async (): Promise<any> => {
+  const queryPromise = graphClient.query({
+    query: gql(COLLECTIONS_ALL),
+    fetchPolicy: "no-cache",
+    errorPolicy: "all",
+  });
+
+  const timeoutPromise = new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({ timedOut: true });
+    }, 20000); // 1 minute timeout
+  });
+
+  const result: any = await Promise.race([queryPromise, timeoutPromise]);
+  if (result.timedOut) {
+    return;
+  } else {
+    return result;
+  }
+};

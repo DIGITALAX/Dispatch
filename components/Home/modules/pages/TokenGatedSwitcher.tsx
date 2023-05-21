@@ -71,6 +71,9 @@ const TokenGatedSwitcher: FunctionComponent = (): JSX.Element => {
   const postGateImagesDispatched = useSelector(
     (state: RootState) => state.app.postGatedImageReducer.value
   );
+  const decryptAllCollections = useSelector(
+    (state: RootState) => state.app.decryptCollectionsAllReducer.value
+  );
 
   const dispatch = useDispatch();
   const { handleLensSignIn, handleConnect } = useConnect();
@@ -421,6 +424,7 @@ const TokenGatedSwitcher: FunctionComponent = (): JSX.Element => {
           collections={collections}
           preElement={preElement}
           preElementPost={preElementPost}
+          decryptAllCollections={decryptAllCollections}
         />
       );
 

@@ -378,6 +378,7 @@ export type AllPostsProps = {
   setVideoLoadingPost: (e: boolean) => void;
   setImageLoadingComment: (e: boolean) => void;
   setImageLoadingPost: (e: boolean) => void;
+  decryptAllCollections: Collection[]
 };
 
 export interface ApprovalArgs {

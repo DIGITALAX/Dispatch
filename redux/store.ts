@@ -51,6 +51,7 @@ import postGatedImageReducer from "./reducers/postGatedImageSlice";
 import canEditCollectionReducer from "./reducers/canEditCollectionSlice";
 import updateCollectionReducer from "./reducers/updateCollectionSlice";
 import decryptReducer from "./reducers/decryptSlice";
+import decryptCollectionsAllReducer from "./reducers/decryptCollectionsAllSlice";
 
 const reducer = combineReducers({
   lensProfileReducer,
@@ -104,6 +105,7 @@ const reducer = combineReducers({
   canEditCollectionReducer,
   updateCollectionReducer,
   decryptReducer,
+  decryptCollectionsAllReducer,
 });
 
 export const store = configureStore({

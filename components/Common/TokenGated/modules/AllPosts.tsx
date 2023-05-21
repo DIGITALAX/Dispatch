@@ -184,6 +184,7 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
   tokenIds,
   preElement,
   preElementPost,
+  decryptAllCollections
 }): JSX.Element => {
   return (
     <div className="relative w-full h-fit flex flex-col items-start justify-start gap-4">
@@ -374,7 +375,7 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
             setMappedFeatureFilesComment={setMappedFeatureFilesComment}
             setVideoLoadingComment={setVideoLoadingComment}
             setImageLoadingComment={setImageLoadingComment}
-            allCollections={collections}
+            allCollections={decryptAllCollections}
           />
         ) : postsLoading ? (
           <div className="relative w-full h-auto flex flex-col gap-4 overflow-y-scroll">
@@ -493,7 +494,7 @@ const AllPosts: FunctionComponent<AllPostsProps> = ({
                         }
                         feedType={feedType.value}
                         openComment={commentOpen}
-                        allCollections={collections}
+                        allCollections={decryptAllCollections}
                       />
                       {(publication?.__typename === "Mirror"
                         ? publication?.mirrorOf?.id
