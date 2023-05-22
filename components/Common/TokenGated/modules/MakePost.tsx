@@ -399,7 +399,7 @@ const MakePost: FunctionComponent<MakePostProps> = ({
                         gated
                       />
                     )}
-                    {collectible === "yes" && chargeCollect === "yes" && (
+                    {collectible === "yes" && (
                       <CollectButton
                         col={"1"}
                         row={"1"}
@@ -411,23 +411,21 @@ const MakePost: FunctionComponent<MakePostProps> = ({
                         gated
                       />
                     )}
-                    {collectible === "yes" &&
-                      limitedEdition === "yes" &&
-                      chargeCollect === "yes" && (
-                        <CollectInput
-                          min="1"
-                          step="1"
-                          defaultValue={limit.toString()}
-                          placeholder={limit.toString()}
-                          id="collectLimit"
-                          label="Edition Amount"
-                          name="collectLimit"
-                          col={"1"}
-                          row={"1"}
-                          handleValueChange={setLimit}
-                          gated
-                        />
-                      )}
+                    {collectible === "yes" && limitedEdition === "yes" && (
+                      <CollectInput
+                        min="1"
+                        step="1"
+                        defaultValue={limit.toString()}
+                        placeholder={limit.toString()}
+                        id="collectLimit"
+                        label="Edition Amount"
+                        name="collectLimit"
+                        col={"1"}
+                        row={"1"}
+                        handleValueChange={setLimit}
+                        gated
+                      />
+                    )}
                   </div>
                   <div className="relative flex flex-col preG:flex-row w-full items-center justify-center">
                     {collectible === "yes" && chargeCollect === "yes" && (

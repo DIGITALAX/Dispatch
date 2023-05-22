@@ -378,7 +378,7 @@ export type AllPostsProps = {
   setVideoLoadingPost: (e: boolean) => void;
   setImageLoadingComment: (e: boolean) => void;
   setImageLoadingPost: (e: boolean) => void;
-  decryptAllCollections: Collection[]
+  decryptAllCollections: Collection[];
 };
 
 export interface ApprovalArgs {
@@ -726,6 +726,10 @@ export interface CollectValueType {
     };
     recipient: string;
     referralFee: number;
+    followerOnly: boolean;
+  };
+  simpleCollectModule?: {
+    collectLimit: string;
     followerOnly: boolean;
   };
   limitedTimedFeeCollectModule?: {

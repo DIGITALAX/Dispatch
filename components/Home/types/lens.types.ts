@@ -2641,7 +2641,8 @@ const result: PossibleTypesResultData = {
       'LimitedFeeCollectModuleSettings',
       'LimitedTimedFeeCollectModuleSettings',
       'RevertCollectModuleSettings',
-      'TimedFeeCollectModuleSettings'
+      'TimedFeeCollectModuleSettings',
+      'SimpleCollectModuleSettings'
     ],
     FollowModule: ['FeeFollowModuleSettings', 'ProfileFollowModuleSettings', 'RevertFollowModuleSettings'],
     MainPostReference: ['Mirror', 'Post'],

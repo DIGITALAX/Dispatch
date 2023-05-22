@@ -288,6 +288,11 @@ const GET_PUBLICATION_AUTH = `query Publication($request: PublicationQueryReques
       followerOnly
       contractAddress
     }
+    ... on SimpleCollectModuleSettings {
+      type
+      followerOnly
+      simpleCollectLimit: collectLimit
+    }
     ... on FeeCollectModuleSettings {
       type
       amount {
@@ -645,6 +650,11 @@ fragment CollectModuleFields on CollectModule {
     type
     followerOnly
     contractAddress
+  }
+  ... on SimpleCollectModuleSettings {
+    type
+    followerOnly
+    simpleCollectLimit: collectLimit
   }
   ... on FeeCollectModuleSettings {
     type

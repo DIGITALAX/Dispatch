@@ -274,6 +274,11 @@ query Publications($request: PublicationsQueryRequest!) {
       followerOnly
       contractAddress
     }
+    ... on SimpleCollectModuleSettings {
+      type
+      followerOnly
+      simpleCollectLimit: collectLimit
+    }
     ... on FeeCollectModuleSettings {
       type
       amount {
@@ -630,6 +635,11 @@ fragment CollectModuleFields on CollectModule {
     type
     followerOnly
     contractAddress
+  }
+  ... on SimpleCollectModuleSettings {
+    type
+    followerOnly
+    simpleCollectLimit: collectLimit
   }
   ... on FeeCollectModuleSettings {
     type

@@ -32,9 +32,16 @@ const handleSetCollectValues = (
       revertCollectModule: true,
     };
   } else if (collectible === "yes") {
-    if (chargeCollect === "no") {
+    if (chargeCollect === "no" && limitedEdition === "no") {
       collectModuleType = {
         freeCollectModule: {
+          followerOnly: audienceType === "everyone" ? false : true,
+        },
+      };
+    } else if (chargeCollect === "no" && limitedEdition === "yes") {
+      collectModuleType = {
+        simpleCollectModule: {
+          collectLimit: String(limit),
           followerOnly: audienceType === "everyone" ? false : true,
         },
       };

@@ -280,6 +280,11 @@ fragment CollectModuleFields on CollectModule {
     followerOnly
     contractAddress
   }
+  ... on SimpleCollectModuleSettings {
+    type
+    followerOnly
+    simpleCollectLimit: collectLimit
+  }
   ... on FeeCollectModuleSettings {
     type
     amount {

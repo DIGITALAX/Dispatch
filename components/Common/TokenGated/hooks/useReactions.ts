@@ -591,7 +591,11 @@ const useReactions = () => {
       dispatch(
         setPostCollectValues({
           actionType: collectModule?.type,
-          actionLimit: collectModule?.collectLimit,
+          actionLimit:
+            collectModule?.__typename === "SimpleCollectModuleSettings" ||
+            collectModule?.type === "SimpleCollectModule"
+              ? collectModule?.simpleCollectLimit
+              : collectModule?.collectLimit,
           actionRecipient: collectModule?.recipient,
           actionReferralFee: collectModule?.referralFee,
           actionEndTime: collectModule?.endTimestamp,
@@ -612,7 +616,12 @@ const useReactions = () => {
               : pubData?.publication?.hasCollectedByMe,
           actionApproved:
             collectModule?.type === "FreeCollectModule" ||
-            isApproved > collectModule?.amount?.value
+            isApproved > collectModule?.amount?.value ||
+            ((collectModule?.__typename === "SimpleCollectModuleSettings" ||
+              collectModule?.type === "SimpleCollectModule") &&
+              !collectModule?.amount &&
+              !collectModule?.limit &&
+              !collectModule?.endTime)
               ? true
               : false,
           actionTotalCollects:
