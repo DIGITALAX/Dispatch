@@ -228,7 +228,7 @@ const Reactions: FunctionComponent<ReactionProps> = ({
                     (publication?.collectModule as any)?.type ===
                       "SimpleCollectModule") &&
                     !(publication?.collectModule as any)?.amount &&
-                    !(publication?.collectModule as any)?.limit &&
+                    !(publication?.collectModule as any)?.simpleCollectLimit &&
                     !(publication?.collectModule as any)?.endTime)
                 ? () =>
                     dispatch(
