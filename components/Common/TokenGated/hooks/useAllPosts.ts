@@ -960,6 +960,9 @@ const useAllPosts = () => {
           refetchComments();
         }
       }
+      
+      getFeed();
+      getTimeline();
     }
   }, [indexer.message]);
 
