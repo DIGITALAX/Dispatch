@@ -944,7 +944,7 @@ const useAllPosts = () => {
   const getAllCollectionsDecrypted = async () => {
     try {
       const colls = await getCollectionsDecryptAll();
-      const collections = await collectionGetter(colls, undefined);
+      const collections = await collectionGetter(colls, undefined, true);
       dispatch(setDecryptCollectionsAllRedux(collections ? collections : []));
     } catch (err: any) {
       console.error(err.message);

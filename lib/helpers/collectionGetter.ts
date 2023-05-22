@@ -1,7 +1,11 @@
 import { Collection } from "@/components/Common/Collections/types/collections.types";
 import fetchIPFSJSON from "./fetchIPFSJSON";
 
-const collectionGetter = async (colls: any, drops: any): Promise<any> => {
+const collectionGetter = async (
+  colls: any,
+  drops: any,
+  decrypted?: boolean
+): Promise<any> => {
   try {
     if (!colls?.data?.collectionMinteds || colls?.data?.collectionMinteds < 1) {
       return;
@@ -17,7 +21,7 @@ const collectionGetter = async (colls: any, drops: any): Promise<any> => {
               .trim()
           );
 
-          if (drops && drops.length > 0) {
+          if (!decrypted) {
             let collectionDrops;
 
             collectionDrops = drops.data.dropCreateds
