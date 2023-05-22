@@ -79,7 +79,7 @@ const Success: FunctionComponent<SuccessProps> = ({
                   <Image
                     src={`${INFURA_GATEWAY}/ipfs/${
                       media.includes("ipfs://")
-                        ? media.split("ipfs://")[1]
+                        ? media?.split("ipfs://")[1]
                         : media
                     }`}
                     layout="fill"

@@ -17,8 +17,8 @@ const collectionGetter = async (
           const json = await fetchIPFSJSON(
             (collection.uri as any)
               ?.split("ipfs://")[1]
-              .replace(/"/g, "")
-              .trim()
+              ?.replace(/"/g, "")
+              ?.trim()
           );
 
           if (!decrypted) {
@@ -28,14 +28,14 @@ const collectionGetter = async (
               .filter((drop: any) =>
                 drop.collectionIds.includes(collection.collectionId)
               )
-              .sort((a: any, b: any) => b.dropId - a.dropId);
+              ?.sort((a: any, b: any) => b.dropId - a.dropId);
 
             if (collectionDrops?.length > 0) {
               dropjson = await fetchIPFSJSON(
                 collectionDrops[0]?.dropURI
                   ?.split("ipfs://")[1]
-                  .replace(/"/g, "")
-                  .trim()
+                  ?.replace(/"/g, "")
+                  ?.trim()
               );
             }
 

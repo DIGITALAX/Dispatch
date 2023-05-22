@@ -33,8 +33,8 @@ const useAllDrops = () => {
             const json = await fetchIPFSJSON(
               (drop.dropURI as any)
                 ?.split("ipfs://")[1]
-                .replace(/"/g, "")
-                .trim()
+                ?.replace(/"/g, "")
+                ?.trim()
             );
 
             return {

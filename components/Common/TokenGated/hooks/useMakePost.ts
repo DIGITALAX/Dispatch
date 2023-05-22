@@ -203,20 +203,20 @@ const useMakePost = () => {
       })
     );
     if (
-      e.target.value.split(" ")[e.target.value.split(" ")?.length - 1][0] ===
+      e.target.value?.split(" ")[e.target.value?.split(" ")?.length - 1][0] ===
         "@" &&
-      e.target.value.split(" ")[e.target.value.split(" ")?.length - 1]
+      e.target.value?.split(" ")[e.target.value?.split(" ")?.length - 1]
         ?.length === 1
     ) {
       setCaretCoord(getCaretPos(e, textElement));
       setProfilesOpen(true);
     }
     if (
-      e.target.value.split(" ")[e.target.value.split(" ")?.length - 1][0] ===
+      e.target.value?.split(" ")[e.target.value?.split(" ")?.length - 1][0] ===
       "@"
     ) {
       const allProfiles = await searchProfile({
-        query: e.target.value.split(" ")[e.target.value.split(" ")?.length - 1],
+        query: e.target.value?.split(" ")[e.target.value?.split(" ")?.length - 1],
         type: "PROFILE",
         limit: 50,
       });

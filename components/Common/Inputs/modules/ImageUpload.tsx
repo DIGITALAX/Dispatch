@@ -38,7 +38,7 @@ const ImageUpload: FunctionComponent<ImageUploadProps> = ({
           ) : (
             <Image
               src={`${INFURA_GATEWAY}/ipfs/${
-                image.includes("ipfs://") ? image.split("ipfs://")[1] : image
+                image.includes("ipfs://") ? image?.split("ipfs://")[1] : image
               }`}
               layout="fill"
               objectFit="cover"

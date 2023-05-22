@@ -18,10 +18,10 @@ const createProfilePicture = (publication: any, mirror?: boolean): string => {
   if (!formattedPrefix?.original) {
     profileImage = "";
   } else if (formattedPrefix?.original) {
-    if (formattedPrefix?.original?.url.includes("http")) {
+    if (formattedPrefix?.original?.url?.includes("http")) {
       profileImage = formattedPrefix?.original.url;
     } else {
-      const cut = formattedPrefix?.original?.url.split("://");
+      const cut = formattedPrefix?.original?.url?.split("://");
       profileImage = `${INFURA_GATEWAY}/ipfs/${cut[1]}`;
     }
   } else {

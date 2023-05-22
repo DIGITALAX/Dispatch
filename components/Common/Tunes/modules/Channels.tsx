@@ -37,7 +37,7 @@ const Channels: FunctionComponent<ChannelsProps> = ({
                   dispatch(
                     setMainVideo({
                       actionVideo: `${INFURA_GATEWAY}/ipfs/${
-                        content?.metadata?.media?.[0]?.original?.url.split(
+                        content?.metadata?.media?.[0]?.original?.url?.split(
                           "ipfs://"
                         )[1]
                       }`,

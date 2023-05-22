@@ -233,9 +233,9 @@ const useAddCollection = () => {
             return (BigInt(price) * BigInt(10 ** 18)).toString();
           } else {
             const [wholePart, decimalPart] = price
-              .toFixed(2)
-              .toString()
-              .split(".");
+              ?.toFixed(2)
+              ?.toString()
+              ?.split(".");
             const decimalPlaces = decimalPart.length;
             const factor = BigInt(10 ** (18 - decimalPlaces));
             const adjustedPrice = BigInt(wholePart + decimalPart) * factor;
