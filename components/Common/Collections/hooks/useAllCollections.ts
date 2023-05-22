@@ -24,7 +24,6 @@ const useAllCollections = () => {
     try {
       const colls = await getAllCollections(address);
       const drops = await getAllDrops(address);
-      console.log({drops})
       const collections = await collectionGetter(colls, drops);
       setAllCollections(collections ? collections : []);
       dispatch(setAllCollectionsRedux(collections ? collections : []));
