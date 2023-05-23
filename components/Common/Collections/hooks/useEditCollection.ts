@@ -211,6 +211,7 @@ const useEditCollection = () => {
       await txPrice?.wait();
       await txAccepted?.wait();
       dispatch(setUpdateCollection(false));
+      setCollectionURIArgs(undefined);
       dispatch(
         setIndexModal({
           actionValue: false,
