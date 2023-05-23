@@ -181,7 +181,7 @@ const useEditCollection = () => {
         body: JSON.stringify({
           name: collectionValues?.title,
           description: collectionValues?.description,
-          image: `ipfs://${collectionValues?.image}`,
+          image: `${collectionValues?.image}`,
           external_url: "https://www.chromadin.xyz/",
         }),
       });
