@@ -32,6 +32,7 @@ export const LENS_PERIPHERY_CONTRACT_MATIC: `0x${string}` =
   "0xeff187b4190E551FC25a7fA4dFC6cf7fDeF7194f";
 
 export const LENS_CREATORS: string[] = [
+  "0x01cc42",
   "0x84ec",
   "0x0197d6",
   "0x016305",
