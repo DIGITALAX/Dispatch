@@ -2,6 +2,7 @@ import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
 import { setImageViewer } from "../../../../redux/reducers/imageViewerSlice";
 import { ImageViewerProps } from "../types/modals.types";
+import ReactPlayer from "react-player";
 
 const ImageViewerModal: FunctionComponent<ImageViewerProps> = ({
   dispatch,
@@ -28,13 +29,31 @@ const ImageViewerModal: FunctionComponent<ImageViewerProps> = ({
             type === "image/gif" ||
             type === "image/webp" ||
             type === "image/jpeg" ||
-            type === "image/jpg" ? (
+            type === "image/jpg" ||
+            !type?.includes("video") ? (
               <Image
                 src={image}
                 layout="fill"
                 objectFit="contain"
                 draggable={false}
               />
+            ) : image.includes("index") ? (
+              <div className="rounded-md absolute w-full h-full object-cover">
+                <ReactPlayer
+                  url={image}
+                  controls={true}
+                  muted={true}
+                  playsinline
+                  loop
+                  style={{
+                    borderRadius: "0.375rem",
+                    objectFit: "cover",
+                  }}
+                  width="100%"
+                  height="100%"
+                  className="rounded-md"
+                />
+              </div>
             ) : (
               <video
                 muted
