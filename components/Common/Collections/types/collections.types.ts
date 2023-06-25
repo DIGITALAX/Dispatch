@@ -1,3 +1,4 @@
+import { Profile } from "@/components/Home/types/lens.types";
 import { CollectionDetailsState } from "@/redux/reducers/collectionDetailsSlice";
 import { FormEvent } from "react";
 import { AnyAction, Dispatch } from "redux";
@@ -7,6 +8,7 @@ export type AllCollectionsProps = {
   allCollections: any[];
   allCollectionsRedux: any[];
   collectionsLoading: boolean;
+  marketProfile: Profile | undefined
 };
 
 export type AddCollectionProps = {

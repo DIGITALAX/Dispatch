@@ -32,6 +32,7 @@ const AddDrop: FunctionComponent<AddDropProps> = ({
   addMore,
   deleteDrop,
   deleteDropLoading,
+  marketProfile,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full flex flex-col justify-start items-start text-white gap-4">
@@ -101,7 +102,9 @@ const AddDrop: FunctionComponent<AddDropProps> = ({
             <div className="relative flex flex-col gap-2 w-fit h-fit justify-start items-center">
               <ButtonAdd
                 text={dropDetails.disabled ? "Add More" : "Add Drop"}
-                functionAdd={dropDetails.disabled ? () => addMore() :  () => addDrop()}
+                functionAdd={
+                  dropDetails.disabled ? () => addMore() : () => addDrop()
+                }
                 loader={addDropLoading}
                 width={"28"}
               />
@@ -155,7 +158,7 @@ const AddDrop: FunctionComponent<AddDropProps> = ({
                         actionId: value.collectionId,
                         actionSoldTokens: value?.soldTokens,
                         actionTokenIds: value?.tokenIds,
-                        actionLive: value?.drop?.name ? true: false
+                        actionLive: value?.drop?.name ? true : false,
                       })
                     );
                     dispatch(setCollectionSwitcher("add"));
@@ -223,7 +226,12 @@ const AddDrop: FunctionComponent<AddDropProps> = ({
                               ? (event) => {
                                   event.stopPropagation();
                                   window.open(
-                                    `http://www.chromadin.xyz/#collect?option=history&search=${value?.name}`,
+                                    `http://www.chromadin.xyz/
+                                    autograph/${
+                                      marketProfile?.handle?.split(".lens")[0]
+                                    }/collection/${value?.name
+                                      ?.replaceAll(" ", "-")
+                                      .toLowerCase()}`,
                                     "_blank"
                                   );
                                 }

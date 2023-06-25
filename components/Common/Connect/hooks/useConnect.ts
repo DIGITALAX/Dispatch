@@ -143,12 +143,12 @@ const useConnect = (): UseConnectResults => {
   useEffect(() => {
     if (isSuccess) {
       if (data && router) {
-        dispatch(setIsCreator(data));
+        dispatch(setIsCreator(data as boolean));
       } else {
         dispatch(setLookAround(true));
       }
     }
-    setCreatorToken(data ? data : false);
+    setCreatorToken((data as boolean) ? (data as boolean) : false);
   }, [data, isSuccess]);
 
   return {

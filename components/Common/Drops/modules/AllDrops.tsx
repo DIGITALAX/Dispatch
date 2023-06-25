@@ -10,6 +10,7 @@ const AllDrops: FunctionComponent<AllDropsProps> = ({
   allDrops,
   allDropsRedux,
   dropsLoading,
+  marketProfile,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-fit flex flex-row mid:justify-start mid:items-start items-center justify-center flex-wrap gap-8 overflow-y-scroll">
@@ -27,7 +28,6 @@ const AllDrops: FunctionComponent<AllDropsProps> = ({
                 actionFileType: "",
                 actionType: "add",
                 actionId: 0,
-             
               })
             );
           }}
@@ -63,7 +63,6 @@ const AllDrops: FunctionComponent<AllDropsProps> = ({
                         actionId: value.dropId,
                         actionFileType: value.fileType,
                         actionType: "delete",
-                      
                       })
                     );
                     dispatch(setDropSwitcher("add"));
@@ -119,7 +118,11 @@ const AllDrops: FunctionComponent<AllDropsProps> = ({
                           onClick={(event) => {
                             event.stopPropagation();
                             window.open(
-                              `http://www.chromadin.xyz/#collect?option=history&search=${value?.uri?.name}`,
+                              `http://www.chromadin.xyz/autograph/${
+                                marketProfile?.handle?.split(".lens")[0]
+                              }/drop/${value?.uri?.name
+                                ?.replaceAll(" ", "-")
+                                .toLowerCase()}`,
                               "_blank"
                             );
                           }}
@@ -153,7 +156,6 @@ const AllDrops: FunctionComponent<AllDropsProps> = ({
                                 actionId: value.dropId,
                                 actionFileType: value.fileType,
                                 actionType: "delete",
-                            
                               })
                             );
                             dispatch(setDropSwitcher("add"));

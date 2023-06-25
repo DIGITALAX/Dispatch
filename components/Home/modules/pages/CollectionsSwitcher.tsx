@@ -15,6 +15,9 @@ const CollectionsSwitcher: FunctionComponent = (): JSX.Element => {
   const allCollectionsRedux = useSelector(
     (state: RootState) => state.app.allCollectionsReducer.value
   );
+  const marketProfile = useSelector(
+    (state: RootState) => state.app.marketProfileReducer.profile
+  );
   const collectionDetails = useSelector(
     (state: RootState) => state.app.collectionDetailsReducer
   );
@@ -70,6 +73,7 @@ const CollectionsSwitcher: FunctionComponent = (): JSX.Element => {
           allCollections={allCollections}
           allCollectionsRedux={allCollectionsRedux}
           collectionsLoading={collectionsLoading}
+          marketProfile={marketProfile}
         />
       );
   }

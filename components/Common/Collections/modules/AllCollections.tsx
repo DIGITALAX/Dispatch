@@ -12,6 +12,7 @@ const AllCollections: FunctionComponent<AllCollectionsProps> = ({
   allCollections,
   allCollectionsRedux,
   collectionsLoading,
+  marketProfile,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-fit flex flex-row mid:justify-start mid:items-start items-center justify-center flex-wrap gap-8 overflow-y-scroll">
@@ -33,7 +34,7 @@ const AllCollections: FunctionComponent<AllCollectionsProps> = ({
                 actionId: 0,
                 actionSoldTokens: [],
                 actionTokenIds: [],
-                actionLive: false
+                actionLive: false,
               })
             );
             dispatch(setCollectionSwitcher("add"));
@@ -85,7 +86,7 @@ const AllCollections: FunctionComponent<AllCollectionsProps> = ({
                       actionId: value.collectionId,
                       actionSoldTokens: value?.soldTokens,
                       actionTokenIds: value?.tokenIds,
-                      actionLive: value?.drop?.name ? true: false
+                      actionLive: value?.drop?.name ? true : false,
                     })
                   );
                   dispatch(setCollectionSwitcher("add"));
@@ -161,7 +162,11 @@ const AllCollections: FunctionComponent<AllCollectionsProps> = ({
                             ? (event) => {
                                 event.stopPropagation();
                                 window.open(
-                                  `http://www.chromadin.xyz/#collect?option=history&search=${value?.name}`,
+                                  `http://www.chromadin.xyz/autograph/${
+                                    marketProfile?.handle?.split(".lens")[0]
+                                  }/collection/${value?.name
+                                    ?.replaceAll(" ", "-")
+                                    .toLowerCase()}`,
                                   "_blank"
                                 );
                               }

@@ -18,6 +18,9 @@ import {
 import { setReactId } from "@/redux/reducers/reactIdSlice";
 import { setVideoSync } from "@/redux/reducers/videoSyncSlice";
 import { setReactionCount } from "@/redux/reducers/reactionCountSlice";
+import { useAccount } from "wagmi";
+import getDefaultProfile from "@/graphql/lens/queries/getDefaultProfile";
+import { setMarketProfile } from "@/redux/reducers/marketProfileSlice";
 
 const useChannels = (): UseChannelsResults => {
   const authStatus = useSelector(
@@ -44,6 +47,19 @@ const useChannels = (): UseChannelsResults => {
   const dispatch = useDispatch();
   const [tab, setTab] = useState<number>(0);
   const [videos, setVideos] = useState<Publication[]>([]);
+  const { address } = useAccount();
+
+  const getProfile = async () => {
+    if (!address) {
+      return;
+    }
+    try {
+      const profile = await getDefaultProfile(address);
+      dispatch(setMarketProfile(profile?.data?.defaultProfile));
+    } catch (err: any) {
+      console.error(err.message);
+    }
+  };
 
   const getVideos = async (): Promise<void> => {
     dispatch(
@@ -67,13 +83,13 @@ const useChannels = (): UseChannelsResults => {
         data = await profilePublicationsAuth({
           profileId: "0x01c6a9",
           publicationTypes: ["POST"],
-          limit: 32,
+          limit: 50,
         });
       } else {
         data = await profilePublications({
           profileId: "0x01c6a9",
           publicationTypes: ["POST"],
-          limit: 32,
+          limit: 50,
         });
       }
       const arr: any[] = [...data?.data.publications?.items];
@@ -100,7 +116,7 @@ const useChannels = (): UseChannelsResults => {
           {
             profileId: "0x01c6a9",
             publicationTypes: ["POST"],
-            limit: 32,
+            limit: 50,
           },
           lensProfile
         );
@@ -145,13 +161,13 @@ const useChannels = (): UseChannelsResults => {
         data = await profilePublicationsAuth({
           profileId: "0x01c6a9",
           publicationTypes: ["POST"],
-          limit: 32,
+          limit: 50,
         });
       } else {
         data = await profilePublications({
           profileId: "0x01c6a9",
           publicationTypes: ["POST"],
-          limit: 32,
+          limit: 50,
         });
       }
       const arr: any[] = [...data?.data.publications?.items];
@@ -162,7 +178,7 @@ const useChannels = (): UseChannelsResults => {
         {
           profileId: "0x01c6a9",
           publicationTypes: ["POST"],
-          limit: 32,
+          limit: 50,
         },
         lensProfile
       );
@@ -231,6 +247,12 @@ const useChannels = (): UseChannelsResults => {
       getVideos();
     }
   }, [lensProfile]);
+
+  useEffect(() => {
+    if (address) {
+      getProfile();
+    }
+  }, [address]);
 
   return {
     videos,

@@ -52,6 +52,7 @@ import canEditCollectionReducer from "./reducers/canEditCollectionSlice";
 import updateCollectionReducer from "./reducers/updateCollectionSlice";
 import decryptReducer from "./reducers/decryptSlice";
 import decryptCollectionsAllReducer from "./reducers/decryptCollectionsAllSlice";
+import marketProfileReducer from "./reducers/marketProfileSlice";
 
 const reducer = combineReducers({
   lensProfileReducer,
@@ -106,6 +107,7 @@ const reducer = combineReducers({
   updateCollectionReducer,
   decryptReducer,
   decryptCollectionsAllReducer,
+  marketProfileReducer
 });
 
 export const store = configureStore({

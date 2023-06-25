@@ -2,12 +2,14 @@ import { DropDetailsState } from "@/redux/reducers/dropDetailsSlice";
 import { FormEvent } from "react";
 import { AnyAction, Dispatch } from "redux";
 import { Collection } from "../../Collections/types/collections.types";
+import { Profile } from "@/components/Home/types/lens.types";
 
 export type AllDropsProps = {
   dispatch: Dispatch<AnyAction>;
   allDrops: any[];
   allDropsRedux: any[];
   dropsLoading: boolean;
+  marketProfile: Profile | undefined;
 };
 
 export type AddDropProps = {
@@ -33,6 +35,7 @@ export type AddDropProps = {
   addMore: () => Promise<void>;
   deleteDrop: () => void;
   deleteDropLoading: boolean;
+  marketProfile: Profile | undefined;
 };
 
 export interface Drop {

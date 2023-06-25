@@ -17,6 +17,9 @@ const DropsSwitcher: FunctionComponent = (): JSX.Element => {
   const allCollections = useSelector(
     (state: RootState) => state.app.allCollectionsReducer.value
   );
+  const marketProfile = useSelector(
+    (state: RootState) => state.app.marketProfileReducer.profile
+  );
   const allDropsRedux = useSelector(
     (state: RootState) => state.app.allDropsReducer.value
   );
@@ -62,6 +65,7 @@ const DropsSwitcher: FunctionComponent = (): JSX.Element => {
           addMore={addMore}
           deleteDrop={deleteDrop}
           deleteDropLoading={deleteDropLoading}
+          marketProfile={marketProfile}
         />
       );
 
@@ -72,6 +76,7 @@ const DropsSwitcher: FunctionComponent = (): JSX.Element => {
           allDrops={allDrops}
           allDropsRedux={allDropsRedux}
           dropsLoading={dropsLoading}
+          marketProfile={marketProfile}
         />
       );
   }
