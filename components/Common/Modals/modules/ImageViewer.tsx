@@ -30,13 +30,21 @@ const ImageViewerModal: FunctionComponent<ImageViewerProps> = ({
             type === "image/webp" ||
             type === "image/jpeg" ||
             type === "image/jpg" ||
-            !type?.includes("video") ? (
+            (!type?.includes("video") && !type?.includes("audio")) ? (
               <Image
                 src={image}
                 layout="fill"
                 objectFit="contain"
                 draggable={false}
               />
+            ) : type?.includes("audio") ? (
+              <audio
+                muted
+                controls
+                className="rounded-md absolute w-full h-full object-cover"
+              >
+                <source src={image} />
+              </audio>
             ) : image.includes("index") ? (
               <div className="rounded-md absolute w-full h-full object-cover">
                 <ReactPlayer
