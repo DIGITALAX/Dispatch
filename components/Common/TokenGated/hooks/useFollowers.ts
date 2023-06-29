@@ -214,7 +214,7 @@ const useFollowers = () => {
 
   const refetchProfile = async (): Promise<void> => {
     try {
-      const profile = await getDefaultProfile(address);
+      const profile = await getDefaultProfile(address!);
       dispatch(setLensProfile(profile?.data?.defaultProfile));
     } catch (err: any) {
       console.error(err.message);
