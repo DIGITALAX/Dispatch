@@ -97,7 +97,7 @@ const useAllPosts = () => {
       const data = await profilePublicationsAuthDecrypt(
         {
           profileId: lensProfile,
-          publicationTypes: ["POST", "COMMENT", "MIRROR"],
+          publicationTypes: ["POST", "MIRROR"],
           limit: 10,
           metadata: {
             tags: {
@@ -186,7 +186,7 @@ const useAllPosts = () => {
       const hasReactedArr = await checkPostReactions(
         {
           profileId: lensProfile,
-          publicationTypes: ["POST", "COMMENT", "MIRROR"],
+          publicationTypes: ["POST", "MIRROR"],
           metadata: {
             tags: {
               all: ["encrypted", "chromadin", "labyrinth"],
@@ -261,7 +261,7 @@ const useAllPosts = () => {
       const data = await profilePublicationsAuthDecrypt(
         {
           profileId: lensProfile,
-          publicationTypes: ["POST", "COMMENT", "MIRROR"],
+          publicationTypes: ["POST", "MIRROR"],
           metadata: {
             tags: {
               all: ["encrypted", "chromadin", "labyrinth"],
@@ -352,7 +352,7 @@ const useAllPosts = () => {
       const hasReactedArr = await checkPostReactions(
         {
           profileId: lensProfile,
-          publicationTypes: ["POST", "COMMENT", "MIRROR"],
+          publicationTypes: ["POST", "MIRROR"],
           metadata: {
             tags: {
               all: ["encrypted", "chromadin", "labyrinth"],
@@ -424,7 +424,7 @@ const useAllPosts = () => {
       const data = await feedTimeline(
         {
           profileIds: LENS_CREATORS,
-          publicationTypes: ["POST", "COMMENT", "MIRROR"],
+          publicationTypes: ["POST", "MIRROR"],
           limit: 10,
         },
         lensProfile
@@ -503,7 +503,7 @@ const useAllPosts = () => {
       const hasReactedArr = await checkPostReactions(
         {
           profileIds: LENS_CREATORS,
-          publicationTypes: ["POST", "COMMENT", "MIRROR"],
+          publicationTypes: ["POST", "MIRROR"],
           limit: 10,
         },
         lensProfile
@@ -573,7 +573,7 @@ const useAllPosts = () => {
       const data = await feedTimeline(
         {
           profileIds: LENS_CREATORS,
-          publicationTypes: ["POST", "COMMENT", "MIRROR"],
+          publicationTypes: ["POST", "MIRROR"],
           limit: 10,
           cursor: paginated?.paginatedTimeline?.next,
         },
@@ -655,7 +655,7 @@ const useAllPosts = () => {
       const hasReactedArr = await checkPostReactions(
         {
           profileIds: LENS_CREATORS,
-          publicationTypes: ["POST", "COMMENT", "MIRROR"],
+          publicationTypes: ["POST", "MIRROR"],
           limit: 10,
           cursor: paginated?.paginatedTimeline?.next,
         },
@@ -960,7 +960,7 @@ const useAllPosts = () => {
           refetchComments();
         }
       }
-      
+
       getFeed();
       getTimeline();
     }

@@ -1,7 +1,7 @@
 import { useAccountModal, useConnectModal } from "@rainbow-me/rainbowkit";
 import { UseConnectResults } from "../types/connect.types";
 import { useAccount, useSignMessage } from "wagmi";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   getAddress,
   getAuthenticationToken,
@@ -16,16 +16,15 @@ import { useEffect, useState } from "react";
 import generateChallenge from "@/graphql/lens/queries/generateChallenge";
 import getDefaultProfile from "@/graphql/lens/queries/getDefaultProfile";
 import { useContractRead } from "wagmi";
-import {
-  CHROMADIN_ACCESS_CONTROLS,
-  MUMBAI_ACCESS_CONTROLS,
-} from "@/lib/constants";
+import { CHROMADIN_ACCESS_CONTROLS } from "@/lib/constants";
 import { setIsCreator } from "@/redux/reducers/isCreatorSlice";
 import { useRouter } from "next/router";
 import { setAuthStatus } from "@/redux/reducers/authStatusSlice";
 import { setLensProfile } from "@/redux/reducers/lensProfileSlice";
 import { setLookAround } from "@/redux/reducers/lookAroundSlice";
 import { setCreatorToken } from "@/lib/utils";
+import { RootState } from "@/redux/store";
+import { setAutographHandle } from "@/redux/reducers/autographHandleSlice";
 
 const useConnect = (): UseConnectResults => {
   const { openConnectModal } = useConnectModal();
@@ -34,6 +33,9 @@ const useConnect = (): UseConnectResults => {
   const { address, isConnected } = useAccount();
   const [connected, setConnected] = useState<boolean>(false);
   const router = useRouter();
+  const lensProfile = useSelector(
+    (state: RootState) => state.app.lensProfileReducer.profile
+  );
 
   const { data, isSuccess } = useContractRead({
     address: CHROMADIN_ACCESS_CONTROLS,
@@ -86,7 +88,8 @@ const useConnect = (): UseConnectResults => {
       if (accessTokens) {
         setAuthenticationToken({ token: accessTokens.data.authenticate });
         setAddress(address as string);
-        const profile = await getDefaultProfile(address);
+        if (!address) return;
+        const profile = await getDefaultProfile(address!);
         if (profile?.data?.defaultProfile) {
           dispatch(setLensProfile(profile?.data?.defaultProfile));
           dispatch(setAuthStatus(true));
@@ -99,7 +102,8 @@ const useConnect = (): UseConnectResults => {
 
   const handleRefreshProfile = async (): Promise<void> => {
     try {
-      const profile = await getDefaultProfile(address);
+      if (!address) return;
+      const profile = await getDefaultProfile(address!);
       if (profile?.data?.defaultProfile !== null) {
         dispatch(setLensProfile(profile?.data?.defaultProfile));
         dispatch(setAuthStatus(true));
@@ -112,8 +116,18 @@ const useConnect = (): UseConnectResults => {
     }
   };
 
+  const getProfileforAutograph = async () => {
+    try {
+      if (!address) return;
+      const def = await getDefaultProfile(address!);
+      if (def?.data?.defaultProfile === null) return;
+      dispatch(setAutographHandle(def?.data?.defaultProfile?.handle));
+    } catch (err: any) {
+      console.error(err.message);
+    }
+  };
+
   useEffect(() => {
-    setConnected(isConnected);
     const newAddress = getAddress();
     if (
       (newAddress && newAddress.replace(/^"|"$/g, "") === address) ||
@@ -139,6 +153,16 @@ const useConnect = (): UseConnectResults => {
       removeAuthenticationToken();
     }
   }, [isConnected]);
+
+  useEffect(() => {
+    setConnected(isConnected);
+  }, [isConnected]);
+
+  useEffect(() => {
+    if (!lensProfile && isConnected) {
+      getProfileforAutograph();
+    }
+  }, [isConnected, lensProfile]);
 
   useEffect(() => {
     if (isSuccess) {

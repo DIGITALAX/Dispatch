@@ -87,7 +87,7 @@ const GET_DEFAULT_PROFILES = `
 `;
 
 const getDefaultProfile = async (
-  address?: string
+  address: string
 ): Promise<ApolloQueryResult<any>> => {
   return authClient.query({
     query: gql(GET_DEFAULT_PROFILES),

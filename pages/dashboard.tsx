@@ -27,6 +27,9 @@ export default function Dashboard() {
     (state: RootState) => state.app.authStatusReducer.value
   );
   const pages = useSelector((state: RootState) => state.app.pageReducer.value);
+  const handle = useSelector(
+    (state: RootState) => state.app.autographHandleReducer.value
+  );
 
   useEffect(() => {
     const data = getCreaterToken();
@@ -114,7 +117,7 @@ export default function Dashboard() {
                 : "calc(100vh - 12.5rem)",
           }}
         >
-          <Options dispatch={dispatch} />
+          <Options dispatch={dispatch} handle={handle} />
           <div
             style={{ height: "100%", overflowY: "auto" }}
             className="w-full flex"
