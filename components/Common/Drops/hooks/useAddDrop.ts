@@ -19,6 +19,9 @@ const useAddDrop = () => {
   const dropValues = useSelector(
     (state: RootState) => state.app.dropDetailsReducer
   );
+  const prof = useSelector(
+    (state: RootState) => state.app.autographHandleReducer.value
+  );
   const dropSwitcher = useSelector(
     (state: RootState) => state.app.dropSwitcherReducer.value
   );
@@ -154,7 +157,7 @@ const useAddDrop = () => {
         setSuccessModal({
           actionOpen: true,
           actionMedia: dropValues.image,
-          actionLink: `http://www.chromadin.xyz/#collect?option=history&search=${dropValues.title}`,
+          actionLink: `http://www.chromadin.xyz/${prof?.split(".lens")[0]}/drop/?${dropValues.title}`,
           actionMessage: "Drop Live! You can view your live drop here",
         })
       );
@@ -280,7 +283,7 @@ const useAddDrop = () => {
         setSuccessModal({
           actionOpen: true,
           actionMedia: dropValues.image,
-          actionLink: `http://www.chromadin.xyz/#collect?option=history&search=${dropValues.title}`,
+          actionLink:  `http://www.chromadin.xyz/${prof?.split(".lens")[0]}/drop/?${dropValues.title}`,
           actionMessage: "Collection Added! You can view your live drop here:",
         })
       );
