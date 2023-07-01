@@ -36,11 +36,6 @@ const Channels: FunctionComponent<ChannelsProps> = ({
                 onClick={() =>
                   dispatch(
                     setMainVideo({
-                      actionVideo: `${INFURA_GATEWAY}/ipfs/${
-                        content?.metadata?.media?.[0]?.original?.url?.split(
-                          "ipfs://"
-                        )[1]
-                      }`,
                       actionCollected: videoSync.collectedArray[index],
                       actionLiked: videoSync.likedArray[index],
                       actionMirrored: videoSync.mirroredArray[index],

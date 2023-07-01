@@ -3,7 +3,6 @@ import json from "../../public/videos/local.json";
 
 export interface MainVideoState {
   id: string;
-  video: string;
   collected: boolean;
   liked: boolean;
   mirrored: boolean;
@@ -11,8 +10,7 @@ export interface MainVideoState {
 }
 
 const initialMainVideoState: MainVideoState = {
-  id: "0x01c6a9-0x36",
-  video: "https://chromadin.infura-ipfs.io/ipfs/bafybeifx53ipoqwfuwynay3bsw6dm2qlcuqadrhhu73hkpm6s7vmaavlbq",
+  id: "0x01c6a9-0x37",
   collected: false,
   liked: false,
   mirrored: false,
@@ -27,7 +25,6 @@ export const mainVideoSlice = createSlice({
       state: MainVideoState,
       {
         payload: {
-          actionVideo,
           actionCollected,
           actionLiked,
           actionMirrored,
@@ -36,7 +33,6 @@ export const mainVideoSlice = createSlice({
         },
       }
     ) => {
-      state.video = actionVideo;
       state.collected = actionCollected;
       state.liked = actionLiked;
       state.mirrored = actionMirrored;

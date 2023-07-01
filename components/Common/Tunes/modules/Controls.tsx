@@ -185,17 +185,6 @@ const Controls: FunctionComponent<ControlsProps> = ({
           onClick={() =>
             dispatch(
               setMainVideo({
-                actionVideo: `${INFURA_GATEWAY}/ipfs/${
-                  (videos?.length > 0 ? videos : dispatchVideos)[
-                    currentIndex ===
-                    (videos?.length > 0 ? videos : dispatchVideos).length - 1
-                      ? 0
-                      : currentIndex === 0
-                      ? (videos?.length > 0 ? videos : dispatchVideos).length -
-                        1
-                      : currentIndex - 1
-                  ]?.metadata?.media[0]?.original?.url?.split("ipfs://")[1]
-                }`,
                 actionCollected:
                   videoSync.collectedArray[
                     currentIndex ===
@@ -291,12 +280,6 @@ const Controls: FunctionComponent<ControlsProps> = ({
           onClick={() =>
             dispatch(
               setMainVideo({
-                actionVideo: `${INFURA_GATEWAY}/ipfs/${
-                  (videos?.length > 0 ? videos : dispatchVideos)[
-                    (currentIndex + 1) %
-                      (videos?.length > 0 ? videos : dispatchVideos)?.length
-                  ]?.metadata?.media[0]?.original?.url?.split("ipfs://")[1]
-                }`,
                 actionCollected:
                   videoSync.collectedArray[
                     (currentIndex + 1) %

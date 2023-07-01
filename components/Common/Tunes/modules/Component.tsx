@@ -38,11 +38,6 @@ const Component: FunctionComponent<ComponentProps> = ({
       onEnded={() =>
         dispatch(
           setMainVideo({
-            actionVideo: `${INFURA_GATEWAY}/ipfs/${
-              (videos?.length > 0 ? videos : dispatchVideos)[
-                (currentIndex + 1) % videos?.length
-              ]?.metadata?.media[0]?.original?.url?.split("ipfs://")[1]
-            }`,
             actionCollected:
               videoSync.collectedArray[
                 (currentIndex + 1) %

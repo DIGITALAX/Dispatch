@@ -125,9 +125,6 @@ const useChannels = (): UseChannelsResults => {
       }
       dispatch(
         setMainVideo({
-          actionVideo: `${INFURA_GATEWAY}/ipfs/${
-            sortedArr[0]?.metadata?.media[0]?.original?.url?.split("ipfs://")[1]
-          }`,
           actionCollected: sortedArr[0]?.hasCollectedByMe,
           actionLiked: hasReactedArr?.[0],
           actionMirrored: hasMirroredArr?.[0],
@@ -221,7 +218,6 @@ const useChannels = (): UseChannelsResults => {
         );
         dispatch(
           setMainVideo({
-            actionVideo: mainVideo.video,
             actionCollected: hasCollectedArr?.[currentIndex],
             actionLiked: hasReactedArr?.[currentIndex],
             actionMirrored: hasMirroredArr?.[currentIndex],
