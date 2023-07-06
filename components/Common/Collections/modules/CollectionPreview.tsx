@@ -132,7 +132,11 @@ const CollectionPreview: FunctionComponent<CollectionPreviewProps> = ({
               return (
                 <div
                   key={index}
-                  className="relative text-white flex w-fit h-fit"
+                  className={`relative flex w-fit h-fit ${
+                    collectionDetails?.soldTokens.includes(id)
+                      ? " text-ama"
+                      : "text-white"
+                  }`}
                 >
                   {id}
                   {id !==
