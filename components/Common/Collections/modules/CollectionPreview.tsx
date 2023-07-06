@@ -23,7 +23,8 @@ const CollectionPreview: FunctionComponent<CollectionPreviewProps> = ({
         <div className="relative w-fit h-fit flex flex-col items-center justify-center p-3 border border-white rounded-br-lg rounded-tl-lg">
           <div className="relative w-40 h-52 preG:w-60 preG:h-72 border-2 border-lily bg-black">
             {collectionDetails?.image !== "" &&
-              (collectionDetails.fileType !== "image/png" ? (
+              (collectionDetails.fileType !== "image/png" &&
+              collectionDetails.fileType !== "image/gif" ? (
                 <video
                   muted
                   playsInline
@@ -124,6 +125,26 @@ const CollectionPreview: FunctionComponent<CollectionPreviewProps> = ({
           </div>
         </div>
       </div>
+      {collectionDetails?.tokenIds?.length > 0 && (
+        <div className="relative w-full h-fit justify-center items-center flex flex-row">
+          <div className="relative inline-flex justify-start items-start overflow-x-scroll gap-1 font-earl text-xs">
+            {collectionDetails?.tokenIds?.map((id: number, index: number) => {
+              return (
+                <div
+                  key={index}
+                  className="relative text-white flex w-fit h-fit"
+                >
+                  {id}
+                  {id !==
+                    collectionDetails?.tokenIds[
+                      collectionDetails?.tokenIds?.length - 1
+                    ] && ", "}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
