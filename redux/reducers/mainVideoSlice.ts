@@ -10,7 +10,7 @@ export interface MainVideoState {
 }
 
 const initialMainVideoState: MainVideoState = {
-  id: "0x01c6a9-0x3a",
+  id: "0x01c6a9-0x3b",
   collected: false,
   liked: false,
   mirrored: false,
