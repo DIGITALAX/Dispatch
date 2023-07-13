@@ -136,7 +136,7 @@ const useAddDrop = () => {
     ],
     functionName: "removeCollectionFromDrop",
     enabled: Boolean(collectionToRemove !== 0),
-    args: [collectionToRemove],
+    args: [collectionToRemove] as any,
   });
 
   console.log({error})
