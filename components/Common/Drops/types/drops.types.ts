@@ -14,6 +14,7 @@ export type AllDropsProps = {
 
 export type AddDropProps = {
   imageLoading: boolean;
+  alreadyInDropIds: string[]
   uploadImage: (
     e: FormEvent<Element>,
     setImageLoading: (e: boolean) => void,
@@ -36,6 +37,8 @@ export type AddDropProps = {
   deleteDrop: () => void;
   deleteDropLoading: boolean;
   marketProfile: Profile | undefined;
+  removeCollectionFromDrop: (collectionId: number) => Promise<void>;
+  removeCollectionLoading: boolean[];
 };
 
 export interface Drop {

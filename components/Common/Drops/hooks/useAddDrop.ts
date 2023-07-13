@@ -40,7 +40,13 @@ const useAddDrop = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [chosenCollections, setChosenCollections] = useState<string[]>([]);
   const [alreadyInDrop, setAlreadyInDrop] = useState<string[]>([]);
+  const [alreadyInDropIds, setAlreadyInDropIds] = useState<string[]>([]);
   const [deleteDropLoading, setDeleteDropLoading] = useState<boolean>(false);
+  const [collectionToRemove, setCollectionToRemove] = useState<number>(0);
+  const [collectionRemoveIndex, setCollectionRemoveIndex] = useState<number>(0);
+  const [removeCollectionLoading, setRemoveCollectionLoading] = useState<
+    boolean[]
+  >(Array.from({ length: chosenCollections.length }, () => false));
 
   const { config, isSuccess } = usePrepareContractWrite({
     address: CHROMADIN_DROP_CONTRACT,
@@ -106,6 +112,38 @@ const useAddDrop = () => {
   });
 
   const { writeAsync: deleteWriteAsync } = useContractWrite(deleteConfig);
+
+  const {
+    config: removeCollectionConfig,
+    isSuccess: removeCollectionIsSuccess,
+    error
+  } = usePrepareContractWrite({
+    address: CHROMADIN_DROP_CONTRACT,
+    abi: [
+      {
+        inputs: [
+          {
+            internalType: "uint256",
+            name: "_collectionId",
+            type: "uint256",
+          },
+        ],
+        name: "removeCollectionFromDrop",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+    ],
+    functionName: "removeCollectionFromDrop",
+    enabled: Boolean(collectionToRemove !== 0),
+    args: [collectionToRemove],
+  });
+
+  console.log({error})
+
+  const { writeAsync: removeCollectionWriteAsync } = useContractWrite(
+    removeCollectionConfig
+  );
 
   const addDrop = async (): Promise<void> => {
     if (
@@ -236,6 +274,13 @@ const useAddDrop = () => {
           )
           .map((cd) => cd.name)
       );
+      setAlreadyInDropIds(
+        allCollections
+          .filter((cd) =>
+            (dropValues.collectionIds as any).includes(cd.collectionId)
+          )
+          .map((cd) => cd.collectionId)
+      );
     } catch (err: any) {
       console.error(err.message);
     }
@@ -349,6 +394,81 @@ const useAddDrop = () => {
     setDeleteDropLoading(false);
   };
 
+  const removeCollectionFromDrop = async (collectionId: number) => {
+    console.log({collectionId})
+    const index = alreadyInDropIds.findIndex(
+      (id) => Number(id) === collectionId
+    );
+    setRemoveCollectionLoading(
+      removeCollectionLoading.map((element, i) =>
+        i === index ? true : element
+      )
+    );
+    try {
+      setCollectionRemoveIndex(index);
+      setCollectionToRemove(collectionId);
+    } catch (err: any) {
+      console.error(err.message);
+    }
+    setRemoveCollectionLoading(
+      removeCollectionLoading.map((element, i) =>
+        i === index ? false : element
+      )
+    );
+  };
+
+  const removeCollectionWrite = async () => {
+    setRemoveCollectionLoading(
+      removeCollectionLoading.map((element, i) =>
+        i === collectionRemoveIndex ? true : element
+      )
+    );
+    try {
+      const tx = await removeCollectionWriteAsync?.();
+      console.log({tx})
+      await tx?.wait();
+      const newDrops = await getAllDrops(address);
+      setCollectionToRemove(0);
+      dispatch(setAllDropsRedux(newDrops.data.dropCreateds));
+      dispatch(
+        setSuccessModal({
+          actionOpen: true,
+          actionMedia: dropValues.image,
+          actionLink: "",
+          actionMessage:
+            "Collection Removed! Your collection has been removed from this drop and is no longer live on the market.",
+        })
+      );
+    } catch (err: any) {
+      console.error(err.message);
+      dispatch(
+        setIndexModal({
+          actionValue: true,
+          actionMessage: "Unsuccessful. Please Try Again.",
+        })
+      );
+      setTimeout(() => {
+        dispatch(
+          setIndexModal({
+            actionValue: false,
+            actionMessage: "",
+          })
+        );
+      }, 4000);
+    }
+    setRemoveCollectionLoading(
+      removeCollectionLoading.map((element, i) =>
+        i === collectionRemoveIndex ? false : element
+      )
+    );
+  };
+
+  useEffect(() => {
+    if (removeCollectionIsSuccess) {
+      removeCollectionWrite();
+    }
+  }, [removeCollectionIsSuccess]);
+
   useEffect(() => {
     if (isSuccess) {
       addDropWrite();
@@ -367,6 +487,20 @@ const useAddDrop = () => {
     }
   }, [dropSwitcher]);
 
+  useEffect(() => {
+    setRemoveCollectionLoading((prevLoading) => {
+      const newLoading = [...prevLoading];
+      if (chosenCollections.length < newLoading.length) {
+        newLoading.splice(chosenCollections.length);
+      } else if (chosenCollections.length > newLoading.length) {
+        newLoading.push(
+          ...Array(chosenCollections.length - newLoading.length).fill(false)
+        );
+      }
+      return newLoading;
+    });
+  }, [chosenCollections]);
+
   return {
     addDropLoading,
     addDrop,
@@ -382,6 +516,9 @@ const useAddDrop = () => {
     alreadyInDrop,
     deleteDrop,
     deleteDropLoading,
+    removeCollectionFromDrop,
+    removeCollectionLoading,
+    alreadyInDropIds,
   };
 };
 

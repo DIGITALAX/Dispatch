@@ -40,6 +40,9 @@ const DropsSwitcher: FunctionComponent = (): JSX.Element => {
     addMore,
     deleteDropLoading,
     deleteDrop,
+    removeCollectionFromDrop,
+    removeCollectionLoading,
+    alreadyInDropIds
   } = useAddDrop();
   const { allDrops, dropsLoading } = useAllDrops();
 
@@ -66,6 +69,9 @@ const DropsSwitcher: FunctionComponent = (): JSX.Element => {
           deleteDrop={deleteDrop}
           deleteDropLoading={deleteDropLoading}
           marketProfile={marketProfile}
+          removeCollectionFromDrop={removeCollectionFromDrop}
+          removeCollectionLoading={removeCollectionLoading}
+          alreadyInDropIds={alreadyInDropIds}
         />
       );
 

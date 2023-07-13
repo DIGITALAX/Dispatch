@@ -33,6 +33,9 @@ const AddDrop: FunctionComponent<AddDropProps> = ({
   deleteDrop,
   deleteDropLoading,
   marketProfile,
+  removeCollectionFromDrop,
+  removeCollectionLoading,
+  alreadyInDropIds
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full flex flex-col justify-start items-start text-white gap-4">
@@ -96,6 +99,9 @@ const AddDrop: FunctionComponent<AddDropProps> = ({
               setOpen={setOpen}
               alreadyInDrop={alreadyInDrop}
               disabled={dropDetails.disabled}
+              removeCollectionFromDrop={removeCollectionFromDrop}
+              removeCollectionLoading={removeCollectionLoading}
+              alreadyInDropIds={alreadyInDropIds}
             />
           </div>
           <div className="relative flex flex-row gap-2 w-fit h-fit items-center justify-start">

@@ -35,10 +35,13 @@ export type ImageUploadProps = {
 
 export type DropDownProps = {
   values: string[];
+  alreadyInDropIds: string[]
   setChosen: (e: string[]) => void;
   chosen: string[];
   open: boolean;
   setOpen: (e: boolean) => void;
   alreadyInDrop: string[];
   disabled: boolean;
+  removeCollectionFromDrop: (collectionId: number) => Promise<void>;
+  removeCollectionLoading: boolean[];
 };
