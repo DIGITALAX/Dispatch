@@ -1,6 +1,16 @@
 export const INFURA_GATEWAY: string = "https://chromadin.infura-ipfs.io";
 export const BASE_URL: string = "https://api.lens.dev";
 
+export const CHROMADIN_COLLECTION_CONTRACT_UPDATED: `0x${string}` =
+  "0x4Cb60D3d9cdb018225FB04C3eB9A4FDd25221b89";
+export const CHROMADIN_ESCROW_CONTRACT_UPDATED: `0x${string}` =
+  "0xc9B68306aE17720349A14223a52afE898a1f8fb5";
+export const CHROMADIN_NFT_CONTRACT_UPDATED: `0x${string}` =
+  "0x08Bc276AC71E6bdB5E7103f0d875F919Eb6eE375";
+export const CHROMADIN_MARKETPLACE_CONTRACT_UPDATED: `0x${string}` =
+  "0x2F1a1aA2EE57f03BD983be7BF11bE2056813e12D";
+export const CHROMADIN_DROP_CONTRACT_UPDATED: `0x${string}` =
+  "0xB4b634b4A080E92675378aa67f6b6BB5816E2f95";
 export const CHROMADIN_COLLECTION_CONTRACT: `0x${string}` =
   "0x1ACeCeDBC54d65D72338A2c0b55b479aF5B45870";
 export const CHROMADIN_ESCROW_CONTRACT: `0x${string}` =

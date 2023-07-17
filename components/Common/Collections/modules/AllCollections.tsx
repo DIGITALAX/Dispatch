@@ -9,7 +9,6 @@ import { setDropSwitcher } from "@/redux/reducers/dropSwitcherSlice";
 
 const AllCollections: FunctionComponent<AllCollectionsProps> = ({
   dispatch,
-  allCollections,
   allCollectionsRedux,
   collectionsLoading,
   marketProfile,
@@ -35,6 +34,7 @@ const AllCollections: FunctionComponent<AllCollectionsProps> = ({
                 actionSoldTokens: [],
                 actionTokenIds: [],
                 actionLive: false,
+                actionOld: false,
               })
             );
             dispatch(setCollectionSwitcher("add"));
@@ -55,10 +55,7 @@ const AllCollections: FunctionComponent<AllCollectionsProps> = ({
               </div>
             );
           })
-        : (allCollections?.length < 1
-            ? allCollectionsRedux
-            : allCollections
-          )?.map((value: Collection, index: number) => {
+        : allCollectionsRedux?.map((value: Collection, index: number) => {
             return (
               <div
                 className="relative w-52 h-60 sm:w-60 sm:h-72 flex items-center justify-center bg-black p-3 border border-white cursor-pointer rounded-tr-lg rounded-bl-lg"
@@ -87,6 +84,8 @@ const AllCollections: FunctionComponent<AllCollectionsProps> = ({
                       actionSoldTokens: value?.soldTokens,
                       actionTokenIds: value?.tokenIds,
                       actionLive: value?.drop?.name ? true : false,
+                      actionOld:
+                        Number(value.blockNumber) < 45189643 ? true : false,
                     })
                   );
                   dispatch(setCollectionSwitcher("add"));
@@ -165,7 +164,7 @@ const AllCollections: FunctionComponent<AllCollectionsProps> = ({
                                   `http://www.chromadin.xyz/autograph/${
                                     marketProfile?.handle?.split(".lens")[0]
                                   }/collection/${value?.name
-                                    ?.replaceAll(" ", "-")
+                                    ?.replaceAll(" ", "_")
                                     .toLowerCase()}`,
                                   "_blank"
                                 );

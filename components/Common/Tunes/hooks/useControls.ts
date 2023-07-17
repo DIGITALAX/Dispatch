@@ -254,7 +254,7 @@ const useControls = (): UseControlsResults => {
   const mirrorWrite = async (): Promise<void> => {
     setMirrorLoading(true);
     try {
-      const tx = await writeAsync?.();
+      let tx = await writeAsync?.();
       dispatch(
         setIndexModal({
           actionValue: true,
@@ -263,6 +263,10 @@ const useControls = (): UseControlsResults => {
       );
       const res = await waitForTransaction({
         hash: tx?.hash!,
+        async onSpeedUp(newTransaction) {
+          await newTransaction.wait();
+          tx!.hash = newTransaction.hash as any;
+        },
       });
       await handleIndexCheck(res?.transactionHash, dispatch, true);
     } catch (err: any) {
@@ -336,7 +340,7 @@ const useControls = (): UseControlsResults => {
   const collectWrite = async (): Promise<void> => {
     setCollectLoading(true);
     try {
-      const tx = await collectWriteAsync?.();
+      let tx = await collectWriteAsync?.();
       dispatch(
         setIndexModal({
           actionValue: true,
@@ -345,6 +349,10 @@ const useControls = (): UseControlsResults => {
       );
       const res = await waitForTransaction({
         hash: tx?.hash!,
+        async onSpeedUp(newTransaction) {
+          await newTransaction.wait();
+          tx!.hash = newTransaction.hash as any;
+        },
       });
       await handleIndexCheck(res?.transactionHash, dispatch, false);
     } catch (err: any) {

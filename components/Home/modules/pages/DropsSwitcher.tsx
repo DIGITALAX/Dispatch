@@ -44,7 +44,7 @@ const DropsSwitcher: FunctionComponent = (): JSX.Element => {
     removeCollectionLoading,
     alreadyInDropIds
   } = useAddDrop();
-  const { allDrops, dropsLoading } = useAllDrops();
+  const { dropsLoading } = useAllDrops();
 
   switch (dropSwitcher) {
     case "add":
@@ -79,7 +79,6 @@ const DropsSwitcher: FunctionComponent = (): JSX.Element => {
       return (
         <AllDrops
           dispatch={dispatch}
-          allDrops={allDrops}
           allDropsRedux={allDropsRedux}
           dropsLoading={dropsLoading}
           marketProfile={marketProfile}

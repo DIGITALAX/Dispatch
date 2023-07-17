@@ -1,9 +1,6 @@
 import { Publication } from "@/components/Home/types/lens.types";
 import { feedTimeline } from "@/graphql/lens/queries/getTimeline";
-import {
-  profilePublicationsAuth,
-  profilePublicationsAuthDecrypt,
-} from "@/graphql/lens/queries/getVideos";
+import { profilePublicationsAuthDecrypt } from "@/graphql/lens/queries/getVideos";
 import { Signer } from "ethers";
 import { Web3Provider } from "@ethersproject/providers";
 import { LENS_CREATORS } from "@/lib/constants";
@@ -26,7 +23,10 @@ import { getPostData } from "@/lib/lens/utils";
 import fetchIPFSJSON from "@/lib/helpers/fetchIPFSJSON";
 import collectionGetter from "@/lib/helpers/collectionGetter";
 import { setDecryptCollectionsAllRedux } from "@/redux/reducers/decryptCollectionsAllSlice";
-import { getCollectionsDecryptAll } from "@/graphql/subgraph/queries/getAllCollections";
+import {
+  getCollectionsDecryptAll,
+  getCollectionsDecryptAllUpdated,
+} from "@/graphql/subgraph/queries/getAllCollections";
 
 const useAllPosts = () => {
   const { data: signer } = useSigner();
@@ -944,8 +944,21 @@ const useAllPosts = () => {
   const getAllCollectionsDecrypted = async () => {
     try {
       const colls = await getCollectionsDecryptAll();
+      const collsUpdated = await getCollectionsDecryptAllUpdated();
       const collections = await collectionGetter(colls, undefined, true);
-      dispatch(setDecryptCollectionsAllRedux(collections ? collections : []));
+      const collectionsUpdated = await collectionGetter(
+        collsUpdated,
+        undefined,
+        true,
+        true
+      );
+      dispatch(
+        setDecryptCollectionsAllRedux(
+          collections || collectionsUpdated
+            ? [...collections, ...collectionsUpdated]
+            : []
+        )
+      );
     } catch (err: any) {
       console.error(err.message);
     }

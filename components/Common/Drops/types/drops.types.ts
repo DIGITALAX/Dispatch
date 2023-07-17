@@ -6,7 +6,6 @@ import { Profile } from "@/components/Home/types/lens.types";
 
 export type AllDropsProps = {
   dispatch: Dispatch<AnyAction>;
-  allDrops: any[];
   allDropsRedux: any[];
   dropsLoading: boolean;
   marketProfile: Profile | undefined;
@@ -52,4 +51,5 @@ export interface Drop {
   fileType: string;
   contractType: string;
   dropIPFS: string;
+  blockNumber: string;
 }

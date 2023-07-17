@@ -1,7 +1,6 @@
 import {
   AVAILABLE_TOKENS,
-  CHROMADIN_COLLECTION_CONTRACT,
-  MUMBAI_COLLECTION,
+  CHROMADIN_COLLECTION_CONTRACT_UPDATED,
 } from "@/lib/constants";
 import { setCanEdit } from "@/redux/reducers/canEditCollectionSlice";
 import { setCollectionDetails } from "@/redux/reducers/collectionDetailsSlice";
@@ -14,6 +13,7 @@ import { BigNumber } from "ethers";
 import { FormEvent, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useContractWrite, usePrepareContractWrite } from "wagmi";
+import { waitForTransaction } from "@wagmi/core";
 
 const useAddCollection = () => {
   const dispatch = useDispatch();
@@ -37,7 +37,7 @@ const useAddCollection = () => {
   >();
 
   const { config, isSuccess } = usePrepareContractWrite({
-    address: CHROMADIN_COLLECTION_CONTRACT,
+    address: CHROMADIN_COLLECTION_CONTRACT_UPDATED,
     abi: [
       {
         inputs: [
@@ -96,6 +96,7 @@ const useAddCollection = () => {
         actionSoldTokens: collectionValues?.soldTokens,
         actionTokenIds: collectionValues?.tokenIds,
         actionLive: collectionValues?.live,
+        actionOld: collectionValues?.old
       })
     );
   };
@@ -116,6 +117,7 @@ const useAddCollection = () => {
         actionSoldTokens: collectionValues?.soldTokens,
         actionTokenIds: collectionValues?.tokenIds,
         actionLive: collectionValues?.live,
+        actionOld: collectionValues?.old
       })
     );
   };
@@ -136,6 +138,7 @@ const useAddCollection = () => {
         actionSoldTokens: collectionValues?.soldTokens,
         actionTokenIds: collectionValues?.tokenIds,
         actionLive: collectionValues?.live,
+        actionOld: collectionValues?.old
       })
     );
   };
@@ -183,6 +186,7 @@ const useAddCollection = () => {
         actionSoldTokens: collectionValues?.soldTokens,
         actionTokenIds: collectionValues?.tokenIds,
         actionLive: collectionValues?.live,
+        actionOld: collectionValues?.old
       })
     );
   };
@@ -258,8 +262,14 @@ const useAddCollection = () => {
           actionMessage: "Minting Collection",
         })
       );
-      const tx = await writeAsync?.();
-      await tx?.wait();
+      let tx = await writeAsync?.();
+      await waitForTransaction({
+        hash: tx?.hash!,
+        async onSpeedUp(newTransaction) {
+          await newTransaction.wait();
+          tx!.hash = newTransaction.hash as any;
+        },
+      });
       dispatch(
         setIndexModal({
           actionValue: false,
@@ -291,8 +301,10 @@ const useAddCollection = () => {
           actionSoldTokens: [],
           actionTokenIds: [],
           actionLive: false,
+          actionOld: false
         })
       );
+      setCollectionArgs(undefined)
     } catch (err: any) {
       console.error(err.message);
       dispatch(

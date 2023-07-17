@@ -216,7 +216,8 @@ const useMakePost = () => {
       "@"
     ) {
       const allProfiles = await searchProfile({
-        query: e.target.value?.split(" ")[e.target.value?.split(" ")?.length - 1],
+        query:
+          e.target.value?.split(" ")[e.target.value?.split(" ")?.length - 1],
         type: "PROFILE",
         limit: 50,
       });
@@ -424,10 +425,14 @@ const useMakePost = () => {
   const handlePostWrite = async (): Promise<void> => {
     setPostLoading(true);
     try {
-      const tx = await writeAsync?.();
+      let tx = await writeAsync?.();
       clearPost();
       const res = await waitForTransaction({
         hash: tx?.hash!,
+        async onSpeedUp(newTransaction) {
+          await newTransaction.wait();
+          tx!.hash = newTransaction.hash as any;
+        },
       });
       await handleIndexCheck(res?.transactionHash, dispatch, true);
     } catch (err) {

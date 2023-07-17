@@ -1,6 +1,13 @@
-import getAllCollections from "@/graphql/subgraph/queries/getAllCollections";
-import getAllDrops from "@/graphql/subgraph/queries/getAllDrops";
-import { CHROMADIN_DROP_CONTRACT, MUMBAI_DROP } from "@/lib/constants";
+import getAllCollections, {
+  getAllCollectionsUpdated,
+} from "@/graphql/subgraph/queries/getAllCollections";
+import getAllDrops, {
+  getAllDropsUpdated,
+} from "@/graphql/subgraph/queries/getAllDrops";
+import {
+  CHROMADIN_DROP_CONTRACT,
+  CHROMADIN_DROP_CONTRACT_UPDATED,
+} from "@/lib/constants";
 import { setAllDropsRedux } from "@/redux/reducers/allDropsSlice";
 import { setDropDetails } from "@/redux/reducers/dropDetailsSlice";
 import { setDropSwitcher } from "@/redux/reducers/dropSwitcherSlice";
@@ -12,6 +19,7 @@ import { BigNumber } from "ethers";
 import { FormEvent, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
+import { waitForTransaction } from "@wagmi/core";
 
 const useAddDrop = () => {
   const dispatch = useDispatch();
@@ -36,7 +44,9 @@ const useAddDrop = () => {
   const [dropArgs, setDropArgs] = useState<
     [readonly BigNumber[], string] | undefined
   >();
-  const [addArgs, setAddArgs] = useState<[BigNumber, BigNumber] | undefined>();
+  const [addArgs, setAddArgs] = useState<
+    [BigNumber, BigNumber[]] | undefined | [BigNumber, BigNumber]
+  >();
   const [open, setOpen] = useState<boolean>(false);
   const [chosenCollections, setChosenCollections] = useState<string[]>([]);
   const [alreadyInDrop, setAlreadyInDrop] = useState<string[]>([]);
@@ -49,7 +59,9 @@ const useAddDrop = () => {
   >(Array.from({ length: chosenCollections.length }, () => false));
 
   const { config, isSuccess } = usePrepareContractWrite({
-    address: CHROMADIN_DROP_CONTRACT,
+    address: dropValues?.old
+      ? CHROMADIN_DROP_CONTRACT
+      : CHROMADIN_DROP_CONTRACT_UPDATED,
     abi: [
       {
         inputs: [
@@ -75,19 +87,47 @@ const useAddDrop = () => {
 
   const { config: addConfig, isSuccess: addIsSuccess } =
     usePrepareContractWrite({
-      address: CHROMADIN_DROP_CONTRACT,
-
+      address: dropValues?.old
+        ? CHROMADIN_DROP_CONTRACT
+        : CHROMADIN_DROP_CONTRACT_UPDATED,
       abi: [
-        {
-          inputs: [
-            { internalType: "uint256", name: "_dropId", type: "uint256" },
-            { internalType: "uint256", name: "_collectionId", type: "uint256" },
-          ],
-          name: "addCollectionToDrop",
-          outputs: [],
-          stateMutability: "nonpayable",
-          type: "function",
-        },
+        dropValues?.old
+          ? {
+              inputs: [
+                {
+                  internalType: "uint256",
+                  name: "_dropId",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "_collectionId",
+                  type: "uint256",
+                },
+              ],
+              name: "addCollectionToDrop",
+              outputs: [],
+              stateMutability: "nonpayable",
+              type: "function",
+            }
+          : {
+              inputs: [
+                {
+                  internalType: "uint256",
+                  name: "_dropId",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256[]",
+                  name: "_collectionIds",
+                  type: "uint256[]",
+                },
+              ],
+              name: "addCollectionToDrop",
+              outputs: [],
+              stateMutability: "nonpayable",
+              type: "function",
+            },
       ],
       functionName: "addCollectionToDrop",
       enabled: Boolean(addArgs),
@@ -97,10 +137,18 @@ const useAddDrop = () => {
   const { writeAsync: writeAddAsync } = useContractWrite(addConfig);
 
   const { config: deleteConfig } = usePrepareContractWrite({
-    address: CHROMADIN_DROP_CONTRACT,
+    address: dropValues?.old
+      ? CHROMADIN_DROP_CONTRACT
+      : CHROMADIN_DROP_CONTRACT_UPDATED,
     abi: [
       {
-        inputs: [{ internalType: "uint256", name: "_dropId", type: "uint256" }],
+        inputs: [
+          {
+            internalType: "uint256",
+            name: "_dropId",
+            type: "uint256",
+          },
+        ],
         name: "deleteDrop",
         outputs: [],
         stateMutability: "nonpayable",
@@ -116,9 +164,10 @@ const useAddDrop = () => {
   const {
     config: removeCollectionConfig,
     isSuccess: removeCollectionIsSuccess,
-    error
   } = usePrepareContractWrite({
-    address: CHROMADIN_DROP_CONTRACT,
+    address: dropValues?.old
+      ? CHROMADIN_DROP_CONTRACT
+      : CHROMADIN_DROP_CONTRACT_UPDATED,
     abi: [
       {
         inputs: [
@@ -139,18 +188,12 @@ const useAddDrop = () => {
     args: [collectionToRemove] as any,
   });
 
-  console.log({error})
-
   const { writeAsync: removeCollectionWriteAsync } = useContractWrite(
     removeCollectionConfig
   );
 
   const addDrop = async (): Promise<void> => {
-    if (
-      !dropValues.image ||
-      !dropValues.title ||
-      chosenCollections?.length < 1
-    ) {
+    if (!dropValues.image || !dropValues.title) {
       dispatch(
         setModal({
           actionOpen: true,
@@ -189,15 +232,21 @@ const useAddDrop = () => {
   const addDropWrite = async (): Promise<void> => {
     setAddDropLoading(true);
     try {
-      const tx = await writeAsync?.();
-      await tx?.wait();
+      let tx = await writeAsync?.();
+      await waitForTransaction({
+        hash: tx?.hash!,
+        async onSpeedUp(newTransaction) {
+          await newTransaction.wait();
+          tx!.hash = newTransaction.hash as any;
+        },
+      });
       dispatch(
         setSuccessModal({
           actionOpen: true,
           actionMedia: dropValues.image,
           actionLink: `http://www.chromadin.xyz/${
             prof?.split(".lens")[0]
-          }/drop/${dropValues.title?.replaceAll(" ", "-").toLowerCase()}`,
+          }/drop/${dropValues.title?.replaceAll(" ", "_").toLowerCase()}`,
           actionMessage: "Drop Live! You can view your live drop here",
         })
       );
@@ -211,8 +260,10 @@ const useAddDrop = () => {
           actionFileType: "",
           actionId: 0,
           actionType: "",
+          actionOld: false,
         })
       );
+      setDropArgs(undefined);
     } catch (err: any) {
       console.error(err.message);
       dispatch(
@@ -243,6 +294,7 @@ const useAddDrop = () => {
         actionFileType: dropValues.fileType,
         actionId: dropValues.id,
         actionType: dropValues.type,
+        actionOld: false,
       })
     );
   };
@@ -251,34 +303,64 @@ const useAddDrop = () => {
     try {
       const drops = await getAllDrops(address);
       const colls = await getAllCollections(address);
+      const updatedColls = await getAllCollectionsUpdated(address);
+      const updatedDrops = await getAllDropsUpdated(address);
 
       const dropIds = drops.data.dropCreateds.flatMap(
         (d: any) => d.collectionIds
       );
+      const dropIdsUpdated =
+        updatedDrops.data.updatedChromadinDropDropCreateds.flatMap(
+          (d: any) => d.collectionIds
+        );
+
       setAvailableCollectionIds(
-        colls?.data?.collectionMinteds
-          .filter((c: any) => !dropIds.includes(c.collectionId))
-          .map((c: any) => c.name)
+        dropValues?.old
+          ? colls?.data?.collectionMinteds
+              .filter((c: any) => !dropIds.includes(c.collectionId))
+              .map((c: any) => c.name)
+          : updatedColls?.data?.updatedChromadinCollectionCollectionMinteds
+              .filter((c: any) => !dropIdsUpdated.includes(c.collectionId))
+              .map((c: any) => c.name)
       );
+
       setChosenCollections(
         allCollections
-          .filter((cd) =>
-            (dropValues.collectionIds as any).includes(cd.collectionId)
-          )
+          .filter((cd) => {
+            const blockstampCondition = dropValues.old
+              ? Number(cd.blockNumber) < 45189643
+              : Number(cd.blockNumber) >= 45189643;
+            return (
+              (dropValues.collectionIds as any).includes(cd.collectionId) &&
+              blockstampCondition
+            );
+          })
           .map((cd) => cd.name)
       );
       setAlreadyInDrop(
         allCollections
-          .filter((cd) =>
-            (dropValues.collectionIds as any).includes(cd.collectionId)
-          )
+          .filter((cd) => {
+            const blockstampCondition = dropValues.old
+              ? Number(cd.blockNumber) < 45189643
+              : Number(cd.blockNumber) >= 45189643;
+            return (
+              (dropValues.collectionIds as any).includes(cd.collectionId) &&
+              blockstampCondition
+            );
+          })
           .map((cd) => cd.name)
       );
       setAlreadyInDropIds(
         allCollections
-          .filter((cd) =>
-            (dropValues.collectionIds as any).includes(cd.collectionId)
-          )
+          .filter((cd) => {
+            const blockstampCondition = dropValues.old
+              ? Number(cd.blockNumber) < 45189643
+              : Number(cd.blockNumber) >= 45189643;
+            return (
+              (dropValues.collectionIds as any).includes(cd.collectionId) &&
+              blockstampCondition
+            );
+          })
           .map((cd) => cd.collectionId)
       );
     } catch (err: any) {
@@ -288,7 +370,10 @@ const useAddDrop = () => {
 
   const addMore = async () => {
     try {
-      if (chosenCollections?.length === alreadyInDrop?.length) {
+      if (
+        chosenCollections?.length === alreadyInDrop?.length &&
+        alreadyInDrop.length !== 0
+      ) {
         dispatch(
           setModal({
             actionOpen: true,
@@ -301,14 +386,25 @@ const useAddDrop = () => {
       try {
         setAddArgs([
           Number(dropValues.id) as any,
-          Number(
-            allCollections.find((collection) => {
-              return (
-                collection.name ===
-                chosenCollections[chosenCollections?.length - 1]
-              );
-            })?.collectionId
-          ) as any,
+          dropValues?.old
+            ? Number(
+                allCollections.find((collection) => {
+                  return (
+                    collection.name ===
+                    chosenCollections[chosenCollections?.length - 1]
+                  );
+                })?.collectionId
+              )
+            : ([
+                Number(
+                  allCollections.find((collection) => {
+                    return (
+                      collection.name ===
+                      chosenCollections[chosenCollections?.length - 1]
+                    );
+                  })?.collectionId
+                ) as any,
+              ] as any),
         ]);
       } catch (err: any) {
         console.error(err.message);
@@ -322,21 +418,34 @@ const useAddDrop = () => {
   const addMoreWrite = async () => {
     setAddDropLoading(true);
     try {
-      const tx = await writeAddAsync?.();
-      await tx?.wait();
+      let tx = await writeAddAsync?.();
+      await waitForTransaction({
+        hash: tx?.hash!,
+        async onSpeedUp(newTransaction) {
+          await newTransaction.wait();
+          tx!.hash = newTransaction.hash as any;
+        },
+      });
       const newDrops = await getAllDrops(address);
-      dispatch(setAllDropsRedux(newDrops.data.dropCreateds));
+      const newDropsUpdated = await getAllDropsUpdated(address);
+      dispatch(
+        setAllDropsRedux([
+          ...(newDrops.data.dropCreateds || []),
+          ...(newDropsUpdated.data.updatedChromadinDropDropCreateds || []),
+        ])
+      );
       dispatch(
         setSuccessModal({
           actionOpen: true,
           actionMedia: dropValues.image,
           actionLink: `http://www.chromadin.xyz/${
             prof?.split(".lens")[0]
-          }/drop/${dropValues.title?.replaceAll(" ", "-").toLowerCase()}`,
+          }/drop/${dropValues.title?.replaceAll(" ", "_").toLowerCase()}`,
           actionMessage: "Collection Added! You can view your live drop here:",
         })
       );
       dispatch(setDropSwitcher("drops"));
+      setAddArgs(undefined);
     } catch (err: any) {
       console.error(err.message);
       dispatch(
@@ -360,10 +469,22 @@ const useAddDrop = () => {
   const deleteDrop = async (): Promise<void> => {
     setDeleteDropLoading(true);
     try {
-      const tx = await deleteWriteAsync?.();
-      await tx?.wait();
+      let tx = await deleteWriteAsync?.();
+      await waitForTransaction({
+        hash: tx?.hash!,
+        async onSpeedUp(newTransaction) {
+          await newTransaction.wait();
+          tx!.hash = newTransaction.hash as any;
+        },
+      });
       const newDrops = await getAllDrops(address);
-      dispatch(setAllDropsRedux(newDrops.data.dropCreateds));
+      const newDropsUpdated = await getAllDropsUpdated(address);
+      dispatch(
+        setAllDropsRedux([
+          ...(newDrops.data.dropCreateds || []),
+          ...(newDropsUpdated.data.updatedChromadinDropDropCreateds || []),
+        ])
+      );
       dispatch(
         setSuccessModal({
           actionOpen: true,
@@ -395,7 +516,6 @@ const useAddDrop = () => {
   };
 
   const removeCollectionFromDrop = async (collectionId: number) => {
-    console.log({collectionId})
     const index = alreadyInDropIds.findIndex(
       (id) => Number(id) === collectionId
     );
@@ -424,12 +544,23 @@ const useAddDrop = () => {
       )
     );
     try {
-      const tx = await removeCollectionWriteAsync?.();
-      console.log({tx})
-      await tx?.wait();
+      let tx = await removeCollectionWriteAsync?.();
+      await waitForTransaction({
+        hash: tx?.hash!,
+        async onSpeedUp(newTransaction) {
+          await newTransaction.wait();
+          tx!.hash = newTransaction.hash as any;
+        },
+      });
       const newDrops = await getAllDrops(address);
+      const newDropsUpdated = await getAllDropsUpdated(address);
       setCollectionToRemove(0);
-      dispatch(setAllDropsRedux(newDrops.data.dropCreateds));
+      dispatch(
+        setAllDropsRedux([
+          ...(newDrops.data.dropCreateds || []),
+          ...(newDropsUpdated.data.updatedChromadinDropDropCreateds || []),
+        ])
+      );
       dispatch(
         setSuccessModal({
           actionOpen: true,

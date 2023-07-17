@@ -162,7 +162,8 @@ const useComment = () => {
       "@"
     ) {
       const allProfiles = await searchProfile({
-        query: e.target.value?.split(" ")[e.target.value?.split(" ")?.length - 1],
+        query:
+          e.target.value?.split(" ")[e.target.value?.split(" ")?.length - 1],
         type: "PROFILE",
         limit: 20,
       });
@@ -306,10 +307,14 @@ const useComment = () => {
   const handleCommentWrite = async (): Promise<void> => {
     setCommentLoading(true);
     try {
-      const tx = await commentWriteAsync?.();
+      let tx = await commentWriteAsync?.();
       clearComment();
       const res = await waitForTransaction({
         hash: tx?.hash!,
+        async onSpeedUp(newTransaction) {
+          await newTransaction.wait();
+          tx!.hash = newTransaction.hash as any;
+        },
       });
       await handleIndexCheck(res?.transactionHash, dispatch, true);
     } catch (err) {

@@ -344,7 +344,7 @@ const useReactions = () => {
       return updatedArray;
     });
     try {
-      const tx = await writeAsync?.();
+      let tx = await writeAsync?.();
       dispatch(
         setIndexModal({
           actionValue: true,
@@ -353,6 +353,10 @@ const useReactions = () => {
       );
       const res = await waitForTransaction({
         hash: tx?.hash!,
+        async onSpeedUp(newTransaction) {
+          await newTransaction.wait();
+          tx!.hash = newTransaction.hash as any;
+        },
       });
       await handleIndexCheck(res?.transactionHash, dispatch, true);
     } catch (err: any) {
@@ -502,7 +506,7 @@ const useReactions = () => {
       return updatedArray;
     });
     try {
-      const tx = await collectWriteAsync?.();
+      let tx = await collectWriteAsync?.();
       dispatch(
         setPurchase({
           actionOpen: false,
@@ -518,6 +522,10 @@ const useReactions = () => {
       );
       const res = await waitForTransaction({
         hash: tx?.hash!,
+        async onSpeedUp(newTransaction) {
+          await newTransaction.wait();
+          tx!.hash = newTransaction.hash as any;
+        },
       });
       await handleIndexCheck(res?.transactionHash, dispatch, false);
     } catch (err: any) {
@@ -650,9 +658,13 @@ const useReactions = () => {
 
   const callApprovalSign = async (): Promise<void> => {
     try {
-      const tx = await sendTransactionAsync?.();
+      let tx = await sendTransactionAsync?.();
       const res = await waitForTransaction({
         hash: tx?.hash!,
+        async onSpeedUp(newTransaction) {
+          await newTransaction.wait();
+          tx!.hash = newTransaction.hash as any;
+        },
       });
       await pollUntilIndexed(res?.transactionHash as string, false);
       await getCollectInfo();

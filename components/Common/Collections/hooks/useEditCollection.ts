@@ -1,6 +1,7 @@
 import {
   AVAILABLE_TOKENS,
   CHROMADIN_COLLECTION_CONTRACT,
+  CHROMADIN_COLLECTION_CONTRACT_UPDATED,
 } from "@/lib/constants";
 import { setCollectionDetails } from "@/redux/reducers/collectionDetailsSlice";
 import { setCollectionSwitcher } from "@/redux/reducers/collectionSwitcherSlice";
@@ -12,6 +13,7 @@ import { RootState } from "@/redux/store";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useContractWrite, usePrepareContractWrite } from "wagmi";
+import { waitForTransaction } from "@wagmi/core";
 
 const useEditCollection = () => {
   const dispatch = useDispatch();
@@ -28,8 +30,10 @@ const useEditCollection = () => {
     useState<boolean>(false);
   const [collectionURIArgs, setCollectionURIArgs] = useState<string>();
 
-  const { config: burnConfig } = usePrepareContractWrite({
-    address: CHROMADIN_COLLECTION_CONTRACT,
+  const { config: burnConfig, error } = usePrepareContractWrite({
+    address: collectionValues?.old
+      ? CHROMADIN_COLLECTION_CONTRACT
+      : CHROMADIN_COLLECTION_CONTRACT_UPDATED,
     abi: [
       {
         inputs: [
@@ -47,48 +51,48 @@ const useEditCollection = () => {
 
   const { writeAsync: burnWriteAsync } = useContractWrite(burnConfig);
 
-  const { config: acceptedTokensConfig } = usePrepareContractWrite({
-    address: CHROMADIN_COLLECTION_CONTRACT,
+  const { config: valuesConfig, isSuccess } = usePrepareContractWrite({
+    address: CHROMADIN_COLLECTION_CONTRACT_UPDATED,
     abi: [
       {
         inputs: [
-          { internalType: "uint256", name: "_collectionId", type: "uint256" },
+          {
+            internalType: "uint256",
+            name: "_collectionId",
+            type: "uint256",
+          },
+          {
+            internalType: "string",
+            name: "_collectionName",
+            type: "string",
+          },
+          {
+            internalType: "string",
+            name: "_newURI",
+            type: "string",
+          },
+          {
+            internalType: "uint256[]",
+            name: "_newPrices",
+            type: "uint256[]",
+          },
           {
             internalType: "address[]",
             name: "_newAcceptedTokens",
             type: "address[]",
           },
         ],
-        name: "setCollectionAcceptedTokens",
+        name: "updateCollectionValues",
         outputs: [],
         stateMutability: "nonpayable",
         type: "function",
       },
     ],
-    functionName: "setCollectionAcceptedTokens",
-    args: [collectionValues.id as any, collectionValues?.acceptedTokens as any],
-  });
-
-  const { writeAsync: acceptedTokensWriteAsync } =
-    useContractWrite(acceptedTokensConfig);
-
-  const { config: basePricesConfig } = usePrepareContractWrite({
-    address: CHROMADIN_COLLECTION_CONTRACT,
-    abi: [
-      {
-        inputs: [
-          { internalType: "uint256", name: "_collectionId", type: "uint256" },
-          { internalType: "uint256[]", name: "_newPrices", type: "uint256[]" },
-        ],
-        name: "setCollectionBasePrices",
-        outputs: [],
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-    ],
-    functionName: "setCollectionBasePrices",
+    functionName: "updateCollectionValues",
     args: [
       collectionValues.id as any,
+      collectionValues?.title as any,
+      collectionURIArgs as string,
       collectionValues?.tokenPrices.map((price, i: number) => {
         if (
           i === collectionValues.acceptedTokens.indexOf(AVAILABLE_TOKENS[2][1])
@@ -107,55 +111,15 @@ const useEditCollection = () => {
           return adjustedPrice.toString();
         }
       }) as any,
+      collectionValues?.acceptedTokens as any,
     ],
-  });
-
-  const { writeAsync: basePricesConfigWriteAsync } =
-    useContractWrite(basePricesConfig);
-
-  const { config: nameConfig } = usePrepareContractWrite({
-    address: CHROMADIN_COLLECTION_CONTRACT,
-    abi: [
-      {
-        inputs: [
-          { internalType: "string", name: "_collectionName", type: "string" },
-          { internalType: "uint256", name: "_collectionId", type: "uint256" },
-        ],
-        name: "setCollectionName",
-        outputs: [],
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-    ],
-    functionName: "setCollectionName",
-    args: [collectionValues?.title as any, collectionValues.id as any],
-  });
-
-  const { writeAsync: nameConfigWriteAsync } = useContractWrite(nameConfig);
-
-  const { config: metadataConfig, isSuccess } = usePrepareContractWrite({
-    address: CHROMADIN_COLLECTION_CONTRACT,
-    abi: [
-      {
-        inputs: [
-          { internalType: "string", name: "_newURI", type: "string" },
-          { internalType: "uint256", name: "_collectionId", type: "uint256" },
-        ],
-        name: "setCollectionURI",
-        outputs: [],
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-    ],
-    functionName: "setCollectionURI",
-    args: [collectionURIArgs as string, collectionValues.id as any],
     enabled: Boolean(collectionURIArgs),
   });
 
-  const { writeAsync: metadataConfigWriteAsync } =
-    useContractWrite(metadataConfig);
+  const { writeAsync: valuesWriteAsync } = useContractWrite(valuesConfig);
 
   const updateCollection = async () => {
+    if (collectionValues?.old) return;
     if (
       !collectionValues.image ||
       !collectionValues.title ||
@@ -194,6 +158,7 @@ const useEditCollection = () => {
   };
 
   const updateCollectionWrite = async () => {
+    if (collectionValues?.old) return;
     setUpdateCollectionLoading(true);
     try {
       dispatch(
@@ -202,14 +167,14 @@ const useEditCollection = () => {
           actionMessage: "Updating Collection",
         })
       );
-      const txName = await nameConfigWriteAsync?.();
-      const txMetadata = await metadataConfigWriteAsync?.();
-      const txPrice = await basePricesConfigWriteAsync?.();
-      const txAccepted = await acceptedTokensWriteAsync?.();
-      await txName?.wait();
-      await txMetadata?.wait();
-      await txPrice?.wait();
-      await txAccepted?.wait();
+      let tx = await valuesWriteAsync?.();
+      await waitForTransaction({
+        hash: tx?.hash!,
+        async onSpeedUp(newTransaction) {
+          await newTransaction.wait();
+          tx!.hash = newTransaction.hash as any;
+        },
+      });
       dispatch(setUpdateCollection(false));
       setCollectionURIArgs(undefined);
       dispatch(
@@ -242,8 +207,14 @@ const useEditCollection = () => {
           actionMessage: "Deleting Collection",
         })
       );
-      const tx = await burnWriteAsync?.();
-      await tx?.wait();
+      let tx = await burnWriteAsync?.();
+      await waitForTransaction({
+        hash: tx?.hash!,
+        async onSpeedUp(newTransaction) {
+          await newTransaction.wait();
+          tx!.hash = newTransaction.hash as any;
+        },
+      });
       dispatch(
         setIndexModal({
           actionValue: false,
@@ -274,6 +245,7 @@ const useEditCollection = () => {
           actionSoldTokens: [],
           actionTokenIds: [],
           actionLive: false,
+          actionOld: false,
         })
       );
     } catch (err: any) {

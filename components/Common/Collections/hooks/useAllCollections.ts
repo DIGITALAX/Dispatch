@@ -1,7 +1,11 @@
-import getAllCollections from "@/graphql/subgraph/queries/getAllCollections";
+import getAllCollections, {
+  getAllCollectionsUpdated,
+} from "@/graphql/subgraph/queries/getAllCollections";
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
-import getAllDrops from "@/graphql/subgraph/queries/getAllDrops";
+import getAllDrops, {
+  getAllDropsUpdated,
+} from "@/graphql/subgraph/queries/getAllDrops";
 import { setAllCollectionsRedux } from "@/redux/reducers/allCollectionsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
@@ -10,7 +14,6 @@ import collectionGetter from "@/lib/helpers/collectionGetter";
 const useAllCollections = () => {
   const { address } = useAccount();
   const dispatch = useDispatch();
-  const [allCollections, setAllCollections] = useState<any[]>([]);
   const successModal = useSelector(
     (state: RootState) => state.app.successModalReducer
   );
@@ -24,9 +27,22 @@ const useAllCollections = () => {
     try {
       const colls = await getAllCollections(address);
       const drops = await getAllDrops(address);
+      const collsUpdated = await getAllCollectionsUpdated(address);
+      const dropsUpdated = await getAllDropsUpdated(address);
       const collections = await collectionGetter(colls, drops);
-      setAllCollections(collections ? collections : []);
-      dispatch(setAllCollectionsRedux(collections ? collections : []));
+      const collectionsUpdated = await collectionGetter(
+        collsUpdated,
+        dropsUpdated,
+        false,
+        true
+      );
+      dispatch(
+        setAllCollectionsRedux(
+          collections || collectionsUpdated
+            ? [...(collections || []), ...(collectionsUpdated || [])]
+            : []
+        )
+      );
     } catch (err: any) {
       console.error(err.message);
     }
@@ -51,7 +67,7 @@ const useAllCollections = () => {
     }
   }, [successModal.open]);
 
-  return { allCollections, collectionsLoading };
+  return { collectionsLoading };
 };
 
 export default useAllCollections;

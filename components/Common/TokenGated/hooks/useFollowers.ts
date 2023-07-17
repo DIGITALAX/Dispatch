@@ -102,9 +102,13 @@ const useFollowers = () => {
 
   const callApprovalSign = async (): Promise<void> => {
     try {
-      const tx = await sendTransactionAsync?.();
+      let tx = await sendTransactionAsync?.();
       const res = await waitForTransaction({
         hash: tx?.hash!,
+        async onSpeedUp(newTransaction) {
+          await newTransaction.wait();
+          tx!.hash = newTransaction.hash as any;
+        },
       });
       await pollUntilIndexed(res?.transactionHash as string, false);
       await approvedFollow();
@@ -200,9 +204,15 @@ const useFollowers = () => {
   const followWrite = async (): Promise<void> => {
     setFollowLoading(true);
     try {
-      const tx = await writeAsync?.();
+      let tx = await writeAsync?.();
       clearFollow();
-      const res = await tx?.wait();
+      const res = await waitForTransaction({
+        hash: tx?.hash!,
+        async onSpeedUp(newTransaction) {
+          await newTransaction.wait();
+          tx!.hash = newTransaction.hash as any;
+        },
+      });
       await handleIndexCheck(res?.transactionHash, dispatch, false);
       await refetchProfile();
     } catch (err: any) {
