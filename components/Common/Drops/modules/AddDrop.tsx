@@ -35,7 +35,7 @@ const AddDrop: FunctionComponent<AddDropProps> = ({
   marketProfile,
   removeCollectionFromDrop,
   removeCollectionLoading,
-  alreadyInDropIds
+  alreadyInDropIds,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full flex flex-col justify-start items-start text-white gap-4">
@@ -126,7 +126,7 @@ const AddDrop: FunctionComponent<AddDropProps> = ({
               )}
             </div>
           </div>
-          {dropDetails.disabled === true && (
+          {dropDetails.disabled === true && dropDetails.old && (
             <div className="relative w-fit h-fit flex flex-col text-xs font-earl text-marip">
               (Add One New Collection At A Time)
             </div>
@@ -134,9 +134,17 @@ const AddDrop: FunctionComponent<AddDropProps> = ({
         </div>
         <div className="relative w-full h-fit max-h-full flex flex-row overflow-x-scroll gap-8 flex-wrap overflow-y-scroll">
           {allCollections
-            ?.filter((cd) =>
-              (dropDetails?.collectionIds as any).includes(cd?.collectionId)
-            )
+            ?.filter((cd) => {
+              const blockstampCondition = dropDetails.old
+                ? Number(cd.blockNumber) < 45189643
+                : Number(cd.blockNumber) >= 45189643;
+
+              return (
+                (dropDetails?.collectionIds as any).includes(
+                  cd?.collectionId
+                ) && blockstampCondition
+              );
+            })
             .map((value: any, index: number) => {
               return (
                 <div
@@ -165,6 +173,8 @@ const AddDrop: FunctionComponent<AddDropProps> = ({
                         actionSoldTokens: value?.soldTokens,
                         actionTokenIds: value?.tokenIds,
                         actionLive: value?.drop?.name ? true : false,
+                        actionOld:
+                          Number(value.blockNumber) < 45189643 ? true : false,
                       })
                     );
                     dispatch(setCollectionSwitcher("add"));
@@ -232,11 +242,10 @@ const AddDrop: FunctionComponent<AddDropProps> = ({
                               ? (event) => {
                                   event.stopPropagation();
                                   window.open(
-                                    `http://www.chromadin.xyz/
-                                    autograph/${
+                                    `http://www.chromadin.xyz/autograph/${
                                       marketProfile?.handle?.split(".lens")[0]
                                     }/collection/${value?.name
-                                      ?.replaceAll(" ", "-")
+                                      ?.replaceAll(" ", "_")
                                       .toLowerCase()}`,
                                     "_blank"
                                   );

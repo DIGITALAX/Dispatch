@@ -44,6 +44,7 @@ const Channels: FunctionComponent<ChannelsProps> = ({
                     })
                   )
                 }
+                id="staticLoad"
               >
                 <div className="relative w-28 h-full">
                   <video

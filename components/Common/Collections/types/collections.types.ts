@@ -5,10 +5,9 @@ import { AnyAction, Dispatch } from "redux";
 
 export type AllCollectionsProps = {
   dispatch: Dispatch<AnyAction>;
-  allCollections: any[];
   allCollectionsRedux: any[];
   collectionsLoading: boolean;
-  marketProfile: Profile | undefined
+  marketProfile: Profile | undefined;
 };
 
 export type AddCollectionProps = {
@@ -71,4 +70,5 @@ export interface Collection {
   contractType: string;
   collectionIPFS: string;
   dropIPFS: string;
+  blockNumber: string;
 }

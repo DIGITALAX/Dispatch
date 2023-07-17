@@ -1,4 +1,6 @@
-import getAllDrops from "@/graphql/subgraph/queries/getAllDrops";
+import getAllDrops, {
+  getAllDropsUpdated,
+} from "@/graphql/subgraph/queries/getAllDrops";
 import { setAllDropsRedux } from "@/redux/reducers/allDropsSlice";
 import { RootState } from "@/redux/store";
 import { useEffect, useState } from "react";
@@ -7,7 +9,9 @@ import { useAccount } from "wagmi";
 import fetchIPFSJSON from "@/lib/helpers/fetchIPFSJSON";
 import collectionGetter from "@/lib/helpers/collectionGetter";
 import { setAllCollectionsRedux } from "@/redux/reducers/allCollectionsSlice";
-import getAllCollections from "@/graphql/subgraph/queries/getAllCollections";
+import getAllCollections, {
+  getAllCollectionsUpdated,
+} from "@/graphql/subgraph/queries/getAllCollections";
 
 const useAllDrops = () => {
   const dispatch = useDispatch();
@@ -15,7 +19,6 @@ const useAllDrops = () => {
     (state: RootState) => state.app.successModalReducer
   );
   const { address } = useAccount();
-  const [allDrops, setAllDrops] = useState<any[]>([]);
   const allDropsRedux = useSelector(
     (state: RootState) => state.app.allDropsReducer.value
   );
@@ -26,10 +29,17 @@ const useAllDrops = () => {
     try {
       const data = await getAllDrops(address);
       const colls = await getAllCollections(address);
+      const dataUpdated = await getAllDropsUpdated(address);
+      const collsUpdated = await getAllCollectionsUpdated(address);
+
       const drops =
-        data?.data?.dropCreateds &&
+        (data?.data?.dropCreateds ||
+          dataUpdated.data?.updatedChromadinDropDropCreateds) &&
         (await Promise.all(
-          data.data?.dropCreateds?.map(async (drop: any, index: any) => {
+          [
+            ...(data.data?.dropCreateds || []),
+            ...(dataUpdated.data?.updatedChromadinDropDropCreateds || []),
+          ]?.map(async (drop: any) => {
             const json = await fetchIPFSJSON(
               (drop.dropURI as any)
                 ?.split("ipfs://")[1]
@@ -44,12 +54,20 @@ const useAllDrops = () => {
             };
           })
         ));
-      const collections = await collectionGetter(
-        colls,
-        data,
+      const collections = await collectionGetter(colls, data);
+      const collectionsUpdated = await collectionGetter(
+        collsUpdated,
+        dataUpdated,
+        false,
+        true
       );
-      dispatch(setAllCollectionsRedux(collections ? collections : []));
-      setAllDrops(drops ? drops : []);
+      dispatch(
+        setAllCollectionsRedux(
+          collections || collectionsUpdated
+            ? [...(collections || []), ...(collectionsUpdated || [])]
+            : []
+        )
+      );
       dispatch(setAllDropsRedux(drops ? drops : []));
     } catch (err: any) {
       console.error(err.message);
@@ -74,7 +92,7 @@ const useAllDrops = () => {
     }
   }, [successModal.open]);
 
-  return { allDrops, dropsLoading };
+  return { dropsLoading };
 };
 
 export default useAllDrops;

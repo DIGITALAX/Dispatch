@@ -122,32 +122,37 @@ const AddCollection: FunctionComponent<AddCollectionProps> = ({
           <div
             className={`relative flex flex-row gap-2 w-fit h-fit justify-start items-center flex-wrap preG:flex-nowrap`}
           >
-            <div
-              className={`relative w-fit h-fit ${
-                collectionDetails.disabled && !canEditCollection
-                  ? "hidden"
-                  : "flex"
-              }
+            {!collectionDetails?.old && (
+              <div
+                className={`relative w-fit h-fit ${
+                  collectionDetails.disabled && !canEditCollection
+                    ? "hidden"
+                    : "flex"
+                }
             `}
-            >
-              <ButtonAdd
-                text={
-                  collectionDetails.disabled && canEditCollection
-                    ? "Update Collection"
-                    : "Mint Collection"
-                }
-                width={"40"}
-                functionAdd={
-                  collectionDetails.disabled && canEditCollection
-                    ? () => dispatch(setUpdateCollection(true))
-                    : () => addCollection()
-                }
-                loader={addCollectionLoading}
-              />
-            </div>
+              >
+                <ButtonAdd
+                  text={
+                    collectionDetails.disabled && canEditCollection
+                      ? "Update Collection"
+                      : "Mint Collection"
+                  }
+                  width={"40"}
+                  functionAdd={
+                    collectionDetails.disabled && canEditCollection
+                      ? () => dispatch(setUpdateCollection(true))
+                      : () => addCollection()
+                  }
+                  loader={addCollectionLoading}
+                />
+              </div>
+            )}
             <div
               className={`relative w-fit h-fit ${
-                collectionDetails.disabled && collectionDetails.live
+                (collectionDetails.disabled && collectionDetails.live) ||
+                (!collectionDetails?.old &&
+                  !collectionDetails.live &&
+                  collectionDetails.disabled)
                   ? "flex"
                   : "hidden"
               }`}

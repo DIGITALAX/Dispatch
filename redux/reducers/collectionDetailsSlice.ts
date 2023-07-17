@@ -14,6 +14,7 @@ export interface CollectionDetailsState {
   soldTokens: any[];
   tokenIds: any[];
   live: boolean;
+  old: boolean;
 }
 
 const initialCollectionDetailsState: CollectionDetailsState = {
@@ -30,6 +31,7 @@ const initialCollectionDetailsState: CollectionDetailsState = {
   soldTokens: [],
   tokenIds: [],
   live: false,
+  old: false,
 };
 
 export const collectionDetailsSlice = createSlice({
@@ -53,6 +55,7 @@ export const collectionDetailsSlice = createSlice({
           actionSoldTokens,
           actionTokenIds,
           actionLive,
+          actionOld,
         },
       }
     ) => {
@@ -69,6 +72,7 @@ export const collectionDetailsSlice = createSlice({
       state.soldTokens = actionSoldTokens;
       state.tokenIds = actionTokenIds;
       state.live = actionLive;
+      state.old = actionOld;
     },
   },
 });

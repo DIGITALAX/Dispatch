@@ -31,9 +31,7 @@ const UpdateCollection: FunctionComponent<UpdateCollectionProps> = ({
                   <span className="text-white">{collectionValues.title}</span>
                 </div>
                 <div className="relative w-3/4 h-fit justify-center items-center text-white font-earl text-base text-center">
-                  To update your collection you will be prompted to sign for a
-                  total of <span className="text-ama text-lg">FOUR</span>{" "}
-                  transactions.
+                  Everything good to go?
                 </div>
                 <div
                   className="relative w-36 preG:w-52 md:w-40 xl:w-52 h-36 preG:h-52 md:h-40 xl:h-52 justify-center items-center rounded-lg border border-white"

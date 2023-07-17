@@ -5,7 +5,9 @@ import { useAccount } from "wagmi";
 import fetchIPFSJSON from "@/lib/helpers/fetchIPFSJSON";
 import getDefaultProfile from "@/graphql/lens/queries/getDefaultProfile";
 import { setSalesRedux } from "@/redux/reducers/salesSlice";
-import getSalesHistory from "@/graphql/subgraph/queries/getSalesHistory";
+import getSalesHistory, {
+  getSalesHistoryUpdated,
+} from "@/graphql/subgraph/queries/getSalesHistory";
 import { Sales } from "../types/sales.types";
 
 const useSales = () => {
@@ -29,9 +31,16 @@ const useSales = () => {
     setSalesLoading(true);
     try {
       const res = await getSalesHistory(address);
-      if (res.data.tokensBoughts.length > 0) {
+      const resUpdated = await getSalesHistoryUpdated(address);
+      if (
+        res.data.tokensBoughts.length > 0 ||
+        resUpdated.data.updatedChromadinMarketTokensBoughts.length > 0
+      ) {
         const history = await Promise.all(
-          res.data.tokensBoughts.map(async (history: Sales) => {
+          [
+            ...(res.data.tokensBoughts || []),
+            ...(resUpdated.data.updatedChromadinMarketTokensBoughts || []),
+          ].map(async (history: Sales) => {
             const json = await fetchIPFSJSON(
               (history.uri as any)
                 ?.split("ipfs://")[1]
