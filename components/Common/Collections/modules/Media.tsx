@@ -91,7 +91,8 @@ const Media: FunctionComponent<ImageProps> = ({
                     : "Collection Art"}
                 </div>
                 {collectionType === "audio/mpeg" ||
-                collectionDetails?.fileType === "audio/mpeg" ? (
+                collectionDetails?.fileType === "audio/mpeg" ||
+                collectionDetails?.audio ? (
                   <AudioUpload
                     image={collectionDetails.image}
                     imageLoading={imageLoading}

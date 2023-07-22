@@ -15,27 +15,33 @@ const CollectionPreview: FunctionComponent<CollectionPreviewProps> = ({
   const wavesurfer = useRef<null | WaveSurfer>(null);
 
   useEffect(() => {
-    // if (wavesurfer?.current) {
-    wavesurfer.current = WaveSurfer.create({
-      container: waveformRef.current!,
-      waveColor: "violet",
-      progressColor: "white",
-      height: 16,
-    });
+    if (waveformRef.current) {
+      if (wavesurfer.current) {
+        wavesurfer.current.destroy();
+      }
 
-    wavesurfer.current.load(
-      `${INFURA_GATEWAY}/ipfs/${
-        collectionDetails?.audio?.includes("ipfs://")
-          ? collectionDetails?.audio?.split("ipfs://")[1]
-          : collectionDetails?.audio
-      }`
-    );
+      wavesurfer.current = WaveSurfer.create({
+        container: waveformRef.current,
+        waveColor: "violet",
+        progressColor: "white",
+        height: 16,
+      });
+
+      if (collectionDetails?.audio) {
+        wavesurfer.current.load(
+          `${INFURA_GATEWAY}/ipfs/${
+            collectionDetails?.audio?.includes("ipfs://")
+              ? collectionDetails?.audio?.split("ipfs://")[1]
+              : collectionDetails?.audio
+          }`
+        );
+      }
+    }
 
     return () => {
       wavesurfer.current?.destroy();
     };
-    // }
-  }, [wavesurfer, collectionDetails?.audio]);
+  }, [collectionDetails?.audio, wavesurfer]);
 
   const handlePlayPause = () => {
     wavesurfer.current?.playPause();
@@ -53,7 +59,7 @@ const CollectionPreview: FunctionComponent<CollectionPreviewProps> = ({
       </div>
       <div className="relative w-full h-fit flex flex-col items-center justify-center">
         {collectionDetails.fileType === "audio/mpeg" ||
-        collectionType === "audio/mpeg" ? (
+        collectionType === "audio/mpeg" || collectionDetails?.audio ? (
           <div className="relative flex flex-col gap-5 w-fit h-fit">
             {collectionDetails?.audio !== "" && (
               <div className="relative w-full h-fit flex flex-row gap-1.5 items-center justify-center">

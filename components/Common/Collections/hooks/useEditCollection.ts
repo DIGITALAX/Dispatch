@@ -23,6 +23,9 @@ const useEditCollection = () => {
   const updateCollectionBool = useSelector(
     (state: RootState) => state.app.updateCollectionReducer.open
   );
+  const collectionType = useSelector(
+    (state: RootState) => state.app.collectionTypeReducer.value
+  );
 
   const [deleteCollectionLoading, setDeleteCollectionLoading] =
     useState<boolean>(false);
@@ -128,7 +131,10 @@ const useEditCollection = () => {
       collectionValues.tokenPrices?.length < 1 ||
       collectionValues.acceptedTokens?.length !==
         collectionValues.tokenPrices?.length ||
-      collectionValues.tokenPrices.some((value) => /^0+$/.test(String(value)))
+      collectionValues.tokenPrices.some((value) =>
+        /^0+$/.test(String(value))
+      ) ||
+      (collectionType === "audio/mpeg" && !collectionValues?.audio)
     ) {
       dispatch(
         setModal({
@@ -137,17 +143,25 @@ const useEditCollection = () => {
         })
       );
       return;
-    }
+    } 
     setUpdateCollectionLoading(true);
     try {
       const response = await fetch("/api/ipfs", {
         method: "POST",
-        body: JSON.stringify({
-          name: collectionValues?.title,
-          description: collectionValues?.description,
-          image: `${collectionValues?.image}`,
-          external_url: "https://www.chromadin.xyz/",
-        }),
+        body: collectionValues?.audio
+          ? JSON.stringify({
+              name: collectionValues?.title,
+              description: collectionValues?.description,
+              image: `${collectionValues?.image}`,
+              audio: `ipfs://${collectionValues?.audio}`,
+              external_url: "https://www.chromadin.xyz/",
+            })
+          : JSON.stringify({
+              name: collectionValues?.title,
+              description: collectionValues?.description,
+              image: `${collectionValues?.image}`,
+              external_url: "https://www.chromadin.xyz/",
+            }),
       });
       const responseJSON = await response.json();
       setCollectionURIArgs(`ipfs://${responseJSON.cid}`);
@@ -191,9 +205,23 @@ const useEditCollection = () => {
           actionMessage:
             "Collection Updated! Your Collection has been updated.",
         })
-      );
+      );  
     } catch (err: any) {
       console.error(err.message);
+      dispatch(
+        setIndexModal({
+          actionValue: true,
+          actionMessage: "Unsuccessful. Please Try Again.",
+        })
+      );
+      setTimeout(() => {
+        dispatch(
+          setIndexModal({
+            actionValue: false,
+            actionMessage: "",
+          })
+        );
+      }, 4000);
     }
     setUpdateCollectionLoading(false);
   };

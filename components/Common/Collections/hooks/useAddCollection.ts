@@ -26,6 +26,9 @@ const useAddCollection = () => {
   const collectionValues = useSelector(
     (state: RootState) => state.app.collectionDetailsReducer
   );
+  const collectionType = useSelector(
+    (state: RootState) => state.app.collectionTypeReducer.value
+  );
   const [collectionArgs, setCollectionArgs] = useState<
     | [
         string,
@@ -209,7 +212,12 @@ const useAddCollection = () => {
       collectionValues.tokenPrices?.length < 1 ||
       collectionValues.acceptedTokens?.length !==
         collectionValues.tokenPrices?.length ||
-      collectionValues.tokenPrices.some((value) => /^0+$/.test(String(value)))
+      collectionValues.tokenPrices.some((value) =>
+        /^0+$/.test(String(value))
+      ) ||
+      (collectionType === "audio/mpeg" &&
+        !collectionValues?.audio &&
+        !collectionValues?.audioFileName)
     ) {
       dispatch(
         setModal({
@@ -223,12 +231,21 @@ const useAddCollection = () => {
     try {
       const response = await fetch("/api/ipfs", {
         method: "POST",
-        body: JSON.stringify({
-          name: collectionValues?.title,
-          description: collectionValues?.description,
-          image: `ipfs://${collectionValues?.image}`,
-          external_url: "https://www.chromadin.xyz/",
-        }),
+        body:
+          collectionType === "audio/mpeg"
+            ? JSON.stringify({
+                name: collectionValues?.title,
+                description: collectionValues?.description,
+                image: `ipfs://${collectionValues?.image}`,
+                audio: `ipfs://${collectionValues?.audio}`,
+                external_url: "https://www.chromadin.xyz/",
+              })
+            : JSON.stringify({
+                name: collectionValues?.title,
+                description: collectionValues?.description,
+                image: `ipfs://${collectionValues?.image}`,
+                external_url: "https://www.chromadin.xyz/",
+              }),
       });
       const responseJSON = await response.json();
       setCollectionArgs([

@@ -61,7 +61,6 @@ export interface Collection {
   collectionId: string;
   name: string;
   owner: string;
-  audio: string;
   audioFileName: string;
   drop: {
     name: string;
@@ -73,6 +72,7 @@ export interface Collection {
     image: string;
     name: string;
     type: string;
+    audio?: string;
   };
   basePrices: string[];
   acceptedTokens: string[];

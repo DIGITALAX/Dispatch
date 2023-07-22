@@ -25,7 +25,7 @@ const AudioUpload: FunctionComponent<AudioUploadProps> = ({
         audio !== "" && "bg-lily/50"
       }`}>
         {audio !== "" && (
-          <div className="absolute top-0 left-0 w-full h-full flex object-cover text-white text-xs font-earl items-center justify-center break-words px-2 overflow-y-scroll">
+          <div className="absolute top-0 left-0 w-full h-full flex object-cover text-white text-xs font-earl items-center justify-start break-words px-2 overflow-y-scroll">
             {audioFileName}
           </div>
         )}
