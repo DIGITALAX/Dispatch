@@ -18,6 +18,7 @@ import { waitForTransaction } from "@wagmi/core";
 const useAddCollection = () => {
   const dispatch = useDispatch();
   const [imageLoading, setImageLoading] = useState<boolean>(false);
+  const [audioLoading, setAudioLoading] = useState<boolean>(false);
   const [addCollectionLoading, setAddCollectionLoading] =
     useState<boolean>(false);
   const [price, setPrice] = useState<{ value: number; currency: string }>();
@@ -87,6 +88,8 @@ const useAddCollection = () => {
         actionDescription: collectionValues?.description,
         actionImage: collectionValues?.image,
         actionAmount: collectionValues?.amount,
+        actionAudio: collectionValues?.audio,
+        actionAudioFileName: collectionValues?.audioFileName,
         actionAcceptedTokens: collectionValues?.acceptedTokens,
         actionTokenPrices: collectionValues?.tokenPrices,
         actionDisabled: collectionValues?.disabled,
@@ -96,7 +99,7 @@ const useAddCollection = () => {
         actionSoldTokens: collectionValues?.soldTokens,
         actionTokenIds: collectionValues?.tokenIds,
         actionLive: collectionValues?.live,
-        actionOld: collectionValues?.old
+        actionOld: collectionValues?.old,
       })
     );
   };
@@ -108,6 +111,8 @@ const useAddCollection = () => {
         actionDescription: (e.target as HTMLFormElement).value,
         actionImage: collectionValues?.image,
         actionAmount: collectionValues?.amount,
+        actionAudio: collectionValues?.audio,
+        actionAudioFileName: collectionValues?.audioFileName,
         actionAcceptedTokens: collectionValues?.acceptedTokens,
         actionTokenPrices: collectionValues?.tokenPrices,
         actionDisabled: collectionValues?.disabled,
@@ -117,7 +122,7 @@ const useAddCollection = () => {
         actionSoldTokens: collectionValues?.soldTokens,
         actionTokenIds: collectionValues?.tokenIds,
         actionLive: collectionValues?.live,
-        actionOld: collectionValues?.old
+        actionOld: collectionValues?.old,
       })
     );
   };
@@ -128,6 +133,8 @@ const useAddCollection = () => {
         actionTitle: collectionValues?.title,
         actionDescription: collectionValues?.description,
         actionImage: collectionValues?.image,
+        actionAudio: collectionValues?.audio,
+        actionAudioFileName: collectionValues?.audioFileName,
         actionAmount: Number((e.target as HTMLFormElement).value),
         actionAcceptedTokens: collectionValues?.acceptedTokens,
         actionTokenPrices: collectionValues?.tokenPrices,
@@ -138,7 +145,7 @@ const useAddCollection = () => {
         actionSoldTokens: collectionValues?.soldTokens,
         actionTokenIds: collectionValues?.tokenIds,
         actionLive: collectionValues?.live,
-        actionOld: collectionValues?.old
+        actionOld: collectionValues?.old,
       })
     );
   };
@@ -176,6 +183,8 @@ const useAddCollection = () => {
         actionTitle: collectionValues?.title,
         actionDescription: collectionValues?.description,
         actionImage: collectionValues?.image,
+        actionAudio: collectionValues?.audio,
+        actionAudioFileName: collectionValues?.audioFileName,
         actionAmount: collectionValues?.amount,
         actionAcceptedTokens: acceptedTokens,
         actionTokenPrices: tokenPrices,
@@ -186,7 +195,7 @@ const useAddCollection = () => {
         actionSoldTokens: collectionValues?.soldTokens,
         actionTokenIds: collectionValues?.tokenIds,
         actionLive: collectionValues?.live,
-        actionOld: collectionValues?.old
+        actionOld: collectionValues?.old,
       })
     );
   };
@@ -292,6 +301,8 @@ const useAddCollection = () => {
           actionDescription: "",
           actionImage: "",
           actionAmount: 1,
+          actionAudio: "",
+          actionAudioFileName: "",
           actionAcceptedTokens: [],
           actionTokenPrices: [],
           actionDisabled: false,
@@ -301,10 +312,10 @@ const useAddCollection = () => {
           actionSoldTokens: [],
           actionTokenIds: [],
           actionLive: false,
-          actionOld: false
+          actionOld: false,
         })
       );
-      setCollectionArgs(undefined)
+      setCollectionArgs(undefined);
     } catch (err: any) {
       console.error(err.message);
       dispatch(
@@ -391,6 +402,8 @@ const useAddCollection = () => {
     handleCollectionPrices,
     price,
     setPrice,
+    audioLoading,
+    setAudioLoading,
   };
 };
 

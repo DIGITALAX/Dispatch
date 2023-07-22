@@ -11,15 +11,14 @@ export type AllCollectionsProps = {
 };
 
 export type AddCollectionProps = {
-  imageLoading: boolean;
-  uploadImage: (
+  collectionType: string;
+  setAudioLoading: (e: boolean) => void;
+  audioLoading: boolean;
+  uploadAudio: (
     e: FormEvent<Element>,
-    setImageLoading: (e: boolean) => void,
+    setAudioLoading: (e: boolean) => void,
     type: string
   ) => Promise<void>;
-  addCollection: () => Promise<void>;
-  addCollectionLoading: boolean;
-  dispatch: Dispatch<AnyAction>;
   handleCollectionTitle: (e: FormEvent) => void;
   handleCollectionDescription: (e: FormEvent) => void;
   setImageLoading: (e: boolean) => void;
@@ -31,12 +30,23 @@ export type AddCollectionProps = {
   deleteCollection: () => Promise<void>;
   deleteCollectionLoading: boolean;
   canEditCollection: boolean;
+  imageLoading: boolean;
+  uploadImage: (
+    e: FormEvent<Element>,
+    setImageLoading: (e: boolean) => void,
+    type: string,
+    audio?: boolean
+  ) => Promise<void>;
+  addCollection: () => Promise<void>;
+  addCollectionLoading: boolean;
+  dispatch: Dispatch<AnyAction>;
 };
 
 export type CollectionPreviewProps = {
   collectionDetails: CollectionDetailsState;
   setPrice: (e: { value: number; currency: string }) => void;
   price: { value: number; currency: string } | undefined;
+  collectionType: string;
 };
 
 export type CollectionPricesProps = {
@@ -51,6 +61,8 @@ export interface Collection {
   collectionId: string;
   name: string;
   owner: string;
+  audio: string;
+  audioFileName: string;
   drop: {
     name: string;
     image: string;
@@ -72,3 +84,35 @@ export interface Collection {
   dropIPFS: string;
   blockNumber: string;
 }
+
+export type ImageProps = {
+  audioLoading?: boolean;
+  setAudioLoading?: (e: boolean) => void;
+  audioFileName?: string;
+  uploadAudio?: (
+    e: FormEvent<Element>,
+    setAudioLoading: (e: boolean) => void,
+    type: string
+  ) => Promise<void>;
+  handleCollectionTitle: (e: FormEvent) => void;
+  handleCollectionDescription: (e: FormEvent) => void;
+  setImageLoading: (e: boolean) => void;
+  handleCollectionAmount: (e: FormEvent) => void;
+  collectionType: string;
+  collectionDetails: CollectionDetailsState;
+  handleCollectionPrices: (e: FormEvent, address: string) => void;
+  setPrice: (e: { value: number; currency: string }) => void;
+  price: { value: number; currency: string } | undefined;
+  deleteCollection: () => Promise<void>;
+  deleteCollectionLoading: boolean;
+  canEditCollection: boolean;
+  imageLoading: boolean;
+  uploadImage: (
+    e: FormEvent<Element>,
+    setImageLoading: (e: boolean) => void,
+    type: string
+  ) => Promise<void>;
+  addCollection: () => Promise<void>;
+  addCollectionLoading: boolean;
+  dispatch: Dispatch<AnyAction>;
+};

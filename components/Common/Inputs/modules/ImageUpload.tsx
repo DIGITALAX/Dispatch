@@ -12,14 +12,17 @@ const ImageUpload: FunctionComponent<ImageUploadProps> = ({
   loaderGeneral,
   setImageLoading,
   type,
-  fileType,
   disabled,
+  fileType,
+  collectionType,
 }): JSX.Element => {
   return (
-    <div className="relative w-40 h-40 border border-lily rounded-tr-lg rounded-bl-lg flex flex-col p-3">
+    <div
+      className={`relative flex flex-col p-3 w-40 h-40 justify-end items-end border border-lily rounded-tr-lg rounded-bl-lg`}
+    >
       {image !== "" && (
         <div className="absolute top-0 left-0 w-full h-full flex object-cover">
-          {fileType !== "image/png" ? (
+          {fileType === "video/mp4" || collectionType === "video/mp4" ? (
             <video
               muted
               playsInline
@@ -48,7 +51,7 @@ const ImageUpload: FunctionComponent<ImageUploadProps> = ({
           )}
         </div>
       )}
-      <div className="relative w-full h-full items-end justify-end flex">
+      <div className="relative w-fit h-fit items-end justify-end flex">
         <label
           className={`relative w-8 h-8 rounded-tr-lg rounded-bl-lg bg-lily flex flex-col items-center justify-center ${
             !loaderGeneral && "cursor-pointer active:scale-95"
@@ -68,7 +71,11 @@ const ImageUpload: FunctionComponent<ImageUploadProps> = ({
           </div>
           <input
             type="file"
-            accept="image/png, video/mp4"
+            accept={
+              fileType === "video/mp4" || collectionType === "video/mp4"
+                ? "video/mp4"
+                : "image/png, image/gif"
+            }
             hidden
             required
             id="files"

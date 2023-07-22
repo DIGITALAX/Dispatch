@@ -167,6 +167,8 @@ const AddDrop: FunctionComponent<AddDropProps> = ({
                               ? 10 ** 6
                               : 10 ** 18)
                         ),
+                        actionAudio: value.audio,
+                        actionAudioFileName: value.audioFileName,
                         actionDisabled: true,
                         actionFileType: value.fileType,
                         actionId: value.collectionId,

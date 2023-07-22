@@ -6,6 +6,7 @@ import { INFURA_GATEWAY } from "@/lib/constants";
 import { setCollectionDetails } from "@/redux/reducers/collectionDetailsSlice";
 import { setPage } from "@/redux/reducers/pageSlice";
 import { setDropSwitcher } from "@/redux/reducers/dropSwitcherSlice";
+import { setCollectionTypeSwitcher } from "@/redux/reducers/collectionTypeSlice";
 
 const AllCollections: FunctionComponent<AllCollectionsProps> = ({
   dispatch,
@@ -29,6 +30,8 @@ const AllCollections: FunctionComponent<AllCollectionsProps> = ({
                 actionTokenPrices: [],
                 actionDisabled: false,
                 actionFileType: "",
+                actionAudio: "",
+                actionAudioFileName: "",
                 actionType: "add",
                 actionId: 0,
                 actionSoldTokens: [],
@@ -38,6 +41,7 @@ const AllCollections: FunctionComponent<AllCollectionsProps> = ({
               })
             );
             dispatch(setCollectionSwitcher("add"));
+            dispatch(setCollectionTypeSwitcher("choice"));
           }}
         >
           new collection type
@@ -77,6 +81,8 @@ const AllCollections: FunctionComponent<AllCollectionsProps> = ({
                             ? 10 ** 6
                             : 10 ** 18)
                       ),
+                      actionAudio: value.audio,
+                      actionAudioFileName: value.audioFileName,
                       actionDisabled: true,
                       actionFileType: value.fileType,
                       actionType: "delete",
@@ -88,6 +94,7 @@ const AllCollections: FunctionComponent<AllCollectionsProps> = ({
                         Number(value.blockNumber) < 45189643 ? true : false,
                     })
                   );
+                  dispatch(setCollectionTypeSwitcher(value.fileType));
                   dispatch(setCollectionSwitcher("add"));
                   dispatch(setPage("collections"));
                 }}
