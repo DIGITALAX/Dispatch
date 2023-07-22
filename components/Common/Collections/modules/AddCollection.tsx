@@ -1,20 +1,17 @@
 import { FunctionComponent } from "react";
-import FillIn from "../../Inputs/modules/FillIn";
-import ImageUpload from "../../Inputs/modules/ImageUpload";
-import ButtonAdd from "../../Inputs/modules/ButtonAdd";
-import { BsRewindFill } from "react-icons/bs";
 import { AddCollectionProps } from "../types/collections.types";
+import { setCollectionTypeSwitcher } from "@/redux/reducers/collectionTypeSlice";
+import { setCollectionDetails } from "@/redux/reducers/collectionDetailsSlice";
+import Media from "./Media";
+import { BsRewindFill } from "react-icons/bs";
 import { setCollectionSwitcher } from "@/redux/reducers/collectionSwitcherSlice";
-import CollectionPreview from "./CollectionPreview";
-import CollectionPrices from "./CollectionPrices";
-import { setUpdateCollection } from "@/redux/reducers/updateCollectionSlice";
 
 const AddCollection: FunctionComponent<AddCollectionProps> = ({
+  dispatch,
   imageLoading,
   uploadImage,
   addCollection,
   addCollectionLoading,
-  dispatch,
   handleCollectionTitle,
   handleCollectionDescription,
   setImageLoading,
@@ -26,156 +23,210 @@ const AddCollection: FunctionComponent<AddCollectionProps> = ({
   deleteCollection,
   deleteCollectionLoading,
   canEditCollection,
+  collectionType,
+  setAudioLoading,
+  audioLoading,
+  uploadAudio,
 }): JSX.Element => {
-  return (
-    <div className="relative w-full h-full flex flex-col justify-start items-start text-white gap-4">
-      <div
-        className="relative w-fit h-fit items-center justify-start font-earl text-sm flex flex-row gap-2 opacity-70 cursor-pointer active:scale-95"
-        onClick={() => dispatch(setCollectionSwitcher("collections"))}
-      >
-        <div className="relative w-fit h-fit ">
-          <BsRewindFill color="white" size={15} />
-        </div>
-        <div className="relative w-fit h-fit justify-start items-center flex">
-          return
-        </div>
-      </div>
-      <div className="relative w-fit h-fit items-start justify-start font-earl text-xl">
-        ADD COLLECTION
-      </div>
-      <div className="relative w-full h-full flex flex-col mode:flex-row gap-4 mid:gap-10">
-        <div className="relative w-full mid:w-1/2 h-fit flex gap-5 flex-col mode:order-1 order-2">
-          <div className="relative flex flex-col gap-2 w-full h-fit">
-            <div className="relative w-fit h-fit font-earl text-lg">
-              Collection Name
-            </div>
-            <FillIn
-              textArea={false}
-              changeFunction={(e) => handleCollectionTitle(e)}
-              type={"string"}
-              width="full"
-              defaultValue={collectionDetails?.title}
-              loader={addCollectionLoading}
-              disabled={!canEditCollection && collectionDetails?.disabled}
-            />
-          </div>
-          <div className="relative flex flex-col gap-2 w-full h-fit">
-            <div className="relative w-fit h-fit font-earl text-lg">
-              Collection Description
-            </div>
-            <FillIn
-              textArea={true}
-              changeFunction={(e) => handleCollectionDescription(e)}
-              width="full"
-              defaultValue={collectionDetails?.description}
-              loader={addCollectionLoading}
-              disabled={!canEditCollection && collectionDetails?.disabled}
-            />
-          </div>
-          <div className="relative flex flex-col new:flex-row w-full h-full items-start justify-start gap-5 new:gap-10 new:pb-0 pb-5">
-            <div className="relative w-full mode:w-fit mid:w-full h-full flex flex-col gap-5">
-              <div className="relative flex flex-col gap-2 w-fit mid:w-full h-fit">
-                <div className="relative w-fit h-fit font-earl text-lg">
-                  Collection Art
-                </div>
-                <ImageUpload
-                  image={collectionDetails.image}
-                  imageLoading={imageLoading}
-                  uploadImage={uploadImage}
-                  loaderGeneral={addCollectionLoading}
-                  setImageLoading={setImageLoading}
-                  type="collection"
-                  disabled={!canEditCollection && collectionDetails.disabled}
-                  fileType={collectionDetails.fileType}
-                />
-              </div>
-              <div className="relative w-full h-fit flex flex-col gap-2">
-                <div className="relative w-fit h-fit font-earl text-lg">
-                  Collection Amount
-                </div>
-                <FillIn
-                  textArea={false}
-                  changeFunction={(e) => handleCollectionAmount(e)}
-                  type={"number"}
-                  width={"full"}
-                  defaultValue={String(collectionDetails?.amount)}
-                  loader={addCollectionLoading}
-                  disabled={collectionDetails?.disabled}
-                />
-              </div>
-            </div>
-            <div className="relative w-full h-fit flex flex-col gap-2 font-earl justify-start">
-              <div className="relative w-fit h-fit text-lg">
-                Collection Prices
-              </div>
-              <div className="opacity-70 w-fit word-break text-xxs">
-                (Set Prices for the Tokens You want to Accept On Payment)
-              </div>
-              <CollectionPrices
-                collectionDetails={collectionDetails}
-                handleCollectionPrices={handleCollectionPrices}
-                loader={addCollectionLoading}
-                canEditCollection={canEditCollection}
-              />
-            </div>
-          </div>
+  switch (collectionType) {
+    case "audio/mpeg":
+      return (
+        <Media
+          imageLoading={imageLoading}
+          uploadImage={uploadImage}
+          addCollection={addCollection}
+          addCollectionLoading={addCollectionLoading}
+          dispatch={dispatch}
+          handleCollectionTitle={handleCollectionTitle}
+          handleCollectionDescription={handleCollectionDescription}
+          setImageLoading={setImageLoading}
+          handleCollectionPrices={handleCollectionPrices}
+          handleCollectionAmount={handleCollectionAmount}
+          collectionDetails={collectionDetails}
+          setPrice={setPrice}
+          price={price}
+          deleteCollection={deleteCollection}
+          deleteCollectionLoading={deleteCollectionLoading}
+          canEditCollection={canEditCollection}
+          collectionType={collectionType}
+          audioLoading={audioLoading}
+          setAudioLoading={setAudioLoading}
+          uploadAudio={uploadAudio}
+        />
+      );
+
+    case "video/mp4":
+      return (
+        <Media
+          imageLoading={imageLoading}
+          uploadImage={uploadImage}
+          addCollection={addCollection}
+          addCollectionLoading={addCollectionLoading}
+          dispatch={dispatch}
+          handleCollectionTitle={handleCollectionTitle}
+          handleCollectionDescription={handleCollectionDescription}
+          setImageLoading={setImageLoading}
+          handleCollectionPrices={handleCollectionPrices}
+          handleCollectionAmount={handleCollectionAmount}
+          collectionDetails={collectionDetails}
+          setPrice={setPrice}
+          price={price}
+          deleteCollection={deleteCollection}
+          deleteCollectionLoading={deleteCollectionLoading}
+          canEditCollection={canEditCollection}
+          collectionType={collectionType}
+        />
+      );
+
+    case "image/gif":
+      return (
+        <Media
+          collectionType={collectionType}
+          imageLoading={imageLoading}
+          uploadImage={uploadImage}
+          addCollection={addCollection}
+          addCollectionLoading={addCollectionLoading}
+          dispatch={dispatch}
+          handleCollectionTitle={handleCollectionTitle}
+          handleCollectionDescription={handleCollectionDescription}
+          setImageLoading={setImageLoading}
+          handleCollectionPrices={handleCollectionPrices}
+          handleCollectionAmount={handleCollectionAmount}
+          collectionDetails={collectionDetails}
+          setPrice={setPrice}
+          price={price}
+          deleteCollection={deleteCollection}
+          deleteCollectionLoading={deleteCollectionLoading}
+          canEditCollection={canEditCollection}
+        />
+      );
+
+    case "image/png":
+      return (
+        <Media
+          collectionType={collectionType}
+          imageLoading={imageLoading}
+          uploadImage={uploadImage}
+          addCollection={addCollection}
+          addCollectionLoading={addCollectionLoading}
+          dispatch={dispatch}
+          handleCollectionTitle={handleCollectionTitle}
+          handleCollectionDescription={handleCollectionDescription}
+          setImageLoading={setImageLoading}
+          handleCollectionPrices={handleCollectionPrices}
+          handleCollectionAmount={handleCollectionAmount}
+          collectionDetails={collectionDetails}
+          setPrice={setPrice}
+          price={price}
+          deleteCollection={deleteCollection}
+          deleteCollectionLoading={deleteCollectionLoading}
+          canEditCollection={canEditCollection}
+        />
+      );
+
+    default:
+      return (
+        <div className="relative flex flex-col w-full h-full justify-start items-start text-white">
           <div
-            className={`relative flex flex-row gap-2 w-fit h-fit justify-start items-center flex-wrap preG:flex-nowrap`}
+            className="relative w-fit h-fit items-center justify-start font-earl text-sm flex flex-row gap-2 opacity-70 cursor-pointer active:scale-95"
+            onClick={() => dispatch(setCollectionSwitcher("collections"))}
           >
-            {!collectionDetails?.old && (
-              <div
-                className={`relative w-fit h-fit ${
-                  collectionDetails.disabled && !canEditCollection
-                    ? "hidden"
-                    : "flex"
-                }
-            `}
-              >
-                <ButtonAdd
-                  text={
-                    collectionDetails.disabled && canEditCollection
-                      ? "Update Collection"
-                      : "Mint Collection"
-                  }
-                  width={"40"}
-                  functionAdd={
-                    collectionDetails.disabled && canEditCollection
-                      ? () => dispatch(setUpdateCollection(true))
-                      : () => addCollection()
-                  }
-                  loader={addCollectionLoading}
-                />
-              </div>
-            )}
+            <div className="relative w-fit h-fit ">
+              <BsRewindFill color="white" size={15} />
+            </div>
+            <div className="relative w-fit h-fit justify-start items-center flex">
+              return
+            </div>
+          </div>
+          <div className="relative w-full h-full flex flex-row justify-center items-center text-white gap-4">
             <div
-              className={`relative w-fit h-fit ${
-                (collectionDetails.disabled && collectionDetails.live) ||
-                (!collectionDetails?.old &&
-                  !collectionDetails.live &&
-                  collectionDetails.disabled)
-                  ? "flex"
-                  : "hidden"
-              }`}
+              className="relative w-24 h-8 bg-marip px-3 py-1.5 font-earl text-black rounded-tr-lg rounded-bl-lg text-sm cursor-pointer active:scale-95 text-center"
+              onClick={() => {
+                dispatch(
+                  setCollectionDetails({
+                    actionTitle: "Collection Title",
+                    actionDescription: "Collection Description :)",
+                    actionImage: "",
+                    actionAmount: 1,
+                    actionAudio: "",
+                    actionAudioFileName: "",
+                    actionAcceptedTokens: [],
+                    actionTokenPrices: [],
+                    actionDisabled: false,
+                    actionFileType: "",
+                    actionType: "add",
+                    actionId: 0,
+                    actionSoldTokens: [],
+                    actionTokenIds: [],
+                    actionLive: false,
+                    actionOld: false,
+                  })
+                );
+                dispatch(setCollectionTypeSwitcher("image/png"));
+              }}
             >
-              <ButtonAdd
-                text={"Delete Collection"}
-                width={"40"}
-                functionAdd={() => deleteCollection()}
-                loader={deleteCollectionLoading}
-              />
+              image
+            </div>
+            <div
+              className="relative w-24 h-8 bg-marip px-3 py-1.5 font-earl text-black rounded-tr-lg rounded-bl-lg text-sm cursor-pointer active:scale-95 text-center"
+              onClick={() => {
+                dispatch(
+                  setCollectionDetails({
+                    actionTitle: "Collection Title",
+                    actionDescription: "Collection Description :)",
+                    actionImage: "",
+                    actionAmount: 1,
+                    actionAudio: "",
+                    actionAudioFileName: "",
+                    actionAcceptedTokens: [],
+                    actionTokenPrices: [],
+                    actionDisabled: false,
+                    actionFileType: "",
+                    actionType: "add",
+                    actionId: 0,
+                    actionSoldTokens: [],
+                    actionTokenIds: [],
+                    actionLive: false,
+                    actionOld: false,
+                  })
+                );
+                dispatch(setCollectionTypeSwitcher("audio/mpeg"));
+              }}
+            >
+              music
+            </div>
+            <div
+              className="relative w-24 h-8 bg-marip px-3 py-1.5 font-earl text-black rounded-tr-lg rounded-bl-lg text-sm cursor-pointer active:scale-95 text-center"
+              onClick={() => {
+                dispatch(
+                  setCollectionDetails({
+                    actionTitle: "Collection Title",
+                    actionDescription: "Collection Description :)",
+                    actionImage: "",
+                    actionAmount: 1,
+                    actionAudio: "",
+                    actionAudioFileName: "",
+                    actionAcceptedTokens: [],
+                    actionTokenPrices: [],
+                    actionDisabled: false,
+                    actionFileType: "",
+                    actionType: "add",
+                    actionId: 0,
+                    actionSoldTokens: [],
+                    actionTokenIds: [],
+                    actionLive: false,
+                    actionOld: false,
+                  })
+                );
+                dispatch(setCollectionTypeSwitcher("video/mp4"));
+              }}
+            >
+              video
             </div>
           </div>
         </div>
-        <div className="relative w-full h-full flex mode:order-2 order-1">
-          <CollectionPreview
-            collectionDetails={collectionDetails}
-            setPrice={setPrice}
-            price={price}
-          />
-        </div>
-      </div>
-    </div>
-  );
+      );
+  }
 };
 
 export default AddCollection;

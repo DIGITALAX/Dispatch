@@ -13,6 +13,7 @@ import dispatcherReducer from "./reducers/dispatcherSlice";
 import dropDetailsReducer from "./reducers/dropDetailsSlice";
 import allDropsReducer from "./reducers/allDropsSlice";
 import collectionSwitcherReducer from "./reducers/collectionSwitcherSlice";
+import collectionTypeReducer from "./reducers/collectionTypeSlice";
 import allCollectionsReducer from "./reducers/allCollectionsSlice";
 import collectionDetailsReducer from "./reducers/collectionDetailsSlice";
 import modalReducer from "./reducers/modalSlice";
@@ -90,6 +91,7 @@ const reducer = combineReducers({
   reactionTimelineCountReducer,
   lastFeedIndexReducer,
   feedSwitchReducer,
+  collectionTypeReducer,
   feedReactIdReducer,
   salesReducer,
   feedTypeReducer,

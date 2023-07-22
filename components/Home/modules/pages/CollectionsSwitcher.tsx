@@ -24,10 +24,13 @@ const CollectionsSwitcher: FunctionComponent = (): JSX.Element => {
   const canEditCollection = useSelector(
     (state: RootState) => state.app.canEditCollectionReducer.value
   );
+  const collectionType = useSelector(
+    (state: RootState) => state.app.collectionTypeReducer.value
+  );
 
   const dispatch = useDispatch();
   const { collectionsLoading } = useAllCollections();
-  const { uploadImage } = useImageUpload();
+  const { uploadImage, uploadAudio } = useImageUpload();
   const {
     imageLoading,
     setImageLoading,
@@ -39,6 +42,8 @@ const CollectionsSwitcher: FunctionComponent = (): JSX.Element => {
     addCollection,
     price,
     setPrice,
+    audioLoading,
+    setAudioLoading,
   } = useAddCollection();
 
   const { deleteCollection, deleteCollectionLoading } = useEditCollection();
@@ -47,6 +52,7 @@ const CollectionsSwitcher: FunctionComponent = (): JSX.Element => {
     case "add":
       return (
         <AddCollection
+          collectionType={collectionType}
           imageLoading={imageLoading}
           uploadImage={uploadImage}
           addCollection={addCollection}
@@ -63,6 +69,9 @@ const CollectionsSwitcher: FunctionComponent = (): JSX.Element => {
           deleteCollection={deleteCollection}
           deleteCollectionLoading={deleteCollectionLoading}
           canEditCollection={canEditCollection}
+          audioLoading={audioLoading}
+          setAudioLoading={setAudioLoading}
+          uploadAudio={uploadAudio}
         />
       );
 

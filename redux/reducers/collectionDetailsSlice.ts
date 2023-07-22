@@ -4,6 +4,8 @@ export interface CollectionDetailsState {
   title: string;
   description: string;
   image: string;
+  audio: string;
+  audioFileName: string;
   amount: number;
   acceptedTokens: string[];
   tokenPrices: number[];
@@ -21,6 +23,8 @@ const initialCollectionDetailsState: CollectionDetailsState = {
   title: "Collection Title",
   description: "Collection Description :)",
   image: "",
+  audio: "",
+  audioFileName: "",
   amount: 1,
   acceptedTokens: [],
   tokenPrices: [],
@@ -45,6 +49,8 @@ export const collectionDetailsSlice = createSlice({
           actionTitle,
           actionDescription,
           actionImage,
+          actionAudio,
+          actionAudioFileName,
           actionAmount,
           actionAcceptedTokens,
           actionTokenPrices,
@@ -62,6 +68,8 @@ export const collectionDetailsSlice = createSlice({
       state.title = actionTitle;
       state.description = actionDescription;
       state.image = actionImage;
+      state.audio = actionAudio;
+      state.audioFileName = actionAudioFileName;
       state.amount = actionAmount;
       state.acceptedTokens = actionAcceptedTokens;
       state.tokenPrices = actionTokenPrices;

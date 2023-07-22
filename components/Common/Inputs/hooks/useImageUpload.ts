@@ -11,12 +11,18 @@ import {
 import { setPostImages } from "@/redux/reducers/postImageSlice";
 import lodash from "lodash";
 import videoLimitAlert from "@/lib/helpers/videoLimitAlert";
-import compressImageFiles from "@/lib/helpers/compressImageFiles";
 import { setPostGateImages } from "@/redux/reducers/postGatedImageSlice";
 
 const useImageUpload = () => {
   const dispatch = useDispatch();
   const [mainImage, setMainImage] = useState<string>("");
+  const [mainAudio, setMainAudio] = useState<{
+    audio: string;
+    audioFileName: string;
+  }>({
+    audio: "",
+    audioFileName: "",
+  });
   const [imageLoadingComment, setImageLoadingComment] =
     useState<boolean>(false);
   const [videoLoadingComment, setVideoLoadingComment] =
@@ -43,6 +49,35 @@ const useImageUpload = () => {
   );
   const [type, setType] = useState<string>("");
   const [fileType, setFileType] = useState<string>("");
+
+  const uploadAudio = async (
+    e: FormEvent<Element>,
+    setAudioLoading: (e: boolean) => void
+  ) => {
+    try {
+      if ((e as any).target.files.length < 1) {
+        return;
+      }
+      setType(type);
+      setFileType((e as any).target.files[0].type);
+      setAudioLoading(true);
+
+      const response = await fetch("/api/ipfs", {
+        method: "POST",
+        body: (e.target as HTMLFormElement).files[0],
+      });
+      let cid = await response.json();
+      if (cid) {
+        setMainAudio({
+          audio: cid?.cid,
+          audioFileName: (e as any).target.files[0].name,
+        });
+      }
+    } catch (err: any) {
+      console.error(err.message);
+    }
+    setAudioLoading(false);
+  };
 
   const uploadImage = async (
     e: FormEvent<Element>,
@@ -94,6 +129,8 @@ const useImageUpload = () => {
             actionTitle: collectionValues.title,
             actionDescription: collectionValues.description,
             actionImage: mainImage,
+            actionAudio: collectionValues?.audio,
+            actionAudioFileName: collectionValues?.audioFileName,
             actionAmount: collectionValues?.amount,
             actionAcceptedTokens: collectionValues?.acceptedTokens,
             actionTokenPrices: collectionValues?.tokenPrices,
@@ -107,8 +144,28 @@ const useImageUpload = () => {
           })
         );
       }
+    } else if (mainAudio.audio !== "") {
+      dispatch(
+        setCollectionDetails({
+          actionTitle: collectionValues.title,
+          actionDescription: collectionValues.description,
+          actionImage: collectionValues.image,
+          actionAudio: mainAudio.audio,
+          actionAudioFileName: mainAudio.audioFileName,
+          actionAmount: collectionValues?.amount,
+          actionAcceptedTokens: collectionValues?.acceptedTokens,
+          actionTokenPrices: collectionValues?.tokenPrices,
+          actionDisabled: collectionValues?.disabled,
+          actionFileType: fileType,
+          actionId: collectionValues?.id,
+          actionSoldTokens: collectionValues?.soldTokens,
+          actionTokenIds: collectionValues?.tokenIds,
+          actionLive: collectionValues?.live,
+          actionOld: collectionValues?.old,
+        })
+      );
     }
-  }, [mainImage]);
+  }, [mainImage, mainAudio]);
 
   const uploadVideo = async (
     e: FormEvent,
@@ -241,6 +298,7 @@ const useImageUpload = () => {
     setVideoLoadingPost,
     setImageLoadingComment,
     setVideoLoadingComment,
+    uploadAudio,
   };
 };
 

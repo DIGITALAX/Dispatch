@@ -235,6 +235,8 @@ const useEditCollection = () => {
           actionTitle: "",
           actionDescription: "",
           actionImage: "",
+          actionAudio: "",
+          actionAudioFileName: "",
           actionAmount: 1,
           actionAcceptedTokens: [],
           actionTokenPrices: [],

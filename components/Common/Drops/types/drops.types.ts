@@ -13,7 +13,7 @@ export type AllDropsProps = {
 
 export type AddDropProps = {
   imageLoading: boolean;
-  alreadyInDropIds: string[]
+  alreadyInDropIds: string[];
   uploadImage: (
     e: FormEvent<Element>,
     setImageLoading: (e: boolean) => void,

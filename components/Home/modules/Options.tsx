@@ -1,6 +1,8 @@
 import { setPage } from "@/redux/reducers/pageSlice";
 import { FunctionComponent } from "react";
 import { OptionsProps } from "../types/home.types";
+import { setCollectionSwitcher } from "@/redux/reducers/collectionSwitcherSlice";
+import { setDropSwitcher } from "@/redux/reducers/dropSwitcherSlice";
 
 const Options: FunctionComponent<OptionsProps> = ({
   dispatch,
@@ -31,7 +33,15 @@ const Options: FunctionComponent<OptionsProps> = ({
                       }`
                     )
                 : index !== 5 && index !== 4
-                ? () => dispatch(setPage(label))
+                ? () => {
+                    dispatch(setPage(label));
+
+                    if (label === "collections") {
+                      dispatch(setCollectionSwitcher("all"));
+                    } else if (label === "drops") {
+                      dispatch(setDropSwitcher("all"));
+                    }
+                  }
                 : () => {}
             }
           >
