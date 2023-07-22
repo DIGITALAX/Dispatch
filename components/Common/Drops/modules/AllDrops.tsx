@@ -117,7 +117,7 @@ const AllDrops: FunctionComponent<AllDropsProps> = ({
                         className="relative w-full h-10 py-2 px-3 border-2 border-lily text-white font-earl text-base flex items-center justify-center bg-pos flex-col"
                         onClick={(event) => {
                           event.stopPropagation();
-               
+
                           window.open(
                             `http://www.chromadin.xyz/autograph/${
                               marketProfile?.handle?.split(".lens")[0]
