@@ -60,6 +60,7 @@ const AllCollections: FunctionComponent<AllCollectionsProps> = ({
             );
           })
         : allCollectionsRedux?.map((value: Collection, index: number) => {
+
             return (
               <div
                 className="relative w-52 h-60 sm:w-60 sm:h-72 flex items-center justify-center bg-black p-3 border border-white cursor-pointer rounded-tr-lg rounded-bl-lg"
@@ -107,7 +108,7 @@ const AllCollections: FunctionComponent<AllCollectionsProps> = ({
                   <div className="relative w-full h-full flex flex-col gap-2 items-center justify-center">
                     <div className="relative w-full h-full gap-2 flex flex-col items-center justify-center">
                       <div className="absolute w-full h-full bg-cover">
-                        {!value.uri.type?.includes("video") ? (
+                        {!value.fileType?.includes("video") ? (
                           <Image
                             src={
                               value?.uri?.image?.includes("ipfs://")

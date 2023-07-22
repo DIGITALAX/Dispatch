@@ -1,5 +1,6 @@
 import { Collection } from "@/components/Common/Collections/types/collections.types";
 import fetchIPFSJSON from "./fetchIPFSJSON";
+import { INFURA_GATEWAY } from "../constants";
 
 const collectionGetter = async (
   colls: any,
