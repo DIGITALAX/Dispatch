@@ -59,7 +59,8 @@ const CollectionPreview: FunctionComponent<CollectionPreviewProps> = ({
       </div>
       <div className="relative w-full h-fit flex flex-col items-center justify-center">
         {collectionDetails.fileType === "audio/mpeg" ||
-        collectionType === "audio/mpeg" || collectionDetails?.audio ? (
+        collectionType === "audio/mpeg" ||
+        collectionDetails?.audio ? (
           <div className="relative flex flex-col gap-5 w-fit h-fit">
             {collectionDetails?.audio !== "" && (
               <div className="relative w-full h-fit flex flex-row gap-1.5 items-center justify-center">
@@ -103,7 +104,6 @@ const CollectionPreview: FunctionComponent<CollectionPreviewProps> = ({
                   collectionDetails.fileType !== "image/gif") ||
                 collectionType === "video/mp4" ? (
                   <video
-                    muted
                     playsInline
                     autoPlay
                     className="w-full h-full flex object-cover"
