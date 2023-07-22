@@ -81,8 +81,8 @@ const AllCollections: FunctionComponent<AllCollectionsProps> = ({
                             ? 10 ** 6
                             : 10 ** 18)
                       ),
-                      actionAudio: value.audio,
-                      actionAudioFileName: value.audioFileName,
+                      actionAudio: value.uri.audio,
+                      actionAudioFileName: value.audioFileName || value.name,
                       actionDisabled: true,
                       actionFileType: value.fileType,
                       actionType: "delete",
@@ -94,7 +94,11 @@ const AllCollections: FunctionComponent<AllCollectionsProps> = ({
                         Number(value.blockNumber) < 45189643 ? true : false,
                     })
                   );
-                  dispatch(setCollectionTypeSwitcher(value.fileType));
+                  dispatch(
+                    setCollectionTypeSwitcher(
+                      value.uri.audio ? "audio/mpeg" : value.fileType
+                    )
+                  );
                   dispatch(setCollectionSwitcher("add"));
                   dispatch(setPage("collections"));
                 }}
