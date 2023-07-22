@@ -107,19 +107,39 @@ const AllCollections: FunctionComponent<AllCollectionsProps> = ({
                   <div className="relative w-full h-full flex flex-col gap-2 items-center justify-center">
                     <div className="relative w-full h-full gap-2 flex flex-col items-center justify-center">
                       <div className="absolute w-full h-full bg-cover">
-                        <Image
-                          src={
-                            value?.uri?.image?.includes("ipfs://")
-                              ? `${INFURA_GATEWAY}/ipfs/${
-                                  value?.uri?.image?.split("ipfs://")[1]
-                                }`
-                              : `${INFURA_GATEWAY}/ipfs/${value?.uri?.image}`
-                          }
-                          layout="fill"
-                          objectFit="cover"
-                          objectPosition={"top"}
-                          className="rounded-tr-lg rounded-bl-lg flex w-full h-full"
-                        />
+                        {!value.uri.type?.includes("video") ? (
+                          <Image
+                            src={
+                              value?.uri?.image?.includes("ipfs://")
+                                ? `${INFURA_GATEWAY}/ipfs/${
+                                    value?.uri?.image?.split("ipfs://")[1]
+                                  }`
+                                : `${INFURA_GATEWAY}/ipfs/${value?.uri?.image}`
+                            }
+                            layout="fill"
+                            objectFit="cover"
+                            objectPosition={"top"}
+                            className="rounded-tr-lg rounded-bl-lg flex w-full h-full"
+                          />
+                        ) : (
+                          <video
+                            className="rounded-tr-lg rounded-bl-lg flex w-full h-full"
+                            muted
+                            autoPlay
+                            playsInline
+                          >
+                            <source
+                              src={
+                                value?.uri?.image?.includes("ipfs://")
+                                  ? `${INFURA_GATEWAY}/ipfs/${
+                                      value?.uri?.image?.split("ipfs://")[1]
+                                    }`
+                                  : `${INFURA_GATEWAY}/ipfs/${value?.uri?.image}`
+                              }
+                              type="video/mp4"
+                            />
+                          </video>
+                        )}
                       </div>
                       <div className="relative w-full h-full flex flex-col items-center justify-center bg-black/60 border-2 border-lily">
                         <div className="relative w-fit h-fit justify-end items-start flex flex-row gap-1 ml-auto p-2">
