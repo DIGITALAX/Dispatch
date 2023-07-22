@@ -187,7 +187,7 @@ const AddDrop: FunctionComponent<AddDropProps> = ({
                     <div className="relative w-full h-full flex flex-col gap-2 items-center justify-center">
                       <div className="relative w-full h-full gap-2 flex flex-col items-center justify-center">
                         <div className="absolute w-full h-full bg-cover">
-                          {!value.uri.type?.includes("video") ? (
+                          {!value.fileType?.includes("video") ? (
                             <Image
                               src={
                                 value?.uri?.image?.includes("ipfs://")
