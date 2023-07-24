@@ -27,6 +27,7 @@ import {
   getCollectionsDecryptAll,
   getCollectionsDecryptAllUpdated,
 } from "@/graphql/subgraph/queries/getAllCollections";
+import { Collection } from "../../Collections/types/collections.types";
 
 const useAllPosts = () => {
   const { data: signer } = useSigner();
@@ -952,11 +953,13 @@ const useAllPosts = () => {
         true,
         true
       );
+      const newCols = collectionsUpdated.filter(
+        (obj: Collection) =>
+          obj.collectionId !== "104" && obj.collectionId !== "99"
+      );
       dispatch(
         setDecryptCollectionsAllRedux(
-          collections || collectionsUpdated
-            ? [...collections, ...collectionsUpdated]
-            : []
+          collections || newCols ? [...collections, ...newCols] : []
         )
       );
     } catch (err: any) {

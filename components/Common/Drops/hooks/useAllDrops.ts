@@ -12,6 +12,7 @@ import { setAllCollectionsRedux } from "@/redux/reducers/allCollectionsSlice";
 import getAllCollections, {
   getAllCollectionsUpdated,
 } from "@/graphql/subgraph/queries/getAllCollections";
+import { Collection } from "../../Collections/types/collections.types";
 
 const useAllDrops = () => {
   const dispatch = useDispatch();
@@ -61,10 +62,15 @@ const useAllDrops = () => {
         false,
         true
       );
+      const newCols = collectionsUpdated.filter(
+        (obj: Collection) =>
+          obj.collectionId !== "104" && obj.collectionId !== "99"
+      );
+
       dispatch(
         setAllCollectionsRedux(
-          collections || collectionsUpdated
-            ? [...(collections || []), ...(collectionsUpdated || [])]
+          collections || newCols
+            ? [...(collections || []), ...(newCols || [])]
             : []
         )
       );
