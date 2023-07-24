@@ -10,6 +10,7 @@ import { setAllCollectionsRedux } from "@/redux/reducers/allCollectionsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import collectionGetter from "@/lib/helpers/collectionGetter";
+import { Collection } from "../types/collections.types";
 
 const useAllCollections = () => {
   const { address } = useAccount();
@@ -36,10 +37,15 @@ const useAllCollections = () => {
         false,
         true
       );
+      const newCols = collectionsUpdated.filter(
+        (obj: Collection) =>
+          obj.collectionId !== "104" && obj.collectionId !== "99"
+      );
+
       dispatch(
         setAllCollectionsRedux(
-          collections || collectionsUpdated
-            ? [...(collections || []), ...(collectionsUpdated || [])]
+          collections || newCols
+            ? [...(collections || []), ...(newCols || [])]
             : []
         )
       );
