@@ -34,7 +34,7 @@ const useWho = () => {
         publicationId: pubId,
         limit: 10,
       });
-      const upvoteArr = lodash.filter(
+      const upvoteArr = lodash?.filter(
         reactions?.data?.whoReactedPublication.items,
         (item) => item.reaction === "UPVOTE"
       );

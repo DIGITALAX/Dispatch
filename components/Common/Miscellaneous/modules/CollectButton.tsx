@@ -59,7 +59,7 @@ const CollectButton: FunctionComponent<CollectButtonProps> = ({
       <div className="absolute row-start-3 flex flex-col w-32 h-fit cursor-pointer z-1">
         {openDropdown &&
           lodash
-            .filter(newValues, (item) => item !== selectValue)
+            ?.filter(newValues, (item) => item !== selectValue)
             ?.map((item: string, index: number) => {
               return (
                 <div

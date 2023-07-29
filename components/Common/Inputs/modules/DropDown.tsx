@@ -23,7 +23,7 @@ const DropDown: FunctionComponent<DropDownProps> = ({
         `}
         onClick={() =>
           setOpen(
-            values.filter((value) => !chosen.includes(value))?.length > 0
+            values?.filter((value) => !chosen.includes(value))?.length > 0
               ? !open
               : false
           )
@@ -36,7 +36,7 @@ const DropDown: FunctionComponent<DropDownProps> = ({
           <FaSortDown />
         </div>
       </div>
-      {values.filter((value) => !chosen.includes(value)).length > 0 && open && (
+      {values?.filter((value) => !chosen.includes(value)).length > 0 && open && (
         <div
           className={`absolute flex flex-col items-start w-full z-1 overflow-y-scroll max-h-32 h-fit top-8 text-xs`}
         >
@@ -77,7 +77,7 @@ const DropDown: FunctionComponent<DropDownProps> = ({
                 onClick={async () => {
                   if (!shouldFilter) {
                     setChosen(
-                      chosen.filter((chosenLabel) => chosenLabel !== label)
+                      chosen?.filter((chosenLabel) => chosenLabel !== label)
                     );
                   } else {
                     await removeCollectionFromDrop(

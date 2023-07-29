@@ -203,7 +203,7 @@ const useImageUpload = () => {
     setMappedFeaturedFiles: (e: UploadedMedia[]) => void,
     uploadImages: UploadedMedia[]
   ): void => {
-    const cleanedArray = lodash.filter(
+    const cleanedArray = lodash?.filter(
       uploadImages,
       (uploaded) => uploaded.cid !== image.cid
     );

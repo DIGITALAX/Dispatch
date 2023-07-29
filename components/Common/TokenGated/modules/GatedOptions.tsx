@@ -24,7 +24,7 @@ const GatedOptions: FunctionComponent<GatedOptionsProps> = ({
               const tokenValue = coll.collectionId;
               if (tokenIds.includes(tokenValue)) {
                 setTokenIds(
-                  tokenIds.filter((tokenId) => tokenId !== tokenValue)
+                  tokenIds?.filter((tokenId) => tokenId !== tokenValue)
                 );
               } else {
                 setTokenIds([...tokenIds, tokenValue]);

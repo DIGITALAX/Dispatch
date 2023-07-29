@@ -317,10 +317,10 @@ const useAddDrop = () => {
       setAvailableCollectionIds(
         dropValues?.old
           ? colls?.data?.collectionMinteds
-              .filter((c: any) => !dropIds.includes(c.collectionId))
+          ?.filter((c: any) => !dropIds.includes(c.collectionId))
               .map((c: any) => c.name)
           : updatedColls?.data?.updatedChromadinCollectionCollectionMinteds
-              .filter((c: any) => !dropIdsUpdated.includes(c.collectionId))
+          ?.filter((c: any) => !dropIdsUpdated.includes(c.collectionId))
               .map((c: any) => c.name)
       );
 
@@ -339,7 +339,7 @@ const useAddDrop = () => {
       );
       setAlreadyInDrop(
         allCollections
-          .filter((cd) => {
+        ?.filter((cd) => {
             const blockstampCondition = dropValues.old
               ? Number(cd.blockNumber) < 45189643
               : Number(cd.blockNumber) >= 45189643;
@@ -352,7 +352,7 @@ const useAddDrop = () => {
       );
       setAlreadyInDropIds(
         allCollections
-          .filter((cd) => {
+        ?.filter((cd) => {
             const blockstampCondition = dropValues.old
               ? Number(cd.blockNumber) < 45189643
               : Number(cd.blockNumber) >= 45189643;
