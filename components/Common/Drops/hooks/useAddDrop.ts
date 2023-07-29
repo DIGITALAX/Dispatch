@@ -244,7 +244,7 @@ const useAddDrop = () => {
         setSuccessModal({
           actionOpen: true,
           actionMedia: dropValues.image,
-          actionLink: `http://www.chromadin.xyz/${
+          actionLink: `http://www.chromadin.xyz/autograph/${
             prof?.split(".lens")[0]
           }/drop/${dropValues.title?.replaceAll(" ", "_").toLowerCase()}`,
           actionMessage: "Drop Live! You can view your live drop here",
@@ -438,7 +438,7 @@ const useAddDrop = () => {
         setSuccessModal({
           actionOpen: true,
           actionMedia: dropValues.image,
-          actionLink: `http://www.chromadin.xyz/${
+          actionLink: `http://www.chromadin.xyz/autograph/${
             prof?.split(".lens")[0]
           }/drop/${dropValues.title?.replaceAll(" ", "_").toLowerCase()}`,
           actionMessage: "Collection Added! You can view your live drop here:",
