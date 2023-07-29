@@ -281,7 +281,7 @@ const useMakePost = () => {
         env: LensEnvironment.Polygon,
       });
 
-      const matchedCollections = collections.filter((collection: Collection) =>
+      const matchedCollections = collections?.filter((collection: Collection) =>
         tokenIds.includes(collection.collectionId)
       );
 
@@ -305,7 +305,7 @@ const useMakePost = () => {
             chainID: 137,
             contractType: ContractType.Erc721,
             tokenIds: collections
-              .filter((collection: Collection) =>
+              ?.filter((collection: Collection) =>
                 tokenIds.includes(collection.collectionId)
               )
               .flatMap((collection: Collection) => collection.tokenIds),
@@ -328,7 +328,7 @@ const useMakePost = () => {
               chainID: 137,
               contractType: ContractType.Erc721,
               tokenIds: collections
-                .filter((collection: Collection) =>
+                ?.filter((collection: Collection) =>
                   tokenIds.includes(collection.collectionId)
                 )
                 .flatMap((collection: Collection) => collection.tokenIds),
@@ -360,7 +360,7 @@ const useMakePost = () => {
               chainID: 137,
               contractType: ContractType.Erc721,
               tokenIds: collections
-                .filter((collection: Collection) =>
+                ?.filter((collection: Collection) =>
                   tokenIds.includes(collection.collectionId)
                 )
                 .flatMap((collection: Collection) => collection.tokenIds),

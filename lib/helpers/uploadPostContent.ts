@@ -27,10 +27,10 @@ const uploadPostContent = async (
     });
   });
 
-  const coverImage = lodash.filter(newImages, (image: PostImage) => {
+  const coverImage = lodash?.filter(newImages, (image: PostImage) => {
     if (image.type === "image/png" || image.type === "image/gif") return true;
   });
-  const videos = lodash.filter(newImages, (image: PostImage) => {
+  const videos = lodash?.filter(newImages, (image: PostImage) => {
     if (image.type === "video/mp4") return true;
   });
 

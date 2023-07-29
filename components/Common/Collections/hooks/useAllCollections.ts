@@ -28,6 +28,7 @@ const useAllCollections = () => {
     try {
       const colls = await getAllCollections(address);
       const drops = await getAllDrops(address);
+
       const collsUpdated = await getAllCollectionsUpdated(address);
       const dropsUpdated = await getAllDropsUpdated(address);
       const collections = await collectionGetter(colls, drops);
@@ -37,7 +38,7 @@ const useAllCollections = () => {
         false,
         true
       );
-      const newCols = collectionsUpdated.filter(
+      const newCols = collectionsUpdated?.filter(
         (obj: Collection) =>
           obj.collectionId !== "104" && obj.collectionId !== "99"
       );

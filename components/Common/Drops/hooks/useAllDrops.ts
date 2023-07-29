@@ -62,7 +62,7 @@ const useAllDrops = () => {
         false,
         true
       );
-      const newCols = collectionsUpdated.filter(
+      const newCols = collectionsUpdated?.filter(
         (obj: Collection) =>
           obj.collectionId !== "104" && obj.collectionId !== "99"
       );

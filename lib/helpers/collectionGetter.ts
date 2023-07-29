@@ -46,7 +46,7 @@ const collectionGetter = async (
               ? drops.data.updatedChromadinDropDropCreateds
               : drops.data.dropCreateds
           )
-            .filter((drop: any) =>
+            ?.filter((drop: any) =>
               drop.collectionIds.includes(collection.collectionId)
             )
             ?.sort((a: any, b: any) => b.dropId - a.dropId);

@@ -159,7 +159,7 @@ const CollectionPreview: FunctionComponent<CollectionPreviewProps> = ({
                 "0x6968105460f67c3bf751be7c15f92f5286fd0ce5",
               ],
             ])
-              .filter((item) =>
+              ?.filter((item) =>
                 collectionDetails?.acceptedTokens?.includes(
                   item[2].toLowerCase()
                 )

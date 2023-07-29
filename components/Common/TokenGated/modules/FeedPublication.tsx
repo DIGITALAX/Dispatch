@@ -323,7 +323,7 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
                   dispatch(
                     setDecrypt({
                       actionOpen: true,
-                      actionCollections: allCollections.filter(
+                      actionCollections: allCollections?.filter(
                         (coll: Collection) => {
                           return (
                             publication?.__typename === "Mirror"

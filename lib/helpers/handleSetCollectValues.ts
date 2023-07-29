@@ -18,7 +18,7 @@ const handleSetCollectValues = (
   referral: number,
   address: string
 ): void => {
-  const setCurrency: Erc20[] = lodash.filter(
+  const setCurrency: Erc20[] = lodash?.filter(
     enabledCurrencies,
     (currency) => currency.symbol === enabledCurrency
   );
