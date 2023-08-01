@@ -3,12 +3,7 @@ import { UseControlsResults } from "../types/video.types";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import addReaction from "@/graphql/lens/mutations/react";
-import {
-  useAccount,
-  useContractWrite,
-  usePrepareContractWrite,
-  useSignTypedData,
-} from "wagmi";
+import { useAccount } from "wagmi";
 import { LENS_HUB_PROXY_ADDRESS_MATIC } from "@/lib/constants";
 import LensHubProxy from "../../../../abis/LensHubProxy.json";
 import handleIndexCheck from "@/lib/helpers/handleIndexCheck";
@@ -19,13 +14,18 @@ import { mirror, mirrorDispatcher } from "@/graphql/lens/mutations/mirror";
 import checkDispatcher from "@/lib/helpers/checkDispatcher";
 import collect from "@/graphql/lens/mutations/collect";
 import ReactPlayer from "react-player";
-import { waitForTransaction } from "@wagmi/core";
 import { setReactId } from "@/redux/reducers/reactIdSlice";
 import { setIndexModal } from "@/redux/reducers/indexModalSlice";
 import { setVideoSync } from "@/redux/reducers/videoSyncSlice";
 import { setSeek } from "@/redux/reducers/seekSecondSlice";
+import { createPublicClient, createWalletClient, custom, http } from "viem";
+import { polygon } from "viem/chains";
 
 const useControls = (): UseControlsResults => {
+  const publicClient = createPublicClient({
+    chain: polygon,
+    transport: http(),
+  });
   const streamRef = useRef<ReactPlayer>(null);
   const fullVideoRef = useRef<ReactPlayer>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -39,7 +39,6 @@ const useControls = (): UseControlsResults => {
   const [collectArgs, setCollectArgs] = useState<any>();
   const dispatch = useDispatch();
   const { address } = useAccount();
-  const { signTypedDataAsync } = useSignTypedData();
   const dispatcher = useSelector(
     (state: RootState) => state.app.dispatcherReducer.value
   );
@@ -61,26 +60,6 @@ const useControls = (): UseControlsResults => {
   const fullScreenVideo = useSelector(
     (state: RootState) => state.app.fullScreenVideoReducer
   );
-
-  const { config, isSuccess } = usePrepareContractWrite({
-    address: LENS_HUB_PROXY_ADDRESS_MATIC,
-    abi: LensHubProxy,
-    functionName: "mirrorWithSig",
-    enabled: Boolean(mirrorArgs),
-    args: [mirrorArgs],
-  });
-
-  const { writeAsync } = useContractWrite(config);
-
-  const { config: collectConfig, isSuccess: isSuccessCollect } =
-    usePrepareContractWrite({
-      address: LENS_HUB_PROXY_ADDRESS_MATIC,
-      abi: LensHubProxy,
-      functionName: "collectWithSig",
-      enabled: Boolean(collectArgs),
-      args: [collectArgs],
-    });
-  const { writeAsync: collectWriteAsync } = useContractWrite(collectConfig);
 
   const handleHeart = () => {
     dispatch(
@@ -201,10 +180,16 @@ const useControls = (): UseControlsResults => {
 
         const typedData: any = mirrorPost.data.createMirrorTypedData.typedData;
 
-        const signature: any = await signTypedDataAsync({
+        const clientWallet = createWalletClient({
+          chain: polygon,
+          transport: custom((window as any).ethereum),
+        });
+        const signature: any = await clientWallet.signTypedData({
           domain: omit(typedData?.domain, ["__typename"]),
-          types: omit(typedData?.types, ["__typename"]) as any,
-          value: omit(typedData?.value, ["__typename"]) as any,
+          types: omit(typedData?.types, ["__typename"]),
+          primaryType: "MirrorWithSig",
+          message: omit(typedData?.value, ["__typename"]),
+          account: address as `0x${string}`,
         });
 
         const broadcastResult: any = await broadcast({
@@ -214,21 +199,40 @@ const useControls = (): UseControlsResults => {
 
         if (broadcastResult?.data?.broadcast?.__typename !== "RelayerResult") {
           const { v, r, s } = splitSignature(signature);
-          const mirrorArgs = {
-            profileId: typedData.value.profileId,
-            profileIdPointed: typedData.value.profileIdPointed,
-            pubIdPointed: typedData.value.pubIdPointed,
-            referenceModuleData: typedData.value.referenceModuleData,
-            referenceModule: typedData.value.referenceModule,
-            referenceModuleInitData: typedData.value.referenceModuleInitData,
-            sig: {
-              v,
-              r,
-              s,
-              deadline: typedData.value.deadline,
-            },
-          };
-          setMirrorArgs(mirrorArgs);
+
+          const { request } = await publicClient.simulateContract({
+            address: LENS_HUB_PROXY_ADDRESS_MATIC,
+            abi: LensHubProxy,
+            functionName: "mirrorWithSig",
+            args: [
+              {
+                profileId: typedData.value.profileId,
+                profileIdPointed: typedData.value.profileIdPointed,
+                pubIdPointed: typedData.value.pubIdPointed,
+                referenceModuleData: typedData.value.referenceModuleData,
+                referenceModule: typedData.value.referenceModule,
+                referenceModuleInitData:
+                  typedData.value.referenceModuleInitData,
+                sig: {
+                  v,
+                  r,
+                  s,
+                  deadline: typedData.value.deadline,
+                },
+              },
+            ],
+            account: address,
+          });
+
+          const res = await clientWallet.writeContract(request);
+          dispatch(
+            setIndexModal({
+              actionValue: true,
+              actionMessage: "Indexing Interaction",
+            })
+          );
+          await publicClient.waitForTransactionReceipt({ hash: res });
+          await handleIndexCheck(res, dispatch, true);
         } else {
           dispatch(
             setIndexModal({
@@ -251,31 +255,6 @@ const useControls = (): UseControlsResults => {
     setMirrorLoading(false);
   };
 
-  const mirrorWrite = async (): Promise<void> => {
-    setMirrorLoading(true);
-    try {
-      let tx = await writeAsync?.();
-      dispatch(
-        setIndexModal({
-          actionValue: true,
-          actionMessage: "Indexing Interaction",
-        })
-      );
-      const res = await waitForTransaction({
-        hash: tx?.hash!,
-        async onSpeedUp(newTransaction) {
-          await newTransaction.wait();
-          tx!.hash = newTransaction.hash as any;
-        },
-      });
-      await handleIndexCheck(res?.transactionHash, dispatch, true);
-    } catch (err: any) {
-      setMirrorLoading(false);
-      console.error(err.message);
-    }
-    setMirrorLoading(false);
-  };
-
   const collectVideo = async (): Promise<void> => {
     setCollectLoading(true);
     dispatch(setReactId(mainVideo.id));
@@ -289,10 +268,17 @@ const useControls = (): UseControlsResults => {
         publicationId: mainVideo.id,
       });
       const typedData: any = collectPost.data.createCollectTypedData.typedData;
-      const signature: any = await signTypedDataAsync({
+
+      const clientWallet = createWalletClient({
+        chain: polygon,
+        transport: custom((window as any).ethereum),
+      });
+      const signature: any = await clientWallet.signTypedData({
         domain: omit(typedData?.domain, ["__typename"]),
-        types: omit(typedData?.types, ["__typename"]) as any,
-        value: omit(typedData?.value, ["__typename"]) as any,
+        types: omit(typedData?.types, ["__typename"]),
+        primaryType: "CollectWithSig",
+        message: omit(typedData?.value, ["__typename"]),
+        account: address as `0x${string}`,
       });
 
       const broadcastResult: any = await broadcast({
@@ -302,19 +288,37 @@ const useControls = (): UseControlsResults => {
 
       if (broadcastResult?.data?.broadcast?.__typename !== "RelayerResult") {
         const { v, r, s } = splitSignature(signature);
-        const collectArgs = {
-          collector: address,
-          profileId: typedData.value.profileId,
-          pubId: typedData.value.pubId,
-          data: typedData.value.data,
-          sig: {
-            v,
-            r,
-            s,
-            deadline: typedData.value.deadline,
-          },
-        };
-        setCollectArgs(collectArgs);
+
+        const { request } = await publicClient.simulateContract({
+          address: LENS_HUB_PROXY_ADDRESS_MATIC,
+          abi: LensHubProxy,
+          functionName: "collectWithSig",
+          args: [
+            {
+              collector: address,
+              profileId: typedData.value.profileId,
+              pubId: typedData.value.pubId,
+              data: typedData.value.data,
+              sig: {
+                v,
+                r,
+                s,
+                deadline: typedData.value.deadline,
+              },
+            },
+          ],
+          account: address,
+        });
+
+        const res = await clientWallet.writeContract(request);
+        dispatch(
+          setIndexModal({
+            actionValue: true,
+            actionMessage: "Indexing Interaction",
+          })
+        );
+        await publicClient.waitForTransactionReceipt({ hash: res });
+        await handleIndexCheck(res, dispatch, true);
       } else {
         dispatch(
           setIndexModal({
@@ -336,43 +340,6 @@ const useControls = (): UseControlsResults => {
     }
     setCollectLoading(false);
   };
-
-  const collectWrite = async (): Promise<void> => {
-    setCollectLoading(true);
-    try {
-      let tx = await collectWriteAsync?.();
-      dispatch(
-        setIndexModal({
-          actionValue: true,
-          actionMessage: "Indexing Interaction",
-        })
-      );
-      const res = await waitForTransaction({
-        hash: tx?.hash!,
-        async onSpeedUp(newTransaction) {
-          await newTransaction.wait();
-          tx!.hash = newTransaction.hash as any;
-        },
-      });
-      await handleIndexCheck(res?.transactionHash, dispatch, false);
-    } catch (err: any) {
-      console.error(err.message);
-      setCollectLoading(false);
-    }
-    setCollectLoading(false);
-  };
-
-  useEffect(() => {
-    if (isSuccess) {
-      mirrorWrite();
-    }
-  }, [isSuccess]);
-
-  useEffect(() => {
-    if (isSuccessCollect) {
-      collectWrite();
-    }
-  }, [isSuccessCollect]);
 
   useEffect(() => {
     checkDispatcher(dispatch, profileId);

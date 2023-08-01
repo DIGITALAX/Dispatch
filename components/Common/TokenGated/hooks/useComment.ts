@@ -1,11 +1,6 @@
 import { LENS_HUB_PROXY_ADDRESS_MATIC } from "@/lib/constants";
 import { FormEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  useContractWrite,
-  usePrepareContractWrite,
-  useSignTypedData,
-} from "wagmi";
 import LensHubProxy from "../../../../abis/LensHubProxy.json";
 import handleIndexCheck from "@/lib/helpers/handleIndexCheck";
 import {
@@ -19,16 +14,22 @@ import { omit } from "lodash";
 import uploadPostContent from "@/lib/helpers/uploadPostContent";
 import { setIndexModal } from "@/redux/reducers/indexModalSlice";
 import { Profile } from "@/components/Home/types/lens.types";
-import { waitForTransaction } from "@wagmi/core";
 import getCommentHTML from "@/lib/helpers/commentHTML";
 import getCaretPos from "@/lib/helpers/getCaretPos";
 import { searchProfile } from "@/graphql/lens/queries/searchProfile";
 import { MediaType, UploadedMedia } from "../types/allPosts.types";
 import { setPostImages } from "@/redux/reducers/postImageSlice";
+import { createPublicClient, createWalletClient, custom, http } from "viem";
+import { polygon } from "viem/chains";
+import { useAccount } from "wagmi";
 
 const useComment = () => {
+  const publicClient = createPublicClient({
+    chain: polygon,
+    transport: http(),
+  });
+  const { address } = useAccount();
   const [commentLoading, setCommentLoading] = useState<boolean>(false);
-  const [commentArgs, setCommentArgs] = useState<any>();
   const [commentDescription, setCommentDescription] = useState<string>("");
   const [caretCoord, setCaretCoord] = useState<{ x: number; y: number }>({
     x: 0,
@@ -44,7 +45,6 @@ const useComment = () => {
   const [searchGif, setSearchGif] = useState<boolean>(false);
   const [commentHTML, setCommentHTML] = useState<string>("");
   const [contentURI, setContentURI] = useState<string>();
-  const { signTypedDataAsync } = useSignTypedData();
   const dispatch = useDispatch();
   const profileId = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile?.id
@@ -61,17 +61,6 @@ const useComment = () => {
   const collectModuleType = useSelector(
     (state: RootState) => state?.app?.collectValueTypeReducer?.type
   );
-
-  const { config: commentConfig, isSuccess: commentSuccess } =
-    usePrepareContractWrite({
-      address: LENS_HUB_PROXY_ADDRESS_MATIC,
-      abi: LensHubProxy,
-      functionName: "commentWithSig",
-      enabled: Boolean(commentArgs),
-      args: [commentArgs],
-    });
-
-  const { writeAsync: commentWriteAsync } = useContractWrite(commentConfig);
 
   const handleGif = (e: FormEvent): void => {
     setSearchGif((e.target as HTMLFormElement).value);
@@ -239,10 +228,17 @@ const useComment = () => {
 
         const typedData: any = result.data.createCommentTypedData.typedData;
 
-        const signature: any = await signTypedDataAsync({
+        const clientWallet = createWalletClient({
+          chain: polygon,
+          transport: custom((window as any).ethereum),
+        });
+
+        const signature: any = await clientWallet.signTypedData({
           domain: omit(typedData?.domain, ["__typename"]),
-          types: omit(typedData?.types, ["__typename"]) as any,
-          value: omit(typedData?.value, ["__typename"]) as any,
+          types: omit(typedData?.types, ["__typename"]),
+          primaryType: "CommentWithSig",
+          message: omit(typedData?.value, ["__typename"]),
+          account: address as `0x${string}`,
         });
 
         const broadcastResult: any = await broadcast({
@@ -252,25 +248,37 @@ const useComment = () => {
 
         if (broadcastResult?.data?.broadcast?.__typename !== "RelayerResult") {
           const { v, r, s } = splitSignature(signature);
+          const { request } = await publicClient.simulateContract({
+            address: LENS_HUB_PROXY_ADDRESS_MATIC,
+            abi: LensHubProxy,
+            functionName: "commentWithSig",
+            args: [
+              {
+                profileId: typedData.value.profileId,
+                contentURI: typedData.value.contentURI,
+                profileIdPointed: typedData.value.profileIdPointed,
+                pubIdPointed: typedData.value.pubIdPointed,
+                referenceModuleData: typedData.value.referenceModuleData,
+                referenceModule: typedData.value.referenceModule,
+                referenceModuleInitData:
+                  typedData.value.referenceModuleInitData,
+                collectModule: typedData.value.collectModule,
+                collectModuleInitData: typedData.value.collectModuleInitData,
+                sig: {
+                  v,
+                  r,
+                  s,
+                  deadline: typedData.value.deadline,
+                },
+              },
+            ],
+            account: address,
+          });
+          const res = await clientWallet.writeContract(request);
+          await publicClient.waitForTransactionReceipt({ hash: res });
 
-          const commentArgs = {
-            profileId: typedData.value.profileId,
-            contentURI: typedData.value.contentURI,
-            profileIdPointed: typedData.value.profileIdPointed,
-            pubIdPointed: typedData.value.pubIdPointed,
-            referenceModuleData: typedData.value.referenceModuleData,
-            referenceModule: typedData.value.referenceModule,
-            referenceModuleInitData: typedData.value.referenceModuleInitData,
-            collectModule: typedData.value.collectModule,
-            collectModuleInitData: typedData.value.collectModuleInitData,
-            sig: {
-              v,
-              r,
-              s,
-              deadline: typedData.value.deadline,
-            },
-          };
-          setCommentArgs(commentArgs);
+          clearComment();
+          await handleIndexCheck(res, dispatch, true);
         } else {
           clearComment();
           setTimeout(async () => {
@@ -304,25 +312,6 @@ const useComment = () => {
     setCommentLoading(false);
   };
 
-  const handleCommentWrite = async (): Promise<void> => {
-    setCommentLoading(true);
-    try {
-      let tx = await commentWriteAsync?.();
-      clearComment();
-      const res = await waitForTransaction({
-        hash: tx?.hash!,
-        async onSpeedUp(newTransaction) {
-          await newTransaction.wait();
-          tx!.hash = newTransaction.hash as any;
-        },
-      });
-      await handleIndexCheck(res?.transactionHash, dispatch, true);
-    } catch (err) {
-      console.error(err);
-      setCommentLoading(false);
-    }
-  };
-
   const handleMentionClick = (user: any) => {
     setProfilesOpen(false);
     let resultElement = document.querySelector("#highlighted-content");
@@ -337,12 +326,6 @@ const useComment = () => {
     // if (newHTMLPost) (resultElement as any).innerHTML = newHTMLPost;
     setCommentHTML(newHTMLPost);
   };
-
-  useEffect(() => {
-    if (commentSuccess) {
-      handleCommentWrite();
-    }
-  }, [commentSuccess]);
 
   useEffect(() => {
     dispatch(setPostImages(gifs));

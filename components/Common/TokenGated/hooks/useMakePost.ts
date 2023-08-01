@@ -4,12 +4,6 @@ import {
 } from "@/lib/constants";
 import { FormEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  useContractWrite,
-  usePrepareContractWrite,
-  useSignTypedData,
-  useSigner,
-} from "wagmi";
 import LensHubProxy from "../../../../abis/LensHubProxy.json";
 import handleIndexCheck from "@/lib/helpers/handleIndexCheck";
 import {
@@ -26,7 +20,6 @@ import { setIndexModal } from "@/redux/reducers/indexModalSlice";
 import getPostHTML from "@/lib/helpers/commentHTML";
 import { Profile } from "@/components/Home/types/lens.types";
 import getCaretPos from "@/lib/helpers/getCaretPos";
-import { waitForTransaction } from "@wagmi/core";
 import { MediaType, UploadedMedia } from "../types/allPosts.types";
 import { searchProfile } from "@/graphql/lens/queries/searchProfile";
 import { Web3Provider } from "@ethersproject/providers";
@@ -39,11 +32,18 @@ import {
 import { Signer } from "ethers";
 import { setPostGateImages } from "@/redux/reducers/postGatedImageSlice";
 import { Collection } from "../../Collections/types/collections.types";
+import { useAccount, useSigner } from "wagmi";
+import { createPublicClient, createWalletClient, custom, http } from "viem";
+import { polygon } from "viem/chains";
 
 const useMakePost = () => {
+  const publicClient = createPublicClient({
+    chain: polygon,
+    transport: http(),
+  });
   const { data: signer } = useSigner();
+  const { address } = useAccount();
   const [postLoading, setPostLoading] = useState<boolean>(false);
-  const [postArgs, setPostArgs] = useState<any>();
   const [postDescription, setPostDescription] = useState<string>("");
   const [caretCoord, setCaretCoord] = useState<{ x: number; y: number }>({
     x: 0,
@@ -60,7 +60,6 @@ const useMakePost = () => {
   const [searchGif, setSearchGif] = useState<string>("");
   const [postHTML, setPostHTML] = useState<string>("");
   const [tokenIds, setTokenIds] = useState<string[]>([]);
-  const { signTypedDataAsync } = useSignTypedData();
   const dispatch = useDispatch();
   const profileId = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile
@@ -77,16 +76,6 @@ const useMakePost = () => {
   const collections = useSelector(
     (state: RootState) => state.app.allCollectionsReducer.value
   );
-
-  const { config, isSuccess } = usePrepareContractWrite({
-    address: LENS_HUB_PROXY_ADDRESS_MATIC,
-    abi: LensHubProxy,
-    functionName: "postWithSig",
-    enabled: Boolean(postArgs),
-    args: [postArgs],
-  });
-
-  const { writeAsync } = useContractWrite(config);
 
   const handleGif = (e: FormEvent): void => {
     setSearchGif((e.target as HTMLFormElement).value);
@@ -373,10 +362,17 @@ const useMakePost = () => {
 
         const typedData: any = result.data.createPostTypedData.typedData;
 
-        const signature: any = await signTypedDataAsync({
+        const clientWallet = createWalletClient({
+          chain: polygon,
+          transport: custom((window as any).ethereum),
+        });
+
+        const signature: any = await clientWallet.signTypedData({
           domain: omit(typedData?.domain, ["__typename"]),
-          types: omit(typedData?.types, ["__typename"]) as any,
-          value: omit(typedData?.value, ["__typename"]) as any,
+          types: omit(typedData?.types, ["__typename"]),
+          primaryType: "CollectWithSig",
+          message: omit(typedData?.value, ["__typename"]),
+          account: address as `0x${string}`,
         });
 
         const broadcastResult: any = await broadcast({
@@ -387,24 +383,36 @@ const useMakePost = () => {
         if (broadcastResult?.data?.broadcast?.__typename !== "RelayerResult") {
           const { v, r, s } = splitSignature(signature);
 
-          const postArgs = {
-            profileId: typedData.value.profileId,
-            contentURI: typedData.value.contentURI,
-            profileIdPointed: typedData.value.profileIdPointed,
-            pubIdPointed: typedData.value.pubIdPointed,
-            referenceModuleData: typedData.value.referenceModuleData,
-            referenceModule: typedData.value.referenceModule,
-            referenceModuleInitData: typedData.value.referenceModuleInitData,
-            collectModule: typedData.value.collectModule,
-            collectModuleInitData: typedData.value.collectModuleInitData,
-            sig: {
-              v,
-              r,
-              s,
-              deadline: typedData.value.deadline,
-            },
-          };
-          setPostArgs(postArgs);
+          const { request } = await publicClient.simulateContract({
+            address: LENS_HUB_PROXY_ADDRESS_MATIC,
+            abi: LensHubProxy,
+            functionName: "postWithSig",
+            args: [
+              {
+                profileId: typedData.value.profileId,
+                contentURI: typedData.value.contentURI,
+                profileIdPointed: typedData.value.profileIdPointed,
+                pubIdPointed: typedData.value.pubIdPointed,
+                referenceModuleData: typedData.value.referenceModuleData,
+                referenceModule: typedData.value.referenceModule,
+                referenceModuleInitData:
+                  typedData.value.referenceModuleInitData,
+                collectModule: typedData.value.collectModule,
+                collectModuleInitData: typedData.value.collectModuleInitData,
+                sig: {
+                  v,
+                  r,
+                  s,
+                  deadline: typedData.value.deadline,
+                },
+              },
+            ],
+            account: address,
+          });
+          const res = await clientWallet.writeContract(request);
+          await publicClient.waitForTransactionReceipt({ hash: res });
+          clearPost();
+          await handleIndexCheck(res, dispatch, true);
         } else {
           clearPost();
           setTimeout(async () => {
@@ -420,25 +428,6 @@ const useMakePost = () => {
       console.error(err.message);
     }
     setPostLoading(false);
-  };
-
-  const handlePostWrite = async (): Promise<void> => {
-    setPostLoading(true);
-    try {
-      let tx = await writeAsync?.();
-      clearPost();
-      const res = await waitForTransaction({
-        hash: tx?.hash!,
-        async onSpeedUp(newTransaction) {
-          await newTransaction.wait();
-          tx!.hash = newTransaction.hash as any;
-        },
-      });
-      await handleIndexCheck(res?.transactionHash, dispatch, true);
-    } catch (err) {
-      console.error(err);
-      setPostLoading(false);
-    }
   };
 
   const handleMentionClick = (user: any) => {
@@ -463,12 +452,6 @@ const useMakePost = () => {
     // if (newHTMLPost) (resultElement as any).innerHTML = newHTMLPost;
     setPostHTML(newHTMLPost);
   };
-
-  useEffect(() => {
-    if (isSuccess) {
-      handlePostWrite();
-    }
-  }, [isSuccess]);
 
   useEffect(() => {
     const savedData = getPostData();

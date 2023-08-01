@@ -44,7 +44,8 @@
     "typescript": "5.0.4",
     "uuid": "^9.0.0",
     "wagmi": "^0.12.12",
-    "wavesurfer.js": "^7.0.3"
+    "wavesurfer.js": "^7.0.3",
+    "viem": "^1.4.1"
   },
   "devDependencies": {
     "@types/cookie": "^0.5.1",

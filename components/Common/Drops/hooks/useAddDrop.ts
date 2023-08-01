@@ -15,15 +15,19 @@ import { setIndexModal } from "@/redux/reducers/indexModalSlice";
 import { setModal } from "@/redux/reducers/modalSlice";
 import { setSuccessModal } from "@/redux/reducers/successModalSlice";
 import { RootState } from "@/redux/store";
-import { BigNumber } from "ethers";
 import { FormEvent, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
-import { waitForTransaction } from "@wagmi/core";
+import { useAccount } from "wagmi";
+import { createPublicClient, createWalletClient, custom, http } from "viem";
+import { polygon } from "viem/chains";
 
 const useAddDrop = () => {
   const dispatch = useDispatch();
   const { address } = useAccount();
+  const publicClient = createPublicClient({
+    chain: polygon,
+    transport: http(),
+  });
   const dropValues = useSelector(
     (state: RootState) => state.app.dropDetailsReducer
   );
@@ -41,156 +45,14 @@ const useAddDrop = () => {
   const [availableCollectionIds, setAvailableCollectionIds] = useState<
     string[]
   >([]);
-  const [dropArgs, setDropArgs] = useState<
-    [readonly BigNumber[], string] | undefined
-  >();
-  const [addArgs, setAddArgs] = useState<
-    [BigNumber, BigNumber[]] | undefined | [BigNumber, BigNumber]
-  >();
   const [open, setOpen] = useState<boolean>(false);
   const [chosenCollections, setChosenCollections] = useState<string[]>([]);
   const [alreadyInDrop, setAlreadyInDrop] = useState<string[]>([]);
   const [alreadyInDropIds, setAlreadyInDropIds] = useState<string[]>([]);
   const [deleteDropLoading, setDeleteDropLoading] = useState<boolean>(false);
-  const [collectionToRemove, setCollectionToRemove] = useState<number>(0);
-  const [collectionRemoveIndex, setCollectionRemoveIndex] = useState<number>(0);
   const [removeCollectionLoading, setRemoveCollectionLoading] = useState<
     boolean[]
   >(Array.from({ length: chosenCollections.length }, () => false));
-
-  const { config, isSuccess } = usePrepareContractWrite({
-    address: dropValues?.old
-      ? CHROMADIN_DROP_CONTRACT
-      : CHROMADIN_DROP_CONTRACT_UPDATED,
-    abi: [
-      {
-        inputs: [
-          {
-            internalType: "uint256[]",
-            name: "_collectionIds",
-            type: "uint256[]",
-          },
-          { internalType: "string", name: "_dropURI", type: "string" },
-        ],
-        name: "createDrop",
-        outputs: [],
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-    ],
-    functionName: "createDrop",
-    enabled: Boolean(dropArgs),
-    args: dropArgs,
-  });
-
-  const { writeAsync } = useContractWrite(config);
-
-  const { config: addConfig, isSuccess: addIsSuccess } =
-    usePrepareContractWrite({
-      address: dropValues?.old
-        ? CHROMADIN_DROP_CONTRACT
-        : CHROMADIN_DROP_CONTRACT_UPDATED,
-      abi: [
-        dropValues?.old
-          ? {
-              inputs: [
-                {
-                  internalType: "uint256",
-                  name: "_dropId",
-                  type: "uint256",
-                },
-                {
-                  internalType: "uint256",
-                  name: "_collectionId",
-                  type: "uint256",
-                },
-              ],
-              name: "addCollectionToDrop",
-              outputs: [],
-              stateMutability: "nonpayable",
-              type: "function",
-            }
-          : {
-              inputs: [
-                {
-                  internalType: "uint256",
-                  name: "_dropId",
-                  type: "uint256",
-                },
-                {
-                  internalType: "uint256[]",
-                  name: "_collectionIds",
-                  type: "uint256[]",
-                },
-              ],
-              name: "addCollectionToDrop",
-              outputs: [],
-              stateMutability: "nonpayable",
-              type: "function",
-            },
-      ],
-      functionName: "addCollectionToDrop",
-      enabled: Boolean(addArgs),
-      args: addArgs,
-    });
-
-  const { writeAsync: writeAddAsync } = useContractWrite(addConfig);
-
-  const { config: deleteConfig } = usePrepareContractWrite({
-    address: dropValues?.old
-      ? CHROMADIN_DROP_CONTRACT
-      : CHROMADIN_DROP_CONTRACT_UPDATED,
-    abi: [
-      {
-        inputs: [
-          {
-            internalType: "uint256",
-            name: "_dropId",
-            type: "uint256",
-          },
-        ],
-        name: "deleteDrop",
-        outputs: [],
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-    ],
-    functionName: "deleteDrop",
-    args: [dropValues?.id as any],
-  });
-
-  const { writeAsync: deleteWriteAsync } = useContractWrite(deleteConfig);
-
-  const {
-    config: removeCollectionConfig,
-    isSuccess: removeCollectionIsSuccess,
-  } = usePrepareContractWrite({
-    address: dropValues?.old
-      ? CHROMADIN_DROP_CONTRACT
-      : CHROMADIN_DROP_CONTRACT_UPDATED,
-    abi: [
-      {
-        inputs: [
-          {
-            internalType: "uint256",
-            name: "_collectionId",
-            type: "uint256",
-          },
-        ],
-        name: "removeCollectionFromDrop",
-        outputs: [],
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-    ],
-    functionName: "removeCollectionFromDrop",
-    enabled: Boolean(collectionToRemove !== 0),
-    args: [collectionToRemove] as any,
-  });
-
-  const { writeAsync: removeCollectionWriteAsync } = useContractWrite(
-    removeCollectionConfig
-  );
 
   const addDrop = async (): Promise<void> => {
     if (!dropValues.image || !dropValues.title) {
@@ -212,34 +74,49 @@ const useAddDrop = () => {
         }),
       });
       const responseJSON = await response.json();
-      setDropArgs([
-        chosenCollections.map((chosenName) => {
-          const matchingCollection = allCollections.find(
-            (collection) => collection.name === chosenName
-          );
-          return matchingCollection
-            ? Number(matchingCollection.collectionId)
-            : null;
-        }) as any,
-        `ipfs://${responseJSON.cid}`,
-      ]);
-    } catch (err: any) {
-      console.error(err.message);
-    }
-    setAddDropLoading(false);
-  };
 
-  const addDropWrite = async (): Promise<void> => {
-    setAddDropLoading(true);
-    try {
-      let tx = await writeAsync?.();
-      await waitForTransaction({
-        hash: tx?.hash!,
-        async onSpeedUp(newTransaction) {
-          await newTransaction.wait();
-          tx!.hash = newTransaction.hash as any;
-        },
+      const { request } = await publicClient.simulateContract({
+        address: dropValues?.old
+          ? CHROMADIN_DROP_CONTRACT
+          : CHROMADIN_DROP_CONTRACT_UPDATED,
+        abi: [
+          {
+            inputs: [
+              {
+                internalType: "uint256[]",
+                name: "_collectionIds",
+                type: "uint256[]",
+              },
+              { internalType: "string", name: "_dropURI", type: "string" },
+            ],
+            name: "createDrop",
+            outputs: [],
+            stateMutability: "nonpayable",
+            type: "function",
+          },
+        ],
+        value: BigInt(0),
+        chain: polygon,
+        functionName: "createDrop",
+        args: [
+          chosenCollections.map((chosenName) => {
+            const matchingCollection = allCollections.find(
+              (collection) => collection.name === chosenName
+            );
+            return matchingCollection
+              ? Number(matchingCollection.collectionId)
+              : null;
+          }) as any,
+          `ipfs://${responseJSON.cid}`,
+        ],
+        account: address,
       });
+      const clientWallet = createWalletClient({
+        chain: polygon,
+        transport: custom((window as any).ethereum),
+      });
+      const res = await clientWallet.writeContract(request);
+      await publicClient.waitForTransactionReceipt({ hash: res });
       dispatch(
         setSuccessModal({
           actionOpen: true,
@@ -263,9 +140,7 @@ const useAddDrop = () => {
           actionOld: false,
         })
       );
-      setDropArgs(undefined);
     } catch (err: any) {
-      console.error(err.message);
       dispatch(
         setIndexModal({
           actionValue: true,
@@ -280,6 +155,7 @@ const useAddDrop = () => {
           })
         );
       }, 4000);
+      console.error(err.message);
     }
     setAddDropLoading(false);
   };
@@ -317,10 +193,10 @@ const useAddDrop = () => {
       setAvailableCollectionIds(
         dropValues?.old
           ? colls?.data?.collectionMinteds
-          ?.filter((c: any) => !dropIds.includes(c.collectionId))
+              ?.filter((c: any) => !dropIds.includes(c.collectionId))
               .map((c: any) => c.name)
           : updatedColls?.data?.updatedChromadinCollectionCollectionMinteds
-          ?.filter((c: any) => !dropIdsUpdated.includes(c.collectionId))
+              ?.filter((c: any) => !dropIdsUpdated.includes(c.collectionId))
               .map((c: any) => c.name)
       );
 
@@ -339,7 +215,7 @@ const useAddDrop = () => {
       );
       setAlreadyInDrop(
         allCollections
-        ?.filter((cd) => {
+          ?.filter((cd) => {
             const blockstampCondition = dropValues.old
               ? Number(cd.blockNumber) < 45189643
               : Number(cd.blockNumber) >= 45189643;
@@ -352,7 +228,7 @@ const useAddDrop = () => {
       );
       setAlreadyInDropIds(
         allCollections
-        ?.filter((cd) => {
+          ?.filter((cd) => {
             const blockstampCondition = dropValues.old
               ? Number(cd.blockNumber) < 45189643
               : Number(cd.blockNumber) >= 45189643;
@@ -384,70 +260,108 @@ const useAddDrop = () => {
       }
       setAddDropLoading(true);
       try {
-        setAddArgs([
-          Number(dropValues.id) as any,
-          dropValues?.old
-            ? Number(
-                allCollections.find((collection) => {
-                  return (
-                    collection.name ===
-                    chosenCollections[chosenCollections?.length - 1]
-                  );
-                })?.collectionId
-              )
-            : ([
-                Number(
+        const { request } = await publicClient.simulateContract({
+          address: dropValues?.old
+            ? CHROMADIN_DROP_CONTRACT
+            : CHROMADIN_DROP_CONTRACT_UPDATED,
+          abi: [
+            dropValues?.old
+              ? {
+                  inputs: [
+                    {
+                      internalType: "uint256",
+                      name: "_dropId",
+                      type: "uint256",
+                    },
+                    {
+                      internalType: "uint256",
+                      name: "_collectionId",
+                      type: "uint256",
+                    },
+                  ],
+                  name: "addCollectionToDrop",
+                  outputs: [],
+                  stateMutability: "nonpayable",
+                  type: "function",
+                }
+              : {
+                  inputs: [
+                    {
+                      internalType: "uint256",
+                      name: "_dropId",
+                      type: "uint256",
+                    },
+                    {
+                      internalType: "uint256[]",
+                      name: "_collectionIds",
+                      type: "uint256[]",
+                    },
+                  ],
+                  name: "addCollectionToDrop",
+                  outputs: [],
+                  stateMutability: "nonpayable",
+                  type: "function",
+                },
+          ],
+          value: BigInt(0),
+          chain: polygon,
+          functionName: "addCollectionToDrop",
+          args: [
+            Number(dropValues.id) as any,
+            dropValues?.old
+              ? Number(
                   allCollections.find((collection) => {
                     return (
                       collection.name ===
                       chosenCollections[chosenCollections?.length - 1]
                     );
                   })?.collectionId
-                ) as any,
-              ] as any),
-        ]);
+                )
+              : ([
+                  Number(
+                    allCollections.find((collection) => {
+                      return (
+                        collection.name ===
+                        chosenCollections[chosenCollections?.length - 1]
+                      );
+                    })?.collectionId
+                  ) as any,
+                ] as any),
+          ],
+          account: address,
+        });
+        const clientWallet = createWalletClient({
+          chain: polygon,
+          transport: custom((window as any).ethereum),
+        });
+        const res = await clientWallet.writeContract(request);
+        await publicClient.waitForTransactionReceipt({ hash: res });
+
+        const newDrops = await getAllDrops(address);
+        const newDropsUpdated = await getAllDropsUpdated(address);
+        dispatch(
+          setAllDropsRedux([
+            ...(newDrops.data.dropCreateds || []),
+            ...(newDropsUpdated.data.updatedChromadinDropDropCreateds || []),
+          ])
+        );
+        dispatch(
+          setSuccessModal({
+            actionOpen: true,
+            actionMedia: dropValues.image,
+            actionLink: `http://www.chromadin.xyz/autograph/${
+              prof?.split(".lens")[0]
+            }/drop/${dropValues.title?.replaceAll(" ", "_").toLowerCase()}`,
+            actionMessage:
+              "Collection Added! You can view your live drop here:",
+          })
+        );
+        dispatch(setDropSwitcher("drops"));
       } catch (err: any) {
         console.error(err.message);
       }
       setAddDropLoading(false);
     } catch (err: any) {
-      console.error(err.message);
-    }
-  };
-
-  const addMoreWrite = async () => {
-    setAddDropLoading(true);
-    try {
-      let tx = await writeAddAsync?.();
-      await waitForTransaction({
-        hash: tx?.hash!,
-        async onSpeedUp(newTransaction) {
-          await newTransaction.wait();
-          tx!.hash = newTransaction.hash as any;
-        },
-      });
-      const newDrops = await getAllDrops(address);
-      const newDropsUpdated = await getAllDropsUpdated(address);
-      dispatch(
-        setAllDropsRedux([
-          ...(newDrops.data.dropCreateds || []),
-          ...(newDropsUpdated.data.updatedChromadinDropDropCreateds || []),
-        ])
-      );
-      dispatch(
-        setSuccessModal({
-          actionOpen: true,
-          actionMedia: dropValues.image,
-          actionLink: `http://www.chromadin.xyz/autograph/${
-            prof?.split(".lens")[0]
-          }/drop/${dropValues.title?.replaceAll(" ", "_").toLowerCase()}`,
-          actionMessage: "Collection Added! You can view your live drop here:",
-        })
-      );
-      dispatch(setDropSwitcher("drops"));
-      setAddArgs(undefined);
-    } catch (err: any) {
-      console.error(err.message);
       dispatch(
         setIndexModal({
           actionValue: true,
@@ -462,21 +376,44 @@ const useAddDrop = () => {
           })
         );
       }, 4000);
+      console.error(err.message);
     }
-    setAddDropLoading(false);
   };
 
   const deleteDrop = async (): Promise<void> => {
     setDeleteDropLoading(true);
     try {
-      let tx = await deleteWriteAsync?.();
-      await waitForTransaction({
-        hash: tx?.hash!,
-        async onSpeedUp(newTransaction) {
-          await newTransaction.wait();
-          tx!.hash = newTransaction.hash as any;
-        },
+      const { request } = await publicClient.simulateContract({
+        address: dropValues?.old
+          ? CHROMADIN_DROP_CONTRACT
+          : CHROMADIN_DROP_CONTRACT_UPDATED,
+        abi: [
+          {
+            inputs: [
+              {
+                internalType: "uint256",
+                name: "_dropId",
+                type: "uint256",
+              },
+            ],
+            name: "deleteDrop",
+            outputs: [],
+            stateMutability: "nonpayable",
+            type: "function",
+          },
+        ],
+        value: BigInt(0),
+        chain: polygon,
+        functionName: "deleteDrop",
+        args: [dropValues?.id],
+        account: address,
       });
+      const clientWallet = createWalletClient({
+        chain: polygon,
+        transport: custom((window as any).ethereum),
+      });
+      const res = await clientWallet.writeContract(request);
+      await publicClient.waitForTransactionReceipt({ hash: res });
       const newDrops = await getAllDrops(address);
       const newDropsUpdated = await getAllDropsUpdated(address);
       dispatch(
@@ -525,36 +462,39 @@ const useAddDrop = () => {
       )
     );
     try {
-      setCollectionRemoveIndex(index);
-      setCollectionToRemove(collectionId);
-    } catch (err: any) {
-      console.error(err.message);
-    }
-    setRemoveCollectionLoading(
-      removeCollectionLoading.map((element, i) =>
-        i === index ? false : element
-      )
-    );
-  };
-
-  const removeCollectionWrite = async () => {
-    setRemoveCollectionLoading(
-      removeCollectionLoading.map((element, i) =>
-        i === collectionRemoveIndex ? true : element
-      )
-    );
-    try {
-      let tx = await removeCollectionWriteAsync?.();
-      await waitForTransaction({
-        hash: tx?.hash!,
-        async onSpeedUp(newTransaction) {
-          await newTransaction.wait();
-          tx!.hash = newTransaction.hash as any;
-        },
+      const { request } = await publicClient.simulateContract({
+        address: dropValues?.old
+          ? CHROMADIN_DROP_CONTRACT
+          : CHROMADIN_DROP_CONTRACT_UPDATED,
+        abi: [
+          {
+            inputs: [
+              {
+                internalType: "uint256",
+                name: "_collectionId",
+                type: "uint256",
+              },
+            ],
+            name: "removeCollectionFromDrop",
+            outputs: [],
+            stateMutability: "nonpayable",
+            type: "function",
+          },
+        ],
+        value: BigInt(0),
+        chain: polygon,
+        functionName: "removeCollectionFromDrop",
+        args: [collectionId],
+        account: address,
       });
+      const clientWallet = createWalletClient({
+        chain: polygon,
+        transport: custom((window as any).ethereum),
+      });
+      const res = await clientWallet.writeContract(request);
+      await publicClient.waitForTransactionReceipt({ hash: res });
       const newDrops = await getAllDrops(address);
       const newDropsUpdated = await getAllDropsUpdated(address);
-      setCollectionToRemove(0);
       dispatch(
         setAllDropsRedux([
           ...(newDrops.data.dropCreateds || []),
@@ -571,7 +511,6 @@ const useAddDrop = () => {
         })
       );
     } catch (err: any) {
-      console.error(err.message);
       dispatch(
         setIndexModal({
           actionValue: true,
@@ -586,31 +525,14 @@ const useAddDrop = () => {
           })
         );
       }, 4000);
+      console.error(err.message);
     }
     setRemoveCollectionLoading(
       removeCollectionLoading.map((element, i) =>
-        i === collectionRemoveIndex ? false : element
+        i === index ? false : element
       )
     );
   };
-
-  useEffect(() => {
-    if (removeCollectionIsSuccess) {
-      removeCollectionWrite();
-    }
-  }, [removeCollectionIsSuccess]);
-
-  useEffect(() => {
-    if (isSuccess) {
-      addDropWrite();
-    }
-  }, [isSuccess]);
-
-  useEffect(() => {
-    if (addIsSuccess) {
-      addMoreWrite();
-    }
-  }, [addIsSuccess]);
 
   useEffect(() => {
     if (address && dropSwitcher === "add") {

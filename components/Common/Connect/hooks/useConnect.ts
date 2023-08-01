@@ -1,6 +1,6 @@
 import { useAccountModal, useConnectModal } from "@rainbow-me/rainbowkit";
 import { UseConnectResults } from "../types/connect.types";
-import { useAccount, useSignMessage } from "wagmi";
+import { useAccount } from "wagmi";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getAddress,
@@ -15,7 +15,6 @@ import authenticate from "@/graphql/lens/mutations/authenticate";
 import { useEffect, useState } from "react";
 import generateChallenge from "@/graphql/lens/queries/generateChallenge";
 import getDefaultProfile from "@/graphql/lens/queries/getDefaultProfile";
-import { useContractRead } from "wagmi";
 import { CHROMADIN_ACCESS_CONTROLS } from "@/lib/constants";
 import { setIsCreator } from "@/redux/reducers/isCreatorSlice";
 import { useRouter } from "next/router";
@@ -25,11 +24,17 @@ import { setLookAround } from "@/redux/reducers/lookAroundSlice";
 import { setCreatorToken } from "@/lib/utils";
 import { RootState } from "@/redux/store";
 import { setAutographHandle } from "@/redux/reducers/autographHandleSlice";
+import { createPublicClient, createWalletClient, custom, http } from "viem";
+import { polygon } from "viem/chains";
 
 const useConnect = (): UseConnectResults => {
   const { openConnectModal } = useConnectModal();
   const { openAccountModal } = useAccountModal();
   const dispatch = useDispatch();
+  const publicClient = createPublicClient({
+    chain: polygon,
+    transport: http(),
+  });
   const { address, isConnected } = useAccount();
   const [connected, setConnected] = useState<boolean>(false);
   const router = useRouter();
@@ -37,39 +42,46 @@ const useConnect = (): UseConnectResults => {
     (state: RootState) => state.app.lensProfileReducer.profile
   );
 
-  const { data, isSuccess } = useContractRead({
-    address: CHROMADIN_ACCESS_CONTROLS,
-    abi: [
-      {
-        inputs: [
+  const getIsCreator = async () => {
+    try {
+      const data = await publicClient.readContract({
+        address: CHROMADIN_ACCESS_CONTROLS,
+        abi: [
           {
-            internalType: "address",
-            name: "_writer",
-            type: "address",
+            inputs: [
+              {
+                internalType: "address",
+                name: "_writer",
+                type: "address",
+              },
+            ],
+            name: "isWriter",
+            outputs: [
+              {
+                internalType: "bool",
+                name: "",
+                type: "bool",
+              },
+            ],
+            stateMutability: "view",
+            type: "function",
           },
         ],
-        name: "isWriter",
-        outputs: [
-          {
-            internalType: "bool",
-            name: "",
-            type: "bool",
-          },
-        ],
-        stateMutability: "view",
-        type: "function",
-      },
-    ],
-    functionName: "isWriter",
-    args: [address as `0x${string}`],
-    enabled: connected,
-  });
+        functionName: "isWriter",
+        args: [address as `0x${string}`],
+      });
 
-  const { signMessageAsync } = useSignMessage({
-    onError() {
-      dispatch(setAuthStatus(false));
-    },
-  });
+      if (data && router) {
+        dispatch(setIsCreator(data as boolean));
+      } else {
+        dispatch(setLookAround(true));
+      }
+
+      setCreatorToken((data as boolean) ? (data as boolean) : false);
+    } catch (err: any) {
+      console.error(err.message);
+    }
+  };
 
   const handleConnect = (): void => {
     openConnectModal && openConnectModal();
@@ -78,7 +90,12 @@ const useConnect = (): UseConnectResults => {
   const handleLensSignIn = async (): Promise<void> => {
     try {
       const challengeResponse = await generateChallenge(address);
-      const signature = await signMessageAsync({
+      const clientWallet = createWalletClient({
+        chain: polygon,
+        transport: custom((window as any).ethereum),
+      });
+      const signature = await clientWallet.signMessage({
+        account: address as `0x${string}`,
         message: challengeResponse.data.challenge.text,
       });
       const accessTokens = await authenticate(
@@ -96,6 +113,7 @@ const useConnect = (): UseConnectResults => {
         }
       }
     } catch (err: any) {
+      dispatch(setAuthStatus(false));
       console.error(err.message);
     }
   };
@@ -162,18 +180,8 @@ const useConnect = (): UseConnectResults => {
     if (!lensProfile && isConnected) {
       getProfileforAutograph();
     }
+    getIsCreator();
   }, [isConnected, lensProfile]);
-
-  useEffect(() => {
-    if (isSuccess) {
-      if (data && router) {
-        dispatch(setIsCreator(data as boolean));
-      } else {
-        dispatch(setLookAround(true));
-      }
-    }
-    setCreatorToken((data as boolean) ? (data as boolean) : false);
-  }, [data, isSuccess]);
 
   return {
     handleConnect,
