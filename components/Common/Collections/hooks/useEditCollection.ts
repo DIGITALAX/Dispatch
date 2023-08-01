@@ -12,11 +12,17 @@ import { setUpdateCollection } from "@/redux/reducers/updateCollectionSlice";
 import { RootState } from "@/redux/store";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useContractWrite, usePrepareContractWrite } from "wagmi";
-import { waitForTransaction } from "@wagmi/core";
+import { useAccount } from "wagmi";
+import { createPublicClient, createWalletClient, custom, http } from "viem";
+import { polygon } from "viem/chains";
 
 const useEditCollection = () => {
   const dispatch = useDispatch();
+  const { address } = useAccount();
+  const publicClient = createPublicClient({
+    chain: polygon,
+    transport: http(),
+  });
   const collectionValues = useSelector(
     (state: RootState) => state.app.collectionDetailsReducer
   );
@@ -31,95 +37,6 @@ const useEditCollection = () => {
     useState<boolean>(false);
   const [updateCollectionLoading, setUpdateCollectionLoading] =
     useState<boolean>(false);
-  const [collectionURIArgs, setCollectionURIArgs] = useState<string>();
-
-  const { config: burnConfig, error } = usePrepareContractWrite({
-    address: collectionValues?.old
-      ? CHROMADIN_COLLECTION_CONTRACT
-      : CHROMADIN_COLLECTION_CONTRACT_UPDATED,
-    abi: [
-      {
-        inputs: [
-          { internalType: "uint256", name: "_collectionId", type: "uint256" },
-        ],
-        name: "burnCollection",
-        outputs: [],
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-    ],
-    functionName: "burnCollection",
-    args: [collectionValues?.id as any],
-  });
-
-  const { writeAsync: burnWriteAsync } = useContractWrite(burnConfig);
-
-  const { config: valuesConfig, isSuccess } = usePrepareContractWrite({
-    address: CHROMADIN_COLLECTION_CONTRACT_UPDATED,
-    abi: [
-      {
-        inputs: [
-          {
-            internalType: "uint256",
-            name: "_collectionId",
-            type: "uint256",
-          },
-          {
-            internalType: "string",
-            name: "_collectionName",
-            type: "string",
-          },
-          {
-            internalType: "string",
-            name: "_newURI",
-            type: "string",
-          },
-          {
-            internalType: "uint256[]",
-            name: "_newPrices",
-            type: "uint256[]",
-          },
-          {
-            internalType: "address[]",
-            name: "_newAcceptedTokens",
-            type: "address[]",
-          },
-        ],
-        name: "updateCollectionValues",
-        outputs: [],
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-    ],
-    functionName: "updateCollectionValues",
-    args: [
-      collectionValues.id as any,
-      collectionValues?.title as any,
-      collectionURIArgs as string,
-      collectionValues?.tokenPrices.map((price, i: number) => {
-        if (
-          i === collectionValues.acceptedTokens.indexOf(AVAILABLE_TOKENS[2][1])
-        ) {
-          return (BigInt(price) * BigInt(10 ** 6)).toString();
-        } else if (Number.isInteger(price)) {
-          return (BigInt(price) * BigInt(10 ** 18)).toString();
-        } else {
-          const [wholePart, decimalPart] = price
-            ?.toFixed(2)
-            ?.toString()
-            ?.split(".");
-          const decimalPlaces = decimalPart.length;
-          const factor = BigInt(10 ** (18 - decimalPlaces));
-          const adjustedPrice = BigInt(wholePart + decimalPart) * factor;
-          return adjustedPrice.toString();
-        }
-      }) as any,
-      collectionValues?.acceptedTokens as any,
-    ],
-    enabled: Boolean(collectionURIArgs),
-  });
-
-  const { writeAsync: valuesWriteAsync } = useContractWrite(valuesConfig);
 
   const updateCollection = async () => {
     if (collectionValues?.old) return;
@@ -143,7 +60,7 @@ const useEditCollection = () => {
         })
       );
       return;
-    } 
+    }
     setUpdateCollectionLoading(true);
     try {
       const response = await fetch("/api/ipfs", {
@@ -164,33 +81,88 @@ const useEditCollection = () => {
             }),
       });
       const responseJSON = await response.json();
-      setCollectionURIArgs(`ipfs://${responseJSON.cid}`);
-    } catch (err: any) {
-      console.error(err.message);
-    }
-    setUpdateCollectionLoading(true);
-  };
 
-  const updateCollectionWrite = async () => {
-    if (collectionValues?.old) return;
-    setUpdateCollectionLoading(true);
-    try {
+      const { request } = await publicClient.simulateContract({
+        address: CHROMADIN_COLLECTION_CONTRACT_UPDATED,
+        abi: [
+          {
+            inputs: [
+              {
+                internalType: "uint256",
+                name: "_collectionId",
+                type: "uint256",
+              },
+              {
+                internalType: "string",
+                name: "_collectionName",
+                type: "string",
+              },
+              {
+                internalType: "string",
+                name: "_newURI",
+                type: "string",
+              },
+              {
+                internalType: "uint256[]",
+                name: "_newPrices",
+                type: "uint256[]",
+              },
+              {
+                internalType: "address[]",
+                name: "_newAcceptedTokens",
+                type: "address[]",
+              },
+            ],
+            name: "updateCollectionValues",
+            outputs: [],
+            stateMutability: "nonpayable",
+            type: "function",
+          },
+        ],
+        functionName: "updateCollectionValues",
+        value: BigInt(0),
+        chain: polygon,
+        args: [
+          collectionValues.id as any,
+          collectionValues?.title as any,
+          `ipfs://${responseJSON.cid}`,
+          collectionValues?.tokenPrices.map((price, i: number) => {
+            if (
+              i ===
+              collectionValues.acceptedTokens.indexOf(AVAILABLE_TOKENS[2][1])
+            ) {
+              return (BigInt(price) * BigInt(10 ** 6)).toString();
+            } else if (Number.isInteger(price)) {
+              return (BigInt(price) * BigInt(10 ** 18)).toString();
+            } else {
+              const [wholePart, decimalPart] = price
+                ?.toFixed(2)
+                ?.toString()
+                ?.split(".");
+              const decimalPlaces = decimalPart.length;
+              const factor = BigInt(10 ** (18 - decimalPlaces));
+              const adjustedPrice = BigInt(wholePart + decimalPart) * factor;
+              return adjustedPrice.toString();
+            }
+          }) as any,
+          collectionValues?.acceptedTokens as any,
+        ],
+        account: address,
+      });
+
+      const clientWallet = createWalletClient({
+        chain: polygon,
+        transport: custom((window as any).ethereum),
+      });
       dispatch(
         setIndexModal({
           actionValue: true,
           actionMessage: "Updating Collection",
         })
       );
-      let tx = await valuesWriteAsync?.();
-      await waitForTransaction({
-        hash: tx?.hash!,
-        async onSpeedUp(newTransaction) {
-          await newTransaction.wait();
-          tx!.hash = newTransaction.hash as any;
-        },
-      });
+      const res = await clientWallet.writeContract(request);
+      await publicClient.waitForTransactionReceipt({ hash: res });
       dispatch(setUpdateCollection(false));
-      setCollectionURIArgs(undefined);
       dispatch(
         setIndexModal({
           actionValue: false,
@@ -205,9 +177,8 @@ const useEditCollection = () => {
           actionMessage:
             "Collection Updated! Your Collection has been updated.",
         })
-      );  
+      );
     } catch (err: any) {
-      console.error(err.message);
       dispatch(
         setIndexModal({
           actionValue: true,
@@ -222,8 +193,9 @@ const useEditCollection = () => {
           })
         );
       }, 4000);
+      console.error(err.message);
     }
-    setUpdateCollectionLoading(false);
+    setUpdateCollectionLoading(true);
   };
 
   const deleteCollection = async (): Promise<void> => {
@@ -235,14 +207,46 @@ const useEditCollection = () => {
           actionMessage: "Deleting Collection",
         })
       );
-      let tx = await burnWriteAsync?.();
-      await waitForTransaction({
-        hash: tx?.hash!,
-        async onSpeedUp(newTransaction) {
-          await newTransaction.wait();
-          tx!.hash = newTransaction.hash as any;
-        },
+
+      const { request } = await publicClient.simulateContract({
+        address: collectionValues?.old
+          ? CHROMADIN_COLLECTION_CONTRACT
+          : CHROMADIN_COLLECTION_CONTRACT_UPDATED,
+        abi: [
+          {
+            inputs: [
+              {
+                internalType: "uint256",
+                name: "_collectionId",
+                type: "uint256",
+              },
+            ],
+            name: "burnCollection",
+            outputs: [],
+            stateMutability: "nonpayable",
+            type: "function",
+          },
+        ],
+        functionName: "burnCollection",
+        value: BigInt(0),
+        chain: polygon,
+        args: [collectionValues?.id],
+        account: address,
       });
+
+      const clientWallet = createWalletClient({
+        chain: polygon,
+        transport: custom((window as any).ethereum),
+      });
+      dispatch(
+        setIndexModal({
+          actionValue: true,
+          actionMessage: "Updating Collection",
+        })
+      );
+      const res = await clientWallet.writeContract(request);
+      await publicClient.waitForTransactionReceipt({ hash: res });
+
       dispatch(
         setIndexModal({
           actionValue: false,
@@ -298,12 +302,6 @@ const useEditCollection = () => {
 
     setDeleteCollectionLoading(false);
   };
-
-  useEffect(() => {
-    if (isSuccess) {
-      updateCollectionWrite();
-    }
-  }, [isSuccess]);
 
   useEffect(() => {
     if (!updateCollectionBool && updateCollectionLoading) {

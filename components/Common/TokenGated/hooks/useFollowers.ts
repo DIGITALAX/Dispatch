@@ -9,35 +9,31 @@ import handleIndexCheck from "@/lib/helpers/handleIndexCheck";
 import { setIndexModal } from "@/redux/reducers/indexModalSlice";
 import { RootState } from "@/redux/store";
 import { splitSignature } from "ethers/lib/utils.js";
-import { omit } from "lodash";
+import { add, omit } from "lodash";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  useAccount,
-  useContractWrite,
-  usePrepareContractWrite,
-  usePrepareSendTransaction,
-  useSendTransaction,
-  useSignTypedData,
-} from "wagmi";
+import { useAccount } from "wagmi";
 import { LENS_HUB_PROXY_ADDRESS_MATIC } from "@/lib/constants";
 import LensHubProxy from "./../../../../abis/LensHubProxy.json";
 import { setLensProfile } from "@/redux/reducers/lensProfileSlice";
 import getDefaultProfile from "@/graphql/lens/queries/getDefaultProfile";
 import { setModal } from "@/redux/reducers/modalSlice";
 import { setFollowerOnly } from "@/redux/reducers/followerOnlySlice";
-import { waitForTransaction } from "@wagmi/core";
 import pollUntilIndexed from "@/graphql/lens/queries/checkIndexed";
 import createFollowTypedData from "@/graphql/lens/queries/follow";
 import createFollowModule from "@/lib/helpers/createFollowModule";
-import { FollowArgs } from "../types/allPosts.types";
+import { createPublicClient, createWalletClient, custom, http } from "viem";
+import { polygon } from "viem/chains";
 
 const useFollowers = () => {
   const dispatch = useDispatch();
+  const publicClient = createPublicClient({
+    chain: polygon,
+    transport: http(),
+  });
   const { address } = useAccount();
   const [profile, setProfile] = useState<Profile | undefined>();
   const [followLoading, setFollowLoading] = useState<boolean>(false);
-  const [followArgs, setFollowArgs] = useState<any>();
   const followerId = useSelector(
     (state: RootState) => state.app.followerOnlyReducer
   );
@@ -48,17 +44,6 @@ const useFollowers = () => {
   const profileId = useSelector(
     (state: RootState) => state.app.lensProfileReducer.profile?.id
   );
-  const { signTypedDataAsync } = useSignTypedData();
-
-  const { config, isSuccess } = usePrepareContractWrite({
-    address: LENS_HUB_PROXY_ADDRESS_MATIC,
-    abi: LensHubProxy,
-    functionName: "followWithSig",
-    enabled: Boolean(followArgs),
-    args: [followArgs],
-  });
-
-  const { writeAsync } = useContractWrite(config);
 
   const getProfile = async (): Promise<void> => {
     try {
@@ -88,29 +73,20 @@ const useFollowers = () => {
     );
   };
 
-  const { config: approvalConfig } = usePrepareSendTransaction({
-    request: {
-      to: approvalArgs?.to as string,
-      from: approvalArgs?.from as string,
-      data: approvalArgs?.data as string,
-    },
-    // enabled: Boolean(approvalSendEnabled),
-  });
-
-  const { sendTransactionAsync, isSuccess: approvalSuccess } =
-    useSendTransaction(approvalConfig);
-
   const callApprovalSign = async (): Promise<void> => {
     try {
-      let tx = await sendTransactionAsync?.();
-      const res = await waitForTransaction({
-        hash: tx?.hash!,
-        async onSpeedUp(newTransaction) {
-          await newTransaction.wait();
-          tx!.hash = newTransaction.hash as any;
-        },
+      const clientWallet = createWalletClient({
+        chain: polygon,
+        transport: custom((window as any).ethereum),
       });
-      await pollUntilIndexed(res?.transactionHash as string, false);
+
+      const res = await clientWallet.sendTransaction({
+        to: approvalArgs?.to as `0x${string}`,
+        value: BigInt(approvalArgs?.data as string),
+        account: approvalArgs?.from as `0x${string}`,
+      });
+      await publicClient.waitForTransactionReceipt({ hash: res });
+      await pollUntilIndexed(res as string, false);
       await approvedFollow();
     } catch (err: any) {
       setFollowLoading(false);
@@ -150,10 +126,17 @@ const useFollowers = () => {
 
       const typedData: any = response?.data?.createFollowTypedData?.typedData;
 
-      const signature: any = await signTypedDataAsync({
+      const clientWallet = createWalletClient({
+        chain: polygon,
+        transport: custom((window as any).ethereum),
+      });
+
+      const signature: any = await clientWallet.signTypedData({
         domain: omit(typedData?.domain, ["__typename"]),
-        types: omit(typedData?.types, ["__typename"]) as any,
-        value: omit(typedData?.value, ["__typename"]) as any,
+        types: omit(typedData?.types, ["__typename"]),
+        primaryType: "FollowWithSig",
+        message: omit(typedData?.value, ["__typename"]),
+        account: address as `0x${string}`,
       });
 
       const broadcastResult: any = await broadcast({
@@ -163,18 +146,31 @@ const useFollowers = () => {
 
       if (broadcastResult?.data?.broadcast?.__typename !== "RelayerResult") {
         const { v, r, s } = splitSignature(signature);
-        const followArgs: FollowArgs = {
-          follower: address as string,
-          profileIds: typedData?.value?.profileIds,
-          datas: typedData?.value?.datas,
-          sig: {
-            v,
-            r,
-            s,
-            deadline: typedData?.value?.deadline,
-          },
-        };
-        setFollowArgs(followArgs);
+        const { request } = await publicClient.simulateContract({
+          address: LENS_HUB_PROXY_ADDRESS_MATIC,
+          abi: LensHubProxy,
+          functionName: "followWithSig",
+          args: [
+            {
+              follower: address as string,
+              profileIds: typedData?.value?.profileIds,
+              datas: typedData?.value?.datas,
+              sig: {
+                v,
+                r,
+                s,
+                deadline: typedData?.value?.deadline,
+              },
+            },
+          ],
+          account: address,
+        });
+        const res = await clientWallet.writeContract(request);
+        await publicClient.waitForTransactionReceipt({ hash: res });
+
+        clearFollow();
+        await handleIndexCheck(res, dispatch, false);
+        await refetchProfile();
       } else {
         clearFollow();
         setFollowLoading(false);
@@ -196,30 +192,11 @@ const useFollowers = () => {
             actionMessage: "Insufficient Balance to Follow.",
           })
         );
+      } else {
+        dispatch(setIndexModal("Unsuccessful. Please Try Again."));
       }
       console.error(err.message);
     }
-  };
-
-  const followWrite = async (): Promise<void> => {
-    setFollowLoading(true);
-    try {
-      let tx = await writeAsync?.();
-      clearFollow();
-      const res = await waitForTransaction({
-        hash: tx?.hash!,
-        async onSpeedUp(newTransaction) {
-          await newTransaction.wait();
-          tx!.hash = newTransaction.hash as any;
-        },
-      });
-      await handleIndexCheck(res?.transactionHash, dispatch, false);
-      await refetchProfile();
-    } catch (err: any) {
-      console.error(err.message);
-      dispatch(setIndexModal("Unsuccessful. Please Try Again."));
-    }
-    setFollowLoading(false);
   };
 
   const refetchProfile = async (): Promise<void> => {
@@ -247,12 +224,6 @@ const useFollowers = () => {
       })
     );
   };
-
-  useEffect(() => {
-    if (isSuccess) {
-      followWrite();
-    }
-  }, [isSuccess]);
 
   useEffect(() => {
     if (followerId.open) {

@@ -9,14 +9,19 @@ import { setIndexModal } from "@/redux/reducers/indexModalSlice";
 import { setModal } from "@/redux/reducers/modalSlice";
 import { setSuccessModal } from "@/redux/reducers/successModalSlice";
 import { RootState } from "@/redux/store";
-import { BigNumber } from "ethers";
 import { FormEvent, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useContractWrite, usePrepareContractWrite } from "wagmi";
-import { waitForTransaction } from "@wagmi/core";
+import { createPublicClient, createWalletClient, custom, http } from "viem";
+import { polygon } from "viem/chains";
+import { useAccount } from "wagmi";
 
 const useAddCollection = () => {
   const dispatch = useDispatch();
+  const { address } = useAccount();
+  const publicClient = createPublicClient({
+    chain: polygon,
+    transport: http(),
+  });
   const [imageLoading, setImageLoading] = useState<boolean>(false);
   const [audioLoading, setAudioLoading] = useState<boolean>(false);
   const [addCollectionLoading, setAddCollectionLoading] =
@@ -29,60 +34,6 @@ const useAddCollection = () => {
   const collectionType = useSelector(
     (state: RootState) => state.app.collectionTypeReducer.value
   );
-  const [collectionArgs, setCollectionArgs] = useState<
-    | [
-        string,
-        BigNumber,
-        string,
-        readonly `0x${string}`[],
-        readonly BigNumber[]
-      ]
-    | undefined
-  >();
-
-  const { config, isSuccess } = usePrepareContractWrite({
-    address: CHROMADIN_COLLECTION_CONTRACT_UPDATED,
-    abi: [
-      {
-        inputs: [
-          {
-            internalType: "string",
-            name: "_uri",
-            type: "string",
-          },
-          {
-            internalType: "uint256",
-            name: "_amount",
-            type: "uint256",
-          },
-          {
-            internalType: "string",
-            name: "_collectionName",
-            type: "string",
-          },
-          {
-            internalType: "address[]",
-            name: "_acceptedTokens",
-            type: "address[]",
-          },
-          {
-            internalType: "uint256[]",
-            name: "_basePrices",
-            type: "uint256[]",
-          },
-        ],
-        name: "mintCollection",
-        outputs: [],
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-    ],
-    functionName: "mintCollection",
-    enabled: Boolean(collectionArgs),
-    args: collectionArgs,
-  });
-
-  const { writeAsync } = useContractWrite(config);
 
   const handleCollectionTitle = (e: FormEvent): void => {
     dispatch(
@@ -248,54 +199,85 @@ const useAddCollection = () => {
               }),
       });
       const responseJSON = await response.json();
-      setCollectionArgs([
-        `ipfs://${responseJSON.cid}`,
-        Math.ceil(collectionValues?.amount) as any,
-        collectionValues?.title,
-        collectionValues?.acceptedTokens as any,
-        collectionValues?.tokenPrices.map((price, i: number) => {
-          if (
-            i ===
-            collectionValues.acceptedTokens.indexOf(AVAILABLE_TOKENS[2][1])
-          ) {
-            return (BigInt(price) * BigInt(10 ** 6)).toString();
-          } else if (Number.isInteger(price)) {
-            return (BigInt(price) * BigInt(10 ** 18)).toString();
-          } else {
-            const [wholePart, decimalPart] = price
-              ?.toFixed(2)
-              ?.toString()
-              ?.split(".");
-            const decimalPlaces = decimalPart.length;
-            const factor = BigInt(10 ** (18 - decimalPlaces));
-            const adjustedPrice = BigInt(wholePart + decimalPart) * factor;
-            return adjustedPrice.toString();
-          }
-        }) as any,
-      ]);
-    } catch (err: any) {
-      console.error(err.message);
-    }
-    setAddCollectionLoading(false);
-  };
 
-  const addCollectionWrite = async (): Promise<void> => {
-    setAddCollectionLoading(true);
-    try {
       dispatch(
         setIndexModal({
           actionValue: true,
           actionMessage: "Minting Collection",
         })
       );
-      let tx = await writeAsync?.();
-      await waitForTransaction({
-        hash: tx?.hash!,
-        async onSpeedUp(newTransaction) {
-          await newTransaction.wait();
-          tx!.hash = newTransaction.hash as any;
-        },
+      const { request } = await publicClient.simulateContract({
+        address: CHROMADIN_COLLECTION_CONTRACT_UPDATED,
+        abi: [
+          {
+            inputs: [
+              {
+                internalType: "string",
+                name: "_uri",
+                type: "string",
+              },
+              {
+                internalType: "uint256",
+                name: "_amount",
+                type: "uint256",
+              },
+              {
+                internalType: "string",
+                name: "_collectionName",
+                type: "string",
+              },
+              {
+                internalType: "address[]",
+                name: "_acceptedTokens",
+                type: "address[]",
+              },
+              {
+                internalType: "uint256[]",
+                name: "_basePrices",
+                type: "uint256[]",
+              },
+            ],
+            name: "mintCollection",
+            outputs: [],
+            stateMutability: "nonpayable",
+            type: "function",
+          },
+        ],
+        functionName: "mintCollection",
+        value: BigInt(0),
+        args: [
+          `ipfs://${responseJSON.cid}`,
+          Math.ceil(collectionValues?.amount) as any,
+          collectionValues?.title,
+          collectionValues?.acceptedTokens as any,
+          collectionValues?.tokenPrices.map((price, i: number) => {
+            if (
+              i ===
+              collectionValues.acceptedTokens.indexOf(AVAILABLE_TOKENS[2][1])
+            ) {
+              return (BigInt(price) * BigInt(10 ** 6)).toString();
+            } else if (Number.isInteger(price)) {
+              return (BigInt(price) * BigInt(10 ** 18)).toString();
+            } else {
+              const [wholePart, decimalPart] = price
+                ?.toFixed(2)
+                ?.toString()
+                ?.split(".");
+              const decimalPlaces = decimalPart.length;
+              const factor = BigInt(10 ** (18 - decimalPlaces));
+              const adjustedPrice = BigInt(wholePart + decimalPart) * factor;
+              return adjustedPrice.toString();
+            }
+          }) as any,
+        ],
+        account: address,
       });
+      const clientWallet = createWalletClient({
+        chain: polygon,
+        transport: custom((window as any).ethereum),
+      });
+      const res = await clientWallet.writeContract(request);
+      await publicClient.waitForTransactionReceipt({ hash: res });
       dispatch(
         setIndexModal({
           actionValue: false,
@@ -332,9 +314,7 @@ const useAddCollection = () => {
           actionOld: false,
         })
       );
-      setCollectionArgs(undefined);
     } catch (err: any) {
-      console.error(err.message);
       dispatch(
         setIndexModal({
           actionValue: true,
@@ -349,15 +329,10 @@ const useAddCollection = () => {
           })
         );
       }, 4000);
+      console.error(err.message);
     }
     setAddCollectionLoading(false);
   };
-
-  useEffect(() => {
-    if (isSuccess) {
-      addCollectionWrite();
-    }
-  }, [isSuccess]);
 
   useEffect(() => {
     if (

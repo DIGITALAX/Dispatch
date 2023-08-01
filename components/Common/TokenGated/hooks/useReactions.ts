@@ -2,14 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import addReaction from "@/graphql/lens/mutations/react";
-import {
-  useAccount,
-  useContractWrite,
-  usePrepareContractWrite,
-  usePrepareSendTransaction,
-  useSendTransaction,
-  useSignTypedData,
-} from "wagmi";
+import { useAccount } from "wagmi";
 import { LENS_HUB_PROXY_ADDRESS_MATIC } from "@/lib/constants";
 import LensHubProxy from "../../../../abis/LensHubProxy.json";
 import handleIndexCheck from "@/lib/helpers/handleIndexCheck";
@@ -29,11 +22,16 @@ import checkApproved from "@/lib/helpers/checkApproved";
 import { setPostCollectValues } from "@/redux/reducers/postCollectSlice";
 import { setPurchase } from "@/redux/reducers/purchaseSlice";
 import { setModal } from "@/redux/reducers/modalSlice";
-import { waitForTransaction } from "@wagmi/core";
 import pollUntilIndexed from "@/graphql/lens/queries/checkIndexed";
 import { setFeedReactId } from "@/redux/reducers/feedReactIdSlice";
+import { createPublicClient, createWalletClient, custom, http } from "viem";
+import { polygon } from "viem/chains";
 
 const useReactions = () => {
+  const publicClient = createPublicClient({
+    chain: polygon,
+    transport: http(),
+  });
   const dispatcher = useSelector(
     (state: RootState) => state.app.dispatcherReducer.value
   );
@@ -56,9 +54,6 @@ const useReactions = () => {
   const feedSwitch = useSelector(
     (state: RootState) => state.app.feedSwitchReducer.value
   );
-
-  const [mirrorArgs, setMirrorArgs] = useState<any>();
-  const [collectArgs, setCollectArgs] = useState<any>();
   const [approvalLoading, setApprovalLoading] = useState<boolean>(false);
   const [collectInfoLoading, setCollectInfoLoading] = useState<boolean>(false);
   const [mirrorFeedLoading, setMirrorFeedLoading] = useState<boolean[]>(
@@ -83,27 +78,6 @@ const useReactions = () => {
   const [collectIndex, setCollectIndex] = useState<number>();
   const dispatch = useDispatch();
   const { address } = useAccount();
-  const { signTypedDataAsync } = useSignTypedData();
-
-  const { config, isSuccess } = usePrepareContractWrite({
-    address: LENS_HUB_PROXY_ADDRESS_MATIC,
-    abi: LensHubProxy,
-    functionName: "mirrorWithSig",
-    enabled: Boolean(mirrorArgs),
-    args: [mirrorArgs],
-  });
-
-  const { writeAsync } = useContractWrite(config);
-
-  const { config: collectConfig, isSuccess: isSuccessCollect } =
-    usePrepareContractWrite({
-      address: LENS_HUB_PROXY_ADDRESS_MATIC,
-      abi: LensHubProxy,
-      functionName: "collectWithSig",
-      enabled: Boolean(collectArgs),
-      args: [collectArgs],
-    });
-  const { writeAsync: collectWriteAsync } = useContractWrite(collectConfig);
 
   const reactPost = async (
     id: string,
@@ -247,10 +221,16 @@ const useReactions = () => {
 
         const typedData: any = mirrorPost.data.createMirrorTypedData.typedData;
 
-        const signature: any = await signTypedDataAsync({
+        const clientWallet = createWalletClient({
+          chain: polygon,
+          transport: custom((window as any).ethereum),
+        });
+        const signature: any = await clientWallet.signTypedData({
           domain: omit(typedData?.domain, ["__typename"]),
-          types: omit(typedData?.types, ["__typename"]) as any,
-          value: omit(typedData?.value, ["__typename"]) as any,
+          types: omit(typedData?.types, ["__typename"]),
+          primaryType: "MirrorWithSig",
+          message: omit(typedData?.value, ["__typename"]),
+          account: address as `0x${string}`,
         });
 
         const broadcastResult: any = await broadcast({
@@ -260,27 +240,45 @@ const useReactions = () => {
 
         if (broadcastResult?.data?.broadcast?.__typename !== "RelayerResult") {
           const { v, r, s } = splitSignature(signature);
-          const mirrorArgs = {
-            profileId: typedData.value.profileId,
-            profileIdPointed: typedData.value.profileIdPointed,
-            pubIdPointed: typedData.value.pubIdPointed,
-            referenceModuleData: typedData.value.referenceModuleData,
-            referenceModule: typedData.value.referenceModule,
-            referenceModuleInitData: typedData.value.referenceModuleInitData,
-            sig: {
-              v,
-              r,
-              s,
-              deadline: typedData.value.deadline,
-            },
-          };
-          setMirrorArgs(mirrorArgs);
+          const { request } = await publicClient.simulateContract({
+            address: LENS_HUB_PROXY_ADDRESS_MATIC,
+            abi: LensHubProxy,
+            functionName: "mirrorWithSig",
+            args: [
+              {
+                profileId: typedData.value.profileId,
+                profileIdPointed: typedData.value.profileIdPointed,
+                pubIdPointed: typedData.value.pubIdPointed,
+                referenceModuleData: typedData.value.referenceModuleData,
+                referenceModule: typedData.value.referenceModule,
+                referenceModuleInitData:
+                  typedData.value.referenceModuleInitData,
+                sig: {
+                  v,
+                  r,
+                  s,
+                  deadline: typedData.value.deadline,
+                },
+              },
+            ],
+            account: address,
+          });
+
           dispatch(
             setFeedReactId({
               actionValue: id,
               actionType: 1,
             })
           );
+          const res = await clientWallet.writeContract(request);
+          await publicClient.waitForTransactionReceipt({ hash: res });
+          dispatch(
+            setIndexModal({
+              actionValue: true,
+              actionMessage: "Indexing Interaction",
+            })
+          );
+          await handleIndexCheck(res, dispatch, true);
         } else {
           dispatch(
             setFeedReactId({
@@ -337,38 +335,6 @@ const useReactions = () => {
     }
   };
 
-  const mirrorWrite = async (): Promise<void> => {
-    (feedSwitch ? setMirrorFeedLoading : setMirrorTimelineLoading)((prev) => {
-      const updatedArray = [...prev];
-      updatedArray[mirrorIndex!] = true;
-      return updatedArray;
-    });
-    try {
-      let tx = await writeAsync?.();
-      dispatch(
-        setIndexModal({
-          actionValue: true,
-          actionMessage: "Indexing Interaction",
-        })
-      );
-      const res = await waitForTransaction({
-        hash: tx?.hash!,
-        async onSpeedUp(newTransaction) {
-          await newTransaction.wait();
-          tx!.hash = newTransaction.hash as any;
-        },
-      });
-      await handleIndexCheck(res?.transactionHash, dispatch, true);
-    } catch (err: any) {
-      console.error(err.message);
-    }
-    (feedSwitch ? setMirrorFeedLoading : setMirrorTimelineLoading)((prev) => {
-      const updatedArray = [...prev];
-      updatedArray[mirrorIndex!] = false;
-      return updatedArray;
-    });
-  };
-
   const collectPost = async (
     id: string,
     loader?: (e: any) => void,
@@ -401,12 +367,17 @@ const useReactions = () => {
         publicationId: id,
       });
       const typedData: any = collectPost.data.createCollectTypedData.typedData;
-      const signature: any = await signTypedDataAsync({
-        domain: omit(typedData?.domain, ["__typename"]),
-        types: omit(typedData?.types, ["__typename"]) as any,
-        value: omit(typedData?.value, ["__typename"]) as any,
+      const clientWallet = createWalletClient({
+        chain: polygon,
+        transport: custom((window as any).ethereum),
       });
-
+      const signature: any = await clientWallet.signTypedData({
+        domain: omit(typedData?.domain, ["__typename"]),
+        types: omit(typedData?.types, ["__typename"]),
+        primaryType: "CollectWithSig",
+        message: omit(typedData?.value, ["__typename"]),
+        account: address as `0x${string}`,
+      });
       const broadcastResult: any = await broadcast({
         id: collectPost?.data?.createCollectTypedData?.id,
         signature,
@@ -414,25 +385,49 @@ const useReactions = () => {
 
       if (broadcastResult?.data?.broadcast?.__typename !== "RelayerResult") {
         const { v, r, s } = splitSignature(signature);
-        const collectArgs = {
-          collector: address,
-          profileId: typedData.value.profileId,
-          pubId: typedData.value.pubId,
-          data: typedData.value.data,
-          sig: {
-            v,
-            r,
-            s,
-            deadline: typedData.value.deadline,
-          },
-        };
-        setCollectArgs(collectArgs);
+        const { request } = await publicClient.simulateContract({
+          address: LENS_HUB_PROXY_ADDRESS_MATIC,
+          abi: LensHubProxy,
+          functionName: "collectWithSig",
+          args: [
+            {
+              collector: address,
+              profileId: typedData.value.profileId,
+              pubId: typedData.value.pubId,
+              data: typedData.value.data,
+              sig: {
+                v,
+                r,
+                s,
+                deadline: typedData.value.deadline,
+              },
+            },
+          ],
+          account: address,
+        });
         dispatch(
           setFeedReactId({
             actionValue: id,
             actionType: 2,
           })
         );
+        const res = await clientWallet.writeContract(request);
+        await publicClient.waitForTransactionReceipt({ hash: res });
+        dispatch(
+          setPurchase({
+            actionOpen: false,
+            actionId: "",
+            actionIndex: undefined,
+          })
+        );
+        dispatch(
+          setIndexModal({
+            actionValue: true,
+            actionMessage: "Indexing Interaction",
+          })
+        );
+        await handleIndexCheck(res, dispatch, false);
+      
       } else {
         dispatch(
           setFeedReactId({
@@ -498,65 +493,6 @@ const useReactions = () => {
       });
     }
   };
-
-  const collectWrite = async (): Promise<void> => {
-    (feedSwitch ? setCollectFeedLoading : setCollectTimelineLoading)((prev) => {
-      const updatedArray = [...prev];
-      updatedArray[collectIndex!] = true;
-      return updatedArray;
-    });
-    try {
-      let tx = await collectWriteAsync?.();
-      dispatch(
-        setPurchase({
-          actionOpen: false,
-          actionId: "",
-          actionIndex: undefined,
-        })
-      );
-      dispatch(
-        setIndexModal({
-          actionValue: true,
-          actionMessage: "Indexing Interaction",
-        })
-      );
-      const res = await waitForTransaction({
-        hash: tx?.hash!,
-        async onSpeedUp(newTransaction) {
-          await newTransaction.wait();
-          tx!.hash = newTransaction.hash as any;
-        },
-      });
-      await handleIndexCheck(res?.transactionHash, dispatch, false);
-    } catch (err: any) {
-      console.error(err.message);
-      if (err.message.includes("You do not have enough")) {
-        dispatch(
-          setModal({
-            actionOpen: true,
-            actionMessage: "Insufficient Balance to Collect.",
-          })
-        );
-      }
-    }
-    (feedSwitch ? setCollectFeedLoading : setCollectTimelineLoading)((prev) => {
-      const updatedArray = [...prev];
-      updatedArray[collectIndex!] = false;
-      return updatedArray;
-    });
-  };
-
-  useEffect(() => {
-    if (isSuccess) {
-      mirrorWrite();
-    }
-  }, [isSuccess]);
-
-  useEffect(() => {
-    if (isSuccessCollect) {
-      collectWrite();
-    }
-  }, [isSuccessCollect]);
 
   useEffect(() => {
     checkDispatcher(dispatch, profileId);
@@ -644,29 +580,20 @@ const useReactions = () => {
     setCollectInfoLoading(false);
   };
 
-  const { config: approvalConfig } = usePrepareSendTransaction({
-    request: {
-      to: approvalArgs?.to as string,
-      from: approvalArgs?.from as string,
-      data: approvalArgs?.data as string,
-    },
-    // enabled: Boolean(approvalSendEnabled),
-  });
-
-  const { sendTransactionAsync, isSuccess: approvalSuccess } =
-    useSendTransaction(approvalConfig);
-
   const callApprovalSign = async (): Promise<void> => {
     try {
-      let tx = await sendTransactionAsync?.();
-      const res = await waitForTransaction({
-        hash: tx?.hash!,
-        async onSpeedUp(newTransaction) {
-          await newTransaction.wait();
-          tx!.hash = newTransaction.hash as any;
-        },
+      const clientWallet = createWalletClient({
+        chain: polygon,
+        transport: custom((window as any).ethereum),
       });
-      await pollUntilIndexed(res?.transactionHash as string, false);
+
+      const res = await clientWallet.sendTransaction({
+        to: approvalArgs?.to as `0x${string}`,
+        value: BigInt(approvalArgs?.data as string),
+        account:approvalArgs?.from as `0x${string}`,
+      });
+      await publicClient.waitForTransactionReceipt({ hash: res });
+      await pollUntilIndexed(res as string, false);
       await getCollectInfo();
     } catch (err: any) {
       setApprovalLoading(false);
