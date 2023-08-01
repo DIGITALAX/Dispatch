@@ -74,8 +74,6 @@ const useReactions = () => {
   const [collectTimelineLoading, setCollectTimelineLoading] = useState<
     boolean[]
   >(Array.from({ length: timelineDispatch.length }, () => false));
-  const [mirrorIndex, setMirrorIndex] = useState<number>();
-  const [collectIndex, setCollectIndex] = useState<number>();
   const dispatch = useDispatch();
   const { address } = useAccount();
 
@@ -172,7 +170,6 @@ const useReactions = () => {
       index = (feedSwitch ? feedDispatch : timelineDispatch).findIndex(
         (feed) => feed.id === (mirrorId !== undefined ? mirrorId : id)
       );
-      setMirrorIndex(index);
 
       (feedSwitch ? setMirrorFeedLoading : setMirrorTimelineLoading)((prev) => {
         const updatedArray = [...prev];
@@ -346,7 +343,6 @@ const useReactions = () => {
       index = (feedSwitch ? feedDispatch : timelineDispatch).findIndex(
         (feed) => feed.id === (mirrorId !== undefined ? mirrorId : id)
       );
-      setCollectIndex(index);
       (feedSwitch ? setCollectFeedLoading : setCollectTimelineLoading)(
         (prev) => {
           const updatedArray = [...prev];

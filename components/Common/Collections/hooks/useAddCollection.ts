@@ -243,8 +243,7 @@ const useAddCollection = () => {
             type: "function",
           },
         ],
-        functionName: "mintCollection",
-        value: BigInt(0),
+        functionName: "mintCollection" as any,
         args: [
           `ipfs://${responseJSON.cid}`,
           Math.ceil(collectionValues?.amount) as any,
