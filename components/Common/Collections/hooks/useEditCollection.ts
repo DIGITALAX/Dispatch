@@ -69,14 +69,14 @@ const useEditCollection = () => {
           ? JSON.stringify({
               name: collectionValues?.title,
               description: collectionValues?.description,
-              image: `${collectionValues?.image}`,
+              image: `ipfs://${collectionValues?.image}`,
               audio: `ipfs://${collectionValues?.audio}`,
               external_url: "https://www.chromadin.xyz/",
             })
           : JSON.stringify({
               name: collectionValues?.title,
               description: collectionValues?.description,
-              image: `${collectionValues?.image}`,
+              image: `ipfs://${collectionValues?.image}`,
               external_url: "https://www.chromadin.xyz/",
             }),
       });
