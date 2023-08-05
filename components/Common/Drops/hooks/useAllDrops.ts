@@ -42,10 +42,12 @@ const useAllDrops = () => {
             ...(dataUpdated.data?.updatedChromadinDropDropCreateds || []),
           ]?.map(async (drop: any) => {
             const json = await fetchIPFSJSON(
-              (drop.dropURI as any)
-                ?.split("ipfs://")[1]
-                ?.replace(/"/g, "")
-                ?.trim()
+              (drop.dropURI as any)?.includes("ipfs://")
+                ? (drop.dropURI as any)
+                    ?.split("ipfs://")[1]
+                    ?.replace(/"/g, "")
+                    ?.trim()
+                : (drop.dropURI as any)?.trim()
             );
 
             return {

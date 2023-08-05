@@ -303,10 +303,12 @@ const useIndividual = () => {
       if (data?.publication.canDecrypt && data?.publication.canDecrypt.result) {
         try {
           const value = await fetchIPFSJSON(
-            data?.publication.onChainContentURI
-              ?.split("ipfs://")[1]
-              ?.replace(/"/g, "")
-              ?.trim()
+            data?.publication.onChainContentURI?.includes("ipfs://")
+              ? data?.publication.onChainContentURI
+                  ?.split("ipfs://")[1]
+                  ?.replace(/"/g, "")
+                  ?.trim()
+              : data?.publication.onChainContentURI?.trim()
           );
           const { decrypted, error } = await sdk.gated.decryptMetadata(
             value.json

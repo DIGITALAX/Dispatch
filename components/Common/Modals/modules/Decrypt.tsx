@@ -48,7 +48,9 @@ const Decrypt: FunctionComponent<DecryptProps> = ({
                       >
                         <Image
                           src={`${INFURA_GATEWAY}/ipfs/${
-                            coll?.uri?.image?.split("ipfs://")[1]
+                            coll?.uri?.image?.includes("ipfs://")
+                              ? coll?.uri?.image?.split("ipfs://")[1]
+                              : coll?.uri?.image
                           }`}
                           layout="fill"
                           objectFit="cover"
