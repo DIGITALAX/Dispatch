@@ -50,7 +50,9 @@ const SalesHistory: FunctionComponent<SalesHistoryProps> = ({
                         <div className="absolute w-full h-full bg-cover">
                           <Image
                             src={`${INFURA_GATEWAY}/ipfs/${
-                              value?.uri?.json?.image?.split("ipfs://")[1]
+                              value?.uri?.json?.image?.includes("ipfs://")
+                                ? value?.uri?.json?.image?.split("ipfs://")[1]
+                                : value?.uri?.json?.image
                             }`}
                             layout="fill"
                             objectFit="cover"

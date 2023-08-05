@@ -42,10 +42,12 @@ const useSales = () => {
             ...(resUpdated.data.updatedChromadinMarketTokensBoughts || []),
           ].map(async (history: Sales) => {
             const json = await fetchIPFSJSON(
-              (history.uri as any)
-                ?.split("ipfs://")[1]
-                ?.replace(/"/g, "")
-                ?.trim()
+              (history.uri as any)?.includes("ipfs://")
+                ? (history.uri as any)
+                    ?.split("ipfs://")[1]
+                    ?.replace(/"/g, "")
+                    ?.trim()
+                : (history.uri as any)?.trim()
             );
 
             const defaultProfile = await getDefaultProfile(history.creator);

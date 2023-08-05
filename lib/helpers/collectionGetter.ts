@@ -32,10 +32,12 @@ const collectionGetter = async (
       ).map(async (collection: Collection, index: number) => {
         let dropjson: any;
         const json = await fetchIPFSJSON(
-          (collection.uri as any)
-            ?.split("ipfs://")[1]
-            ?.replace(/"/g, "")
-            ?.trim()
+          (collection.uri as any)?.includes("ipfs://")
+            ? (collection.uri as any)
+                ?.split("ipfs://")[1]
+                ?.replace(/"/g, "")
+                ?.trim()
+            : (collection.uri as any)?.trim()
         );
 
         if (!decrypted) {
@@ -53,10 +55,12 @@ const collectionGetter = async (
 
           if (collectionDrops?.length > 0) {
             dropjson = await fetchIPFSJSON(
-              collectionDrops[0]?.dropURI
-                ?.split("ipfs://")[1]
-                ?.replace(/"/g, "")
-                ?.trim()
+              collectionDrops[0]?.dropURI?.includes("ipfs://")
+                ? collectionDrops[0]?.dropURI
+                    ?.split("ipfs://")[1]
+                    ?.replace(/"/g, "")
+                    ?.trim()
+                : collectionDrops[0]?.dropURI?.trim()
             );
           }
 

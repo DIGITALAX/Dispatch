@@ -35,7 +35,9 @@ const GatedOptions: FunctionComponent<GatedOptionsProps> = ({
               <div className="absolute object-cover w-full h-full flex">
                 <Image
                   src={`${INFURA_GATEWAY}/ipfs/${
-                    coll.uri.image?.split("ipfs://")[1]
+                    coll.uri.image?.includes("ipfs://")
+                      ? coll.uri.image?.split("ipfs://")[1]
+                      : coll.uri.image
                   }`}
                   layout="fill"
                   objectFit="cover"

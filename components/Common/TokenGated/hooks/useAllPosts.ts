@@ -138,10 +138,12 @@ const useAllPosts = () => {
         sortedArr.map(async (post) => {
           if (post.canDecrypt && post.canDecrypt.result) {
             const data = await fetchIPFSJSON(
-              post.onChainContentURI
-                ?.split("ipfs://")[1]
-                ?.replace(/"/g, "")
-                ?.trim()
+              post.onChainContentURI?.includes("ipfs://")
+                ? post.onChainContentURI
+                    ?.split("ipfs://")[1]
+                    ?.replace(/"/g, "")
+                    ?.trim()
+                : post.onChainContentURI?.trim()
             );
             try {
               const { decrypted, error } = await sdk.gated.decryptMetadata(
@@ -299,10 +301,12 @@ const useAllPosts = () => {
         sortedArr.map(async (post) => {
           if (post.canDecrypt && post.canDecrypt.result) {
             const data = await fetchIPFSJSON(
-              post.onChainContentURI
-                ?.split("ipfs://")[1]
-                ?.replace(/"/g, "")
-                ?.trim()
+              post.onChainContentURI?.includes("ipfs://")
+                ? post.onChainContentURI
+                    ?.split("ipfs://")[1]
+                    ?.replace(/"/g, "")
+                    ?.trim()
+                : post.onChainContentURI?.trim()
             );
             try {
               const { decrypted, error } = await sdk.gated.decryptMetadata(
@@ -455,10 +459,12 @@ const useAllPosts = () => {
         sortedArr.map(async (post) => {
           if (post.canDecrypt && post.canDecrypt.result) {
             const data = await fetchIPFSJSON(
-              post.onChainContentURI
-                ?.split("ipfs://")[1]
-                ?.replace(/"/g, "")
-                ?.trim()
+              post.onChainContentURI?.includes("ipfs://")
+                ? post.onChainContentURI
+                    ?.split("ipfs://")[1]
+                    ?.replace(/"/g, "")
+                    ?.trim()
+                : post.onChainContentURI?.trim()
             );
             try {
               const { decrypted, error } = await sdk.gated.decryptMetadata(
@@ -603,10 +609,12 @@ const useAllPosts = () => {
           if (post.canDecrypt && post.canDecrypt.result) {
             try {
               const data = await fetchIPFSJSON(
-                post.onChainContentURI
-                  ?.split("ipfs://")[1]
-                  ?.replace(/"/g, "")
-                  ?.trim()
+                post.onChainContentURI?.includes("ipfs://")
+                  ? post.onChainContentURI
+                      ?.split("ipfs://")[1]
+                      ?.replace(/"/g, "")
+                      ?.trim()
+                  : post.onChainContentURI?.trim()
               );
               const { decrypted, error } = await sdk.gated.decryptMetadata(
                 data.json
