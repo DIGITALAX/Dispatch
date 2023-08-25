@@ -127,6 +127,7 @@ const AllCollections: FunctionComponent<AllCollectionsProps> = ({
                             className="rounded-tr-lg rounded-bl-lg flex w-full h-full"
                             muted
                             autoPlay
+                            loop
                             playsInline
                           >
                             <source

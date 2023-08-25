@@ -297,6 +297,7 @@ const FeedPublication: FunctionComponent<FeedPublicationProps> = ({
                       <video
                         muted
                         controls
+                        loop
                         className="rounded-md absolute w-full h-full object-cover"
                       >
                         <source src={formattedImageURL} type="video/mp4" />

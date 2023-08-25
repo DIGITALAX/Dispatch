@@ -205,6 +205,7 @@ const AddDrop: FunctionComponent<AddDropProps> = ({
                             <video
                               className="rounded-tr-lg rounded-bl-lg flex w-full h-full"
                               muted
+                              loop
                               autoPlay
                               playsInline
                             >

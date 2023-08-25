@@ -41,6 +41,7 @@ const ImageUploads: FunctionComponent<ImageUploadsProps> = ({
                     playsInline
                     autoPlay
                     controls
+                    loop
                     className="rounded-md absolute w-full h-full object-cover"
                   >
                     <source
