@@ -91,6 +91,7 @@ const useImageUpload = () => {
       if (fileLimitAlert((e as any).target.files[0])) {
         return;
       }
+      console.log((e as any).target.files)
       setType(type);
       setFileType((e as any).target.files[0].type);
       setImageLoading(true);
@@ -98,6 +99,7 @@ const useImageUpload = () => {
         method: "POST",
         body: (e.target as HTMLFormElement).files[0],
       });
+      console.log({response})
       let cid = await response.json();
       console.log({cid})
       if (cid) {
