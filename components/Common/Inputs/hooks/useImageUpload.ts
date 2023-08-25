@@ -99,6 +99,7 @@ const useImageUpload = () => {
         body: (e.target as HTMLFormElement).files[0],
       });
       let cid = await response.json();
+      console.log({cid})
       if (cid) {
         setMainImage(cid?.cid);
       }
