@@ -26,6 +26,7 @@ const ImageUpload: FunctionComponent<ImageUploadProps> = ({
             <video
               playsInline
               autoPlay
+              loop
               className="rounded-tr-lg rounded-bl-lg w-full h-full flex object-cover"
             >
               <source

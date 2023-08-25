@@ -21,9 +21,11 @@ const AudioUpload: FunctionComponent<AudioUploadProps> = ({
 }): JSX.Element => {
   return (
     <div className={`relative flex flex-col gap-4 h-fit w-fit`}>
-      <div className={`relative w-40 h-14 border border-lily p-3 rounded-tr-lg rounded-bl-lg flex items-end justify-end ${
-        audio !== "" && "bg-lily/50"
-      }`}>
+      <div
+        className={`relative w-40 h-14 border border-lily p-3 rounded-tr-lg rounded-bl-lg flex items-end justify-end ${
+          audio !== "" && "bg-lily/50"
+        }`}
+      >
         {audio !== "" && (
           <div className="absolute top-0 left-0 w-full h-full flex object-cover text-white text-xs font-earl items-center justify-start break-words px-2 overflow-y-scroll">
             {audioFileName}

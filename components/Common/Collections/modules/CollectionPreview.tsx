@@ -106,6 +106,7 @@ const CollectionPreview: FunctionComponent<CollectionPreviewProps> = ({
                   <video
                     playsInline
                     autoPlay
+                    loop
                     className="w-full h-full flex object-cover"
                   >
                     <source
