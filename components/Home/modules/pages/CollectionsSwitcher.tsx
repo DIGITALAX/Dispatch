@@ -30,7 +30,7 @@ const CollectionsSwitcher: FunctionComponent = (): JSX.Element => {
 
   const dispatch = useDispatch();
   const { collectionsLoading } = useAllCollections();
-  const { uploadImage, uploadAudio } = useImageUpload();
+  const { uploadImage, uploadAudio, videoRef, videoAudio } = useImageUpload();
   const {
     imageLoading,
     setImageLoading,
@@ -52,6 +52,7 @@ const CollectionsSwitcher: FunctionComponent = (): JSX.Element => {
     case "add":
       return (
         <AddCollection
+          videoRef={videoRef}
           collectionType={collectionType}
           imageLoading={imageLoading}
           uploadImage={uploadImage}
@@ -72,6 +73,7 @@ const CollectionsSwitcher: FunctionComponent = (): JSX.Element => {
           audioLoading={audioLoading}
           setAudioLoading={setAudioLoading}
           uploadAudio={uploadAudio}
+          videoAudio={videoAudio}
         />
       );
 

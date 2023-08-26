@@ -8,8 +8,8 @@ type Data = {
   cid: string | undefined;
 };
 
-const projectId = process.env.INFURA_PROJECT_ID;
-const projectSecret = process.env.INFURA_SECRET_KEY;
+const projectId = process.env.NEXT_PUBLIC_INFURA_PROJECT_ID;
+const projectSecret = process.env.NEXT_PUBLIC_INFURA_SECRET_KEY;
 
 const auth =
   "Basic " + Buffer.from(projectId + ":" + projectSecret).toString("base64");

@@ -1,8 +1,9 @@
 import fileLimitAlert from "@/lib/helpers/fileLimitAlert";
 import { setCollectionDetails } from "@/redux/reducers/collectionDetailsSlice";
+import { create } from "ipfs-http-client";
 import { setDropDetails } from "@/redux/reducers/dropDetailsSlice";
 import { RootState } from "@/redux/store";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   MediaType,
@@ -13,9 +14,17 @@ import lodash from "lodash";
 import videoLimitAlert from "@/lib/helpers/videoLimitAlert";
 import { setPostGateImages } from "@/redux/reducers/postGatedImageSlice";
 
+const projectId = process.env.NEXT_PUBLIC_INFURA_PROJECT_ID;
+const projectSecret = process.env.NEXT_PUBLIC_INFURA_SECRET_KEY;
+
+const auth =
+  "Basic " + Buffer.from(projectId + ":" + projectSecret).toString("base64");
+
 const useImageUpload = () => {
   const dispatch = useDispatch();
+  const videoRef = useRef<HTMLVideoElement>(null);
   const [mainImage, setMainImage] = useState<string>("");
+  const [videoAudio, setVideoAudio] = useState<boolean>(false);
   const [mainAudio, setMainAudio] = useState<{
     audio: string;
     audioFileName: string;
@@ -91,19 +100,60 @@ const useImageUpload = () => {
       if (fileLimitAlert((e as any).target.files[0])) {
         return;
       }
-      console.log((e as any).target.files)
+
       setType(type);
       setFileType((e as any).target.files[0].type);
       setImageLoading(true);
-      const response = await fetch("/api/ipfs", {
-        method: "POST",
-        body: (e.target as HTMLFormElement).files[0],
+
+      if ((e as any).target.files[0].type === "video/mp4") {
+        const video = document.createElement("video");
+        video.muted = true;
+        video.crossOrigin = "anonymous";
+        video.preload = "auto";
+
+        const value = new Promise((resolve, reject) => {
+          video.addEventListener("error", reject);
+
+          video.addEventListener(
+            "canplay",
+            () => {
+              video.currentTime = 0.99;
+            },
+            { once: true }
+          );
+
+          video.addEventListener(
+            "seeked",
+            () =>
+              resolve(
+                (video as any).mozHasAudio ||
+                  Boolean((video as any).webkitAudioDecodedByteCount) ||
+                  Boolean((video as any).audioTracks?.length)
+              ),
+            {
+              once: true,
+            }
+          );
+
+          video.src = URL.createObjectURL((e as any).target.files[0]);
+        });
+
+        const hasAudio = await value;
+
+        setVideoAudio(hasAudio as boolean);
+      }
+      
+      const client = create({
+        url: "https://ipfs.infura.io:5001/api/v0",
+        headers: {
+          authorization: auth,
+        },
       });
-      console.log({response})
-      let cid = await response.json();
-      console.log({cid})
+
+      const added = await client.add((e.target as HTMLFormElement).files[0]);
+      const cid = added.path;
       if (cid) {
-        setMainImage(cid?.cid);
+        setMainImage(cid);
       }
     } catch (err: any) {
       console.error(err.message);
@@ -152,7 +202,7 @@ const useImageUpload = () => {
         setCollectionDetails({
           actionTitle: collectionValues.title,
           actionDescription: collectionValues.description,
-          actionImage: collectionValues.image,
+          actionImage: mainImage !== "" ? mainImage : collectionValues.image,
           actionAudio: mainAudio.audio,
           actionAudioFileName: mainAudio.audioFileName,
           actionAmount: collectionValues?.amount,
@@ -229,12 +279,14 @@ const useImageUpload = () => {
       setImageLoading(false);
       return;
     }
+
     Array.from(((e as FormEvent).target as HTMLFormElement)?.files).map(
       async (_, index: number) => {
         try {
           // const compressedImage = await compressImageFiles(
           //   (e as any).target.files[index] as File
           // );
+
           const response = await fetch("/api/ipfs", {
             method: "POST",
             body: (e as any).target.files[index],
@@ -302,6 +354,8 @@ const useImageUpload = () => {
     setImageLoadingComment,
     setVideoLoadingComment,
     uploadAudio,
+    videoRef,
+    videoAudio,
   };
 };
 

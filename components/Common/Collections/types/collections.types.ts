@@ -1,6 +1,6 @@
 import { Profile } from "@/components/Home/types/lens.types";
 import { CollectionDetailsState } from "@/redux/reducers/collectionDetailsSlice";
-import { FormEvent } from "react";
+import { FormEvent, Ref } from "react";
 import { AnyAction, Dispatch } from "redux";
 
 export type AllCollectionsProps = {
@@ -14,11 +14,13 @@ export type AddCollectionProps = {
   collectionType: string;
   setAudioLoading: (e: boolean) => void;
   audioLoading: boolean;
+  videoRef: Ref<HTMLVideoElement>;
   uploadAudio: (
     e: FormEvent<Element>,
     setAudioLoading: (e: boolean) => void,
     type: string
   ) => Promise<void>;
+  videoAudio: boolean;
   handleCollectionTitle: (e: FormEvent) => void;
   handleCollectionDescription: (e: FormEvent) => void;
   setImageLoading: (e: boolean) => void;
@@ -47,6 +49,8 @@ export type CollectionPreviewProps = {
   setPrice: (e: { value: number; currency: string }) => void;
   price: { value: number; currency: string } | undefined;
   collectionType: string;
+  videoRef: Ref<HTMLVideoElement>;
+  videoAudio?: boolean;
 };
 
 export type CollectionPricesProps = {
@@ -115,4 +119,6 @@ export type ImageProps = {
   addCollection: () => Promise<void>;
   addCollectionLoading: boolean;
   dispatch: Dispatch<AnyAction>;
+  videoRef: Ref<HTMLVideoElement>;
+  videoAudio?: boolean;
 };

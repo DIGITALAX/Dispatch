@@ -16,7 +16,6 @@ const ImageUpload: FunctionComponent<ImageUploadProps> = ({
   fileType,
   collectionType,
 }): JSX.Element => {
-  console.log({ image, fileType, type });
   return (
     <div
       className={`relative flex flex-col p-3 w-40 h-40 justify-end items-end border border-lily rounded-tr-lg rounded-bl-lg`}
@@ -28,6 +27,7 @@ const ImageUpload: FunctionComponent<ImageUploadProps> = ({
               playsInline
               autoPlay
               loop
+              muted
               className="rounded-tr-lg rounded-bl-lg w-full h-full flex object-cover"
             >
               <source

@@ -10,6 +10,7 @@ const CollectionPreview: FunctionComponent<CollectionPreviewProps> = ({
   setPrice,
   price,
   collectionType,
+  videoAudio,
 }): JSX.Element => {
   const waveformRef = useRef(null);
   const wavesurfer = useRef<null | WaveSurfer>(null);
@@ -27,12 +28,47 @@ const CollectionPreview: FunctionComponent<CollectionPreviewProps> = ({
         height: 16,
       });
 
-      if (collectionDetails?.audio) {
+      wavesurfer.current.on("seeking", function (seekProgress) {
+        const videoElement = document.getElementById(
+          "videoCollection"
+        ) as HTMLVideoElement;
+        if (videoElement) {
+          videoElement.currentTime = seekProgress;
+        }
+      });
+
+      wavesurfer.current.on("play", function () {
+        const videoElement = document.getElementById(
+          "videoCollection"
+        ) as HTMLVideoElement;
+        if (videoElement) {
+          videoElement.play();
+        }
+      });
+
+      wavesurfer.current.on("pause", function () {
+        const videoElement = document.getElementById(
+          "videoCollection"
+        ) as HTMLVideoElement;
+        if (videoElement) {
+          videoElement.pause();
+        }
+      });
+
+      if (collectionDetails?.audio && collectionDetails?.audio !== "") {
         wavesurfer.current.load(
           `${INFURA_GATEWAY}/ipfs/${
             collectionDetails?.audio?.includes("ipfs://")
               ? collectionDetails?.audio?.split("ipfs://")[1]
               : collectionDetails?.audio
+          }`
+        );
+      } else if (videoAudio && collectionDetails?.image !== "") {
+        wavesurfer.current.load(
+          `${INFURA_GATEWAY}/ipfs/${
+            collectionDetails?.image?.includes("ipfs://")
+              ? collectionDetails?.image?.split("ipfs://")[1]
+              : collectionDetails?.image
           }`
         );
       }
@@ -41,11 +77,24 @@ const CollectionPreview: FunctionComponent<CollectionPreviewProps> = ({
     return () => {
       wavesurfer.current?.destroy();
     };
-  }, [collectionDetails?.audio, wavesurfer]);
+  }, [collectionDetails?.audio, wavesurfer, collectionDetails?.image]);
 
   const handlePlayPause = () => {
-    wavesurfer.current?.playPause();
+    const videoElement = document.getElementById(
+      "videoCollection"
+    ) as HTMLVideoElement;
+
+    if (videoElement && wavesurfer.current) {
+      if (videoElement.paused) {
+        videoElement.play();
+        wavesurfer.current.play();
+      } else {
+        videoElement.pause();
+        wavesurfer.current.pause();
+      }
+    }
   };
+
   return (
     <div className="relative w-full h-fit flex flex-col items-center justify-center gap-3">
       <div className="relative w-3/4 h-fit items-center justify-center text-ama font-earl text-xl flex text-center break-all">
@@ -60,9 +109,10 @@ const CollectionPreview: FunctionComponent<CollectionPreviewProps> = ({
       <div className="relative w-full h-fit flex flex-col items-center justify-center">
         {collectionDetails.fileType === "audio/mpeg" ||
         collectionType === "audio/mpeg" ||
-        collectionDetails?.audio ? (
+        collectionDetails?.audio ||
+        videoAudio ? (
           <div className="relative flex flex-col gap-5 w-fit h-fit">
-            {collectionDetails?.audio !== "" && (
+            {(collectionDetails?.audio !== "" || videoAudio) && (
               <div className="relative w-full h-fit flex flex-row gap-1.5 items-center justify-center">
                 <div
                   className="relative flex w-fit h-fit items-center justify-center flex cursor-pointer active:scale-95"
@@ -78,20 +128,38 @@ const CollectionPreview: FunctionComponent<CollectionPreviewProps> = ({
             )}
             <div className="relative w-fit h-fit flex flex-col items-center justify-center p-3 border border-white rounded-br-lg rounded-tl-lg">
               <div className="relative w-40 h-32 preG:w-60 preG:h-56 border-2 border-lily bg-black">
-                {collectionDetails?.image !== "" && (
-                  <Image
-                    src={
-                      collectionDetails?.image?.includes("ipfs://")
-                        ? `${INFURA_GATEWAY}/ipfs/${
-                            collectionDetails?.image?.split("ipfs://")[1]
-                          }`
-                        : `${INFURA_GATEWAY}/ipfs/${collectionDetails?.image}`
-                    }
-                    className="w-full h-full"
-                    layout="fill"
-                    draggable={false}
-                    objectFit="cover"
-                  />
+                {videoAudio && collectionDetails?.image !== "" ? (
+                  <video
+                    playsInline
+                    muted
+                    className="w-full h-full flex object-cover"
+                    id="videoCollection"
+                  >
+                    <source
+                      src={`${INFURA_GATEWAY}/ipfs/${
+                        collectionDetails?.image?.includes("ipfs://")
+                          ? collectionDetails?.image?.split("ipfs://")[1]
+                          : collectionDetails?.image
+                      }`}
+                      type="video/mp4"
+                    />
+                  </video>
+                ) : (
+                  collectionDetails?.image !== "" && (
+                    <Image
+                      src={
+                        collectionDetails?.image?.includes("ipfs://")
+                          ? `${INFURA_GATEWAY}/ipfs/${
+                              collectionDetails?.image?.split("ipfs://")[1]
+                            }`
+                          : `${INFURA_GATEWAY}/ipfs/${collectionDetails?.image}`
+                      }
+                      className="w-full h-full"
+                      layout="fill"
+                      draggable={false}
+                      objectFit="cover"
+                    />
+                  )
                 )}
               </div>
             </div>
@@ -107,6 +175,7 @@ const CollectionPreview: FunctionComponent<CollectionPreviewProps> = ({
                     playsInline
                     autoPlay
                     loop
+                    muted
                     className="w-full h-full flex object-cover"
                   >
                     <source
