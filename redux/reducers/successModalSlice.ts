@@ -5,6 +5,7 @@ export interface SuccessModalState {
   media: string;
   link: string;
   message: string;
+  type: string;
 }
 
 const initialSuccessModalState: SuccessModalState = {
@@ -12,6 +13,7 @@ const initialSuccessModalState: SuccessModalState = {
   media: "",
   link: "",
   message: "",
+  type: "",
 };
 
 export const successModalSlice = createSlice({
@@ -20,12 +22,21 @@ export const successModalSlice = createSlice({
   reducers: {
     setSuccessModal: (
       state: SuccessModalState,
-      { payload: { actionOpen, actionMedia, actionLink, actionMessage } }
+      {
+        payload: {
+          actionOpen,
+          actionMedia,
+          actionLink,
+          actionMessage,
+          actionType,
+        },
+      }
     ) => {
       state.open = actionOpen;
       state.media = actionMedia;
       state.link = actionLink;
       state.message = actionMessage;
+      state.type = actionType;
     },
   },
 });

@@ -175,6 +175,7 @@ const useEditCollection = () => {
           actionLink: "",
           actionMessage:
             "Collection Updated! Your Collection has been updated.",
+          actionType: collectionType,
         })
       );
     } catch (err: any) {
@@ -257,6 +258,7 @@ const useEditCollection = () => {
           actionMedia: collectionValues.image,
           actionLink: "",
           actionMessage: "Collection Burned! Your Collection has been burned.",
+          actionType: collectionType,
         })
       );
       dispatch(setCollectionSwitcher("collections"));

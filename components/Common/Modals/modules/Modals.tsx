@@ -199,6 +199,7 @@ const Modals = () => {
           media={successModal.media}
           link={successModal.link}
           message={successModal.message}
+          type={successModal.type}
         />
       )}
       {indexingModal?.value && <Indexing message={indexingModal.message} />}

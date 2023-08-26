@@ -30,6 +30,7 @@ export type SuccessProps = {
   dispatch: Dispatch<AnyAction>;
   link: string;
   message: string;
+  type: string
 };
 
 export type IndexingProps = {

@@ -290,6 +290,7 @@ const useAddCollection = () => {
           actionLink: "",
           actionMessage:
             "Collection Minted! Before your collection is live on the Market, you need to add it to a drop.",
+          actionType: collectionType,
         })
       );
       dispatch(setCollectionSwitcher("collections"));

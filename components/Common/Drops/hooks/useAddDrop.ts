@@ -124,6 +124,7 @@ const useAddDrop = () => {
             prof?.split(".lens")[0]
           }/drop/${dropValues.title?.replaceAll(" ", "_").toLowerCase()}`,
           actionMessage: "Drop Live! You can view your live drop here",
+          actionType: "image/png",
         })
       );
       dispatch(setDropSwitcher("drops"));
@@ -352,6 +353,7 @@ const useAddDrop = () => {
             }/drop/${dropValues.title?.replaceAll(" ", "_").toLowerCase()}`,
             actionMessage:
               "Collection Added! You can view your live drop here:",
+            actionType: "image/png",
           })
         );
         dispatch(setDropSwitcher("drops"));
@@ -426,6 +428,7 @@ const useAddDrop = () => {
           actionLink: "",
           actionMessage:
             "Drop Deleted! Your drop has been deleted and included collections been removed from the market.",
+          actionType: "image/png",
         })
       );
       dispatch(setDropSwitcher("drops"));
@@ -477,7 +480,7 @@ const useAddDrop = () => {
             stateMutability: "nonpayable",
             type: "function",
           },
-        ]as any,
+        ] as any,
         chain: polygon,
         functionName: "removeCollectionFromDrop",
         args: [collectionId],
@@ -504,6 +507,7 @@ const useAddDrop = () => {
           actionLink: "",
           actionMessage:
             "Collection Removed! Your collection has been removed from this drop and is no longer live on the market.",
+          actionType: "image/png",
         })
       );
     } catch (err: any) {
