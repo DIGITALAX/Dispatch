@@ -11,6 +11,7 @@ const Success: FunctionComponent<SuccessProps> = ({
   dispatch,
   message,
   link,
+  type,
 }): JSX.Element => {
   return (
     <div className="inset-0 justify-center fixed z-20 bg-opacity-50 backdrop-blur-sm overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
@@ -29,6 +30,7 @@ const Success: FunctionComponent<SuccessProps> = ({
                         actionMedia: "",
                         actionLink: "",
                         actionMessage: "",
+                        actionType: "",
                       })
                     )
                   }
@@ -53,6 +55,7 @@ const Success: FunctionComponent<SuccessProps> = ({
                                   actionMedia: "",
                                   actionLink: "",
                                   actionMessage: "",
+                                  actionType: "",
                                 })
                               );
                             }
@@ -64,6 +67,7 @@ const Success: FunctionComponent<SuccessProps> = ({
                                   actionMedia: "",
                                   actionLink: "",
                                   actionMessage: "",
+                                  actionType: "",
                                 })
                               );
                             }
@@ -76,17 +80,36 @@ const Success: FunctionComponent<SuccessProps> = ({
                   className="relative w-36 preG:w-52 md:w-40 xl:w-52 h-36 preG:h-52 md:h-40 xl:h-52 justify-center items-center rounded-lg border border-white"
                   id="staticLoad"
                 >
-                  <Image
-                    src={`${INFURA_GATEWAY}/ipfs/${
-                      media.includes("ipfs://")
-                        ? media?.split("ipfs://")[1]
-                        : media
-                    }`}
-                    layout="fill"
-                    objectFit="cover"
-                    objectPosition={"top"}
-                    className="rounded-lg"
-                  />
+                  {type.includes("video") ? (
+                    <video
+                      playsInline
+                      muted
+                      loop
+                      className="w-full h-full flex object-cover"
+                      id="videoCollection"
+                    >
+                      <source
+                        src={`${INFURA_GATEWAY}/ipfs/${
+                          media.includes("ipfs://")
+                            ? media?.split("ipfs://")[1]
+                            : media
+                        }`}
+                        type="video/mp4"
+                      />
+                    </video>
+                  ) : (
+                    <Image
+                      src={`${INFURA_GATEWAY}/ipfs/${
+                        media.includes("ipfs://")
+                          ? media?.split("ipfs://")[1]
+                          : media
+                      }`}
+                      layout="fill"
+                      objectFit="cover"
+                      objectPosition={"top"}
+                      className="rounded-lg"
+                    />
+                  )}
                 </div>
               </div>
             </div>
