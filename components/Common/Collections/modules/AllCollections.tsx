@@ -60,7 +60,6 @@ const AllCollections: FunctionComponent<AllCollectionsProps> = ({
             );
           })
         : allCollectionsRedux?.map((value: Collection, index: number) => {
-
             return (
               <div
                 className="relative w-52 h-60 sm:w-60 sm:h-72 flex items-center justify-center bg-black p-3 border border-white cursor-pointer rounded-tr-lg rounded-bl-lg"
@@ -124,7 +123,7 @@ const AllCollections: FunctionComponent<AllCollectionsProps> = ({
                           />
                         ) : (
                           <video
-                            className="rounded-tr-lg rounded-bl-lg flex w-full h-full"
+                            className="rounded-tr-lg rounded-bl-lg flex w-full h-full object-cover"
                             muted
                             autoPlay
                             loop

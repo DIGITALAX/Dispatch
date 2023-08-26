@@ -203,7 +203,7 @@ const AddDrop: FunctionComponent<AddDropProps> = ({
                             />
                           ) : (
                             <video
-                              className="rounded-tr-lg rounded-bl-lg flex w-full h-full"
+                              className="rounded-tr-lg rounded-bl-lg flex w-full h-full object-cover"
                               muted
                               loop
                               autoPlay
