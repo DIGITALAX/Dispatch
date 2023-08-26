@@ -85,7 +85,8 @@ const Success: FunctionComponent<SuccessProps> = ({
                       playsInline
                       muted
                       loop
-                      className="w-full h-full flex object-cover"
+                      autoPlay
+                      className="w-full h-full flex object-cover rounded-lg"
                       id="videoCollection"
                     >
                       <source
