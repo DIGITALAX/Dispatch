@@ -134,6 +134,7 @@ const CollectionPreview: FunctionComponent<CollectionPreviewProps> = ({
                     muted
                     className="w-full h-full flex object-cover"
                     id="videoCollection"
+                    key={collectionDetails?.image}
                   >
                     <source
                       src={`${INFURA_GATEWAY}/ipfs/${
@@ -154,6 +155,7 @@ const CollectionPreview: FunctionComponent<CollectionPreviewProps> = ({
                             }`
                           : `${INFURA_GATEWAY}/ipfs/${collectionDetails?.image}`
                       }
+                      key={collectionDetails?.image}
                       className="w-full h-full"
                       layout="fill"
                       draggable={false}
