@@ -27,6 +27,8 @@ const AddCollection: FunctionComponent<AddCollectionProps> = ({
   setAudioLoading,
   audioLoading,
   uploadAudio,
+  videoRef,
+  videoAudio,
 }): JSX.Element => {
   switch (collectionType) {
     case "audio/mpeg":
@@ -52,6 +54,7 @@ const AddCollection: FunctionComponent<AddCollectionProps> = ({
           audioLoading={audioLoading}
           setAudioLoading={setAudioLoading}
           uploadAudio={uploadAudio}
+          videoRef={videoRef}
         />
       );
 
@@ -75,6 +78,8 @@ const AddCollection: FunctionComponent<AddCollectionProps> = ({
           deleteCollectionLoading={deleteCollectionLoading}
           canEditCollection={canEditCollection}
           collectionType={collectionType}
+          videoRef={videoRef}
+          videoAudio={videoAudio}
         />
       );
 
@@ -98,6 +103,7 @@ const AddCollection: FunctionComponent<AddCollectionProps> = ({
           deleteCollection={deleteCollection}
           deleteCollectionLoading={deleteCollectionLoading}
           canEditCollection={canEditCollection}
+          videoRef={videoRef}
         />
       );
 
@@ -121,6 +127,7 @@ const AddCollection: FunctionComponent<AddCollectionProps> = ({
           deleteCollection={deleteCollection}
           deleteCollectionLoading={deleteCollectionLoading}
           canEditCollection={canEditCollection}
+          videoRef={videoRef}
         />
       );
 

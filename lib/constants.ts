@@ -70,3 +70,5 @@ export const AVAILABLE_TOKENS = [
   ["USDT", "0xc2132d05d31c914a87c6611c10748aeb04b58e8f"],
   ["MONA", "0x6968105460f67c3bf751be7c15f92f5286fd0ce5"],
 ];
+
+export const CHUNK_SIZE = 1024 * 1024; // 1 MB chunks

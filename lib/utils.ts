@@ -10,7 +10,7 @@ export const setCreatorToken = (value: boolean) => {
 export const getCreaterToken = () => {
   if (typeof window !== "undefined") {
     const data = localStorage.getItem(CREATOR_STORAGE_KEY);
-    
+
     if (!data) {
       return false;
     }
@@ -18,3 +18,4 @@ export const getCreaterToken = () => {
     return data;
   }
 };
+
