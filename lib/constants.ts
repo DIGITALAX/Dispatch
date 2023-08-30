@@ -61,6 +61,9 @@ export const LENS_CREATORS: string[] = [
   "0x01dfa9",
   "0x01df79",
   "0x01dfab",
+  "0x01dfcb",
+  "0x01dfcc",
+  "0x01dfcd",
 ];
 
 export const AVAILABLE_TOKENS = [
