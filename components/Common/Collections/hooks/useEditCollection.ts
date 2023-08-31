@@ -38,6 +38,8 @@ const useEditCollection = () => {
   const [updateCollectionLoading, setUpdateCollectionLoading] =
     useState<boolean>(false);
 
+  console.log({ collectionValues });
+
   const updateCollection = async () => {
     if (collectionValues?.old) return;
     if (
@@ -69,14 +71,26 @@ const useEditCollection = () => {
           ? JSON.stringify({
               name: collectionValues?.title,
               description: collectionValues?.description,
-              image: `ipfs://${collectionValues?.image}`,
-              audio: `ipfs://${collectionValues?.audio}`,
+              image: `ipfs://${
+                collectionValues?.image.includes("ipfs://")
+                  ? collectionValues?.image?.split("ipfs://")[1]
+                  : collectionValues?.image
+              }`,
+              audio: `ipfs://${
+                collectionValues?.audio.includes("ipfs://")
+                  ? collectionValues?.audio?.split("ipfs://")[1]
+                  : collectionValues?.audio
+              }`,
               external_url: "https://www.chromadin.xyz/",
             })
           : JSON.stringify({
               name: collectionValues?.title,
               description: collectionValues?.description,
-              image: `ipfs://${collectionValues?.image}`,
+              image: `ipfs://${
+                collectionValues?.image.includes("ipfs://")
+                  ? collectionValues?.image?.split("ipfs://")[1]
+                  : collectionValues?.image
+              }`,
               external_url: "https://www.chromadin.xyz/",
             }),
       });
