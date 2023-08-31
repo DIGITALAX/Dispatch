@@ -38,8 +38,6 @@ const useEditCollection = () => {
   const [updateCollectionLoading, setUpdateCollectionLoading] =
     useState<boolean>(false);
 
-  console.log({ collectionValues });
-
   const updateCollection = async () => {
     if (collectionValues?.old) return;
     if (
