@@ -88,6 +88,7 @@ const Success: FunctionComponent<SuccessProps> = ({
                       autoPlay
                       className="w-full h-full flex object-cover rounded-lg"
                       id="videoCollection"
+                      draggable={false}
                     >
                       <source
                         src={`${INFURA_GATEWAY}/ipfs/${
@@ -109,6 +110,7 @@ const Success: FunctionComponent<SuccessProps> = ({
                       objectFit="cover"
                       objectPosition={"top"}
                       className="rounded-lg"
+                      draggable={false}
                     />
                   )}
                 </div>
