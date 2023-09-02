@@ -47,6 +47,7 @@ const UpdateCollection: FunctionComponent<UpdateCollectionProps> = ({
                     objectFit="cover"
                     objectPosition={"top"}
                     className="rounded-lg"
+                    draggable={false}
                   />
                 </div>
                 <ButtonAdd
