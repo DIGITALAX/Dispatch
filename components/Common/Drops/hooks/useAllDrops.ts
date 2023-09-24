@@ -64,15 +64,15 @@ const useAllDrops = () => {
         false,
         true
       );
-      const newCols = collectionsUpdated?.filter(
+      const filteredCols = (collections || [])?.filter(
         (obj: Collection) =>
           obj.collectionId !== "104" && obj.collectionId !== "99"
       );
 
       dispatch(
         setAllCollectionsRedux(
-          collections || newCols
-            ? [...(collections || []), ...(newCols || [])]
+          filteredCols || collectionsUpdated
+            ? [...(filteredCols || []), ...(collectionsUpdated || [])]
             : []
         )
       );
